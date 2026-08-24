@@ -25,6 +25,25 @@ interface HomeClientContentProps {
 export default function HomeClientContent({ fullName, userEmail }: HomeClientContentProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const { scrollY } = useScroll();
+  const [points, setPoints] = React.useState(50);
+
+  React.useEffect(() => {
+    if (!userEmail) return;
+    const loadPoints = async () => {
+      try {
+        const res = await fetch(`/api/auth/points?email=${encodeURIComponent(userEmail)}`);
+        const data = await res.json();
+        if (data.success && typeof data.points === "number") {
+          setPoints(data.points);
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    loadPoints();
+    const interval = setInterval(loadPoints, 5000);
+    return () => clearInterval(interval);
+  }, [userEmail]);
 
   // Parallax transform for hero background and title
   const heroY = useTransform(scrollY, [0, 300], [0, 45]);
@@ -242,7 +261,7 @@ export default function HomeClientContent({ fullName, userEmail }: HomeClientCon
               </div>
               <div className="flex justify-between py-1 border-b border-gray-50">
                 <span className="text-gray-400 font-medium">Campus Reward Points:</span>
-                <span className="font-black text-purple-700">245 Points</span>
+                <span className="font-black text-purple-700">{points} Points</span>
               </div>
               <div className="flex justify-between py-1">
                 <span className="text-gray-400 font-medium">Security &amp; AI Safety:</span>

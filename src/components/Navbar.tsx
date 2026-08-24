@@ -29,6 +29,7 @@ export default function Navbar({ userEmail, userFullName }: NavbarProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [sessionName, setSessionName] = useState(userFullName || "");
   const [sessionEmail, setSessionEmail] = useState(userEmail || "");
+  const [userPoints, setUserPoints] = useState(50);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -45,6 +46,24 @@ export default function Navbar({ userEmail, userFullName }: NavbarProps) {
       }
     }
   }, [sessionName, sessionEmail]);
+
+  useEffect(() => {
+    if (!sessionEmail) return;
+    const fetchPoints = async () => {
+      try {
+        const res = await fetch(`/api/auth/points?email=${encodeURIComponent(sessionEmail)}`);
+        const data = await res.json();
+        if (data.success && typeof data.points === "number") {
+          setUserPoints(data.points);
+        }
+      } catch (err) {
+        console.error("Failed to load user points:", err);
+      }
+    };
+    fetchPoints();
+    const interval = setInterval(fetchPoints, 5000);
+    return () => clearInterval(interval);
+  }, [sessionEmail]);
 
   const navLinks = [
     { label: "Dashboard", href: "/home", icon: Home },
@@ -138,7 +157,7 @@ export default function Navbar({ userEmail, userFullName }: NavbarProps) {
               className="hidden sm:flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-amber-50/90 border border-amber-200/80 text-amber-800 text-xs font-black shadow-2xs"
             >
               <Award size={14} className="text-amber-500" />
-              <span>245 Points</span>
+              <span>{userPoints} Points</span>
             </motion.div>
 
             {/* Notifications Drawer */}
