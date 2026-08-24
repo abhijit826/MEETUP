@@ -136,6 +136,15 @@ export default function MeetupsPage() {
     activeMeetupIdRef.current = activeMeetup?.id || null;
   }, [activeMeetup]);
 
+  const handleCloseDetail = useCallback(() => {
+    setActiveMeetup(null);
+    if (typeof window !== "undefined") {
+      const url = new URL(window.location.href);
+      url.searchParams.delete("openId");
+      window.history.replaceState(null, "", url.pathname + url.search);
+    }
+  }, []);
+
   // Fetch Meetups with polling
   const fetchMeetups = useCallback(async () => {
     try {
@@ -465,7 +474,7 @@ export default function MeetupsPage() {
             userName={userFullName}
             userLat={userLat}
             userLng={userLng}
-            onClose={() => setActiveMeetup(null)}
+            onClose={handleCloseDetail}
             onUpdate={(updated) => setActiveMeetup(updated)}
             triggerToast={triggerToast}
             onReportBlockHost={() => setSafetyModal({
@@ -488,7 +497,7 @@ export default function MeetupsPage() {
             onSuccess={(action) => {
               if (action === "blocked") {
                 setBlockedUserIds((prev) => [...prev, safetyModal.targetUserId]);
-                setActiveMeetup(null);
+                handleCloseDetail();
                 triggerToast("⛔ User blocked successfully");
               } else {
                 triggerToast("🛡️ Report submitted to AI Safety");
