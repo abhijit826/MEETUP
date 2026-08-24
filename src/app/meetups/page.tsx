@@ -1035,14 +1035,44 @@ function MeetupDetailModal({
                             <span className="text-[9px] font-bold text-gray-400 px-1">
                               {msg.senderName}
                             </span>
-                            <div
-                              className={`p-2.5 rounded-2xl text-xs max-w-[80%] leading-relaxed ${
-                                isMe
-                                  ? "bg-purple-600 text-white rounded-br-none"
-                                  : "bg-gray-100 text-gray-800 rounded-bl-none"
-                              }`}
-                            >
-                              {msg.text}
+                            <div className="flex items-center gap-1.5 max-w-[85%]">
+                              {isMe && (
+                                <button
+                                  type="button"
+                                  onClick={async () => {
+                                    if (confirm("Delete this message?")) {
+                                      try {
+                                        const res = await fetch("/api/meetups", {
+                                          method: "POST",
+                                          headers: { "Content-Type": "application/json" },
+                                          body: JSON.stringify({
+                                            action: "chat_delete",
+                                            meetupId: meetup.id,
+                                            messageId: msg.id,
+                                          }),
+                                        });
+                                        const data = await res.json();
+                                        if (data.success && data.meetup) {
+                                          onUpdate(data.meetup);
+                                        }
+                                      } catch {}
+                                    }
+                                  }}
+                                  className="text-red-400 hover:text-red-600 transition-colors p-1 rounded-full hover:bg-gray-100"
+                                  title="Delete Message"
+                                >
+                                  <Trash2 size={11} />
+                                </button>
+                              )}
+                              <div
+                                className={`p-2.5 rounded-2xl text-xs leading-relaxed ${
+                                  isMe
+                                    ? "bg-purple-600 text-white rounded-br-none"
+                                    : "bg-gray-100 text-gray-800 rounded-bl-none"
+                                }`}
+                              >
+                                {msg.text}
+                              </div>
                             </div>
                           </div>
                         );

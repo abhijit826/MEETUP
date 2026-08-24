@@ -164,21 +164,23 @@ export async function toggleJoinActivity(activityId: string, userId: string): Pr
 export async function deleteActivity(activityId: string): Promise<boolean> {
   const activities = await readActivities();
   const filtered = activities.filter((a) => a.id !== activityId);
-  if (filtered.length !== activities.length) {
+  const radarExisted = filtered.length !== activities.length;
+
+  if (radarExisted) {
     await writeActivities(filtered);
-
-    // Also delete the linked Meetup squad hub
-    try {
-      const meetups = await fetchDbData<MeetupItem[]>("meetups", []);
-      const filteredMeetups = meetups.filter((m: any) => m.id !== activityId);
-      if (filteredMeetups.length !== meetups.length) {
-        await saveDbData<MeetupItem[]>("meetups", filteredMeetups);
-      }
-    } catch (err) {
-      console.error("Failed to delete synced meetup from Supabase:", err);
-    }
-
-    return true;
   }
-  return false;
+
+  let meetupExisted = false;
+  try {
+    const meetups = await fetchDbData<MeetupItem[]>("meetups", []);
+    const filteredMeetups = meetups.filter((m: any) => m.id !== activityId);
+    if (filteredMeetups.length !== meetups.length) {
+      meetupExisted = true;
+      await saveDbData<MeetupItem[]>("meetups", filteredMeetups);
+    }
+  } catch (err) {
+    console.error("Failed to delete synced meetup from Supabase:", err);
+  }
+
+  return radarExisted || meetupExisted;
 }

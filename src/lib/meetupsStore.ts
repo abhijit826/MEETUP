@@ -163,6 +163,17 @@ export async function sendMeetupChatMessage(meetupId: string, senderId: string, 
   return { meetup, msg };
 }
 
+export async function deleteMeetupChatMessage(meetupId: string, messageId: string) {
+  const meetups = await getDiskMeetups();
+  const index = meetups.findIndex((m) => m.id === meetupId);
+  if (index === -1) return null;
+
+  const meetup = meetups[index];
+  meetup.chatMessages = meetup.chatMessages.filter((msg) => msg.id !== messageId);
+  await saveDiskMeetups(meetups);
+  return meetup;
+}
+
 export async function addMeetupCheckIn(meetupId: string, userId: string, userName: string, userLat?: number, userLng?: number) {
   const meetups = await getDiskMeetups();
   const index = meetups.findIndex((m) => m.id === meetupId);

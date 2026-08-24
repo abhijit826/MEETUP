@@ -8,6 +8,7 @@ import {
   addMeetupExpense,
   addMeetupPoll,
   voteMeetupPoll,
+  deleteMeetupChatMessage,
 } from "@/lib/meetupsStore";
 import { addNotification } from "@/lib/notificationsStore";
 
@@ -100,6 +101,19 @@ export async function POST(request: Request) {
       if (!res) return NextResponse.json({ error: "Meetup not found" }, { status: 404 });
 
       return NextResponse.json({ success: true, meetup: res.meetup, msg: res.msg });
+    }
+
+    // 3b. Delete Group Chat Message
+    if (action === "chat_delete") {
+      const { meetupId, messageId } = body;
+      if (!meetupId || !messageId) {
+        return NextResponse.json({ error: "meetupId & messageId required" }, { status: 400 });
+      }
+
+      const meetup = await deleteMeetupChatMessage(meetupId, messageId);
+      if (!meetup) return NextResponse.json({ error: "Meetup not found" }, { status: 404 });
+
+      return NextResponse.json({ success: true, meetup });
     }
 
     // 4. Geofenced Live Check-In
