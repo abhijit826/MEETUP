@@ -30,6 +30,7 @@ export default function Navbar({ userEmail, userFullName }: NavbarProps) {
   const [sessionName, setSessionName] = useState(userFullName || "");
   const [sessionEmail, setSessionEmail] = useState(userEmail || "");
   const [userPoints, setUserPoints] = useState(50);
+  const prevPointsRef = React.useRef<number | null>(null);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -54,7 +55,34 @@ export default function Navbar({ userEmail, userFullName }: NavbarProps) {
         const res = await fetch(`/api/auth/points?email=${encodeURIComponent(sessionEmail)}`);
         const data = await res.json();
         if (data.success && typeof data.points === "number") {
-          setUserPoints(data.points);
+          const oldPoints = prevPointsRef.current;
+          const newPoints = data.points;
+
+          if (oldPoints !== null && newPoints !== oldPoints) {
+            const diff = newPoints - oldPoints;
+            const title = diff > 0 ? "Points Earned! 🚀" : "Points Updated";
+            const message = diff > 0
+              ? `Congratulations! You just earned +${diff} Campus Reward Points. Keep syncing!`
+              : `Your rewards balance changed to ${newPoints} points.`;
+
+            // Securely create notifications
+            fetch("/api/notifications", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                action: "create",
+                email: sessionEmail,
+                type: "radar",
+                title,
+                message,
+                link: "/home",
+                actorName: "Reward Engine",
+              }),
+            }).catch((err) => console.error(err));
+          }
+
+          prevPointsRef.current = newPoints;
+          setUserPoints(newPoints);
         }
       } catch (err) {
         console.error("Failed to load user points:", err);

@@ -64,6 +64,20 @@ export async function POST(request: Request) {
       path: "/",
     });
 
+    // 6. Generate welcome notification
+    try {
+      const { addNotification } = await import("@/lib/notificationsStore");
+      addNotification({
+        type: "radar",
+        title: "Welcome to Student Meetup! 🎉",
+        message: "Your email has been verified. Welcome aboard, let's explore campus radar and meetup squads!",
+        link: "/home",
+        targetUserEmail: normalizedEmail,
+      });
+    } catch (e) {
+      console.error("Welcome notification failed:", e);
+    }
+
     return NextResponse.json({
       success: true,
       message: "OTP Verified Successfully!",

@@ -42,6 +42,8 @@ export async function POST(request: Request) {
         path: "/",
       });
 
+      await createLoginNotification(normalizedEmail);
+
       return NextResponse.json({
         success: true,
         message: "Signed in successfully!",
@@ -75,6 +77,8 @@ export async function POST(request: Request) {
       path: "/",
     });
 
+    await createLoginNotification(normalizedEmail);
+
     return NextResponse.json({
       success: true,
       message: "Signed in successfully!",
@@ -83,5 +87,20 @@ export async function POST(request: Request) {
   } catch (err: unknown) {
     const msg = err instanceof Error ? err.message : "Authentication failed";
     return NextResponse.json({ error: msg }, { status: 500 });
+  }
+}
+
+async function createLoginNotification(email: string) {
+  try {
+    const { addNotification } = await import("@/lib/notificationsStore");
+    addNotification({
+      type: "radar",
+      title: "New Sign-In Detected 🔒",
+      message: `You successfully signed in to your account.`,
+      link: "/home",
+      targetUserEmail: email,
+    });
+  } catch (e) {
+    console.error("Login notification failed:", e);
   }
 }
