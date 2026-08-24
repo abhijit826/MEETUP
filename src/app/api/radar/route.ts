@@ -102,6 +102,7 @@ export async function POST(request: Request) {
               title: "👥 Someone Joined Activity!",
               message: `A student joined '${res.activity.title}' (${res.activity.participantCount} interested)`,
               link: "/radar",
+              targetUserEmail: res.activity.hostId,
             });
           } catch { /* ignore */ }
         }

@@ -6,6 +6,7 @@ import {
   sendSharedMessage,
   revealSharedIdentity,
   toggleSharedBlockUser,
+  getSharedConversationById,
 } from "@/lib/messagesStore";
 
 // GET /api/messages — Retrieves conversations for a user or messages for a conversation
@@ -14,8 +15,35 @@ export async function GET(request: Request) {
     const { searchParams } = new URL(request.url);
     const email = searchParams.get("email");
     const convId = searchParams.get("convId");
+    const userId = searchParams.get("userId");
 
     if (convId) {
+      if (!userId) {
+        return NextResponse.json(
+          { error: "Access Denied: authentication userId required" },
+          { status: 401 }
+        );
+      }
+
+      const conv = await getSharedConversationById(convId);
+      if (!conv) {
+        return NextResponse.json(
+          { error: "Conversation not found" },
+          { status: 404 }
+        );
+      }
+
+      const normalizedUserId = userId.trim().toLowerCase();
+      const p1 = conv.participant1Id.replace("user-", "").trim().toLowerCase();
+      const p2 = conv.participant2Id.replace("user-", "").trim().toLowerCase();
+
+      if (normalizedUserId !== p1 && normalizedUserId !== p2) {
+        return NextResponse.json(
+          { error: "Access Denied: You are not authorized to view these messages" },
+          { status: 403 }
+        );
+      }
+
       const messages = await getSharedMessagesForConv(convId);
       return NextResponse.json({ success: true, messages });
     }
@@ -66,14 +94,23 @@ export async function POST(request: Request) {
 
       // Trigger notification
       try {
-        const { addNotification } = await import("@/lib/notificationsStore");
-        addNotification({
-          type: "message",
-          title: "💬 New Direct Message",
-          message: `${senderName}: ${content.length > 40 ? content.substring(0, 40) + "..." : content}`,
-          link: `/messages?convId=${convId}`,
-          actorName: senderName,
-        });
+        const conv = await getSharedConversationById(convId);
+        if (conv) {
+          const cleanSenderId = (senderId || "").trim().toLowerCase();
+          const p1 = conv.participant1Id.replace("user-", "").trim().toLowerCase();
+          const p2 = conv.participant2Id.replace("user-", "").trim().toLowerCase();
+          const recipientEmail = cleanSenderId.includes(p1) ? p2 : p1;
+
+          const { addNotification } = await import("@/lib/notificationsStore");
+          addNotification({
+            type: "message",
+            title: "💬 New Direct Message",
+            message: `${senderName}: ${content.length > 40 ? content.substring(0, 40) + "..." : content}`,
+            link: `/messages?convId=${convId}`,
+            actorName: senderName,
+            targetUserEmail: recipientEmail,
+          });
+        }
       } catch { /* ignore */ }
 
       const messages = await getSharedMessagesForConv(convId);

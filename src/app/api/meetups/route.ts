@@ -83,6 +83,7 @@ export async function POST(request: Request) {
             title: "👥 Joined Meetup!",
             message: `${userName || "A student"} joined '${res.meetup.title}'`,
             link: "/meetups",
+            targetUserEmail: res.meetup.hostId,
           });
         } catch { /* ignore */ }
       }

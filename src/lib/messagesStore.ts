@@ -162,3 +162,8 @@ export async function toggleSharedBlockUser(convId: string): Promise<Conversatio
   await saveDiskMessagesData(store);
   return store.conversations;
 }
+
+export async function getSharedConversationById(convId: string): Promise<Conversation | null> {
+  const store = await getDiskMessagesData();
+  return store.conversations.find((c) => c.id === convId) || null;
+}

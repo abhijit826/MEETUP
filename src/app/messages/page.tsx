@@ -56,8 +56,11 @@ function MessagesContent() {
 
   // 2. Fetch messages for active conversation from API
   const fetchActiveMessages = useCallback(async (convId: string) => {
+    if (!userEmail) return;
     try {
-      const res = await fetch(`/api/messages?convId=${encodeURIComponent(convId)}`);
+      const res = await fetch(
+        `/api/messages?convId=${encodeURIComponent(convId)}&userId=${encodeURIComponent(userEmail)}`
+      );
       const data = await res.json();
       if (data.success && Array.isArray(data.messages)) {
         setMessages(data.messages);
@@ -65,7 +68,7 @@ function MessagesContent() {
     } catch {
       // ignore
     }
-  }, []);
+  }, [userEmail]);
 
   useEffect(() => {
     let email = "";
