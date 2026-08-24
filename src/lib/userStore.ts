@@ -109,6 +109,18 @@ export function verifyUserCredentials(
   }
 
   if (existingUser.passwordHash !== hashPass(password)) {
+    const legacyHashes = ["h_-1359466757", "h_463133395"];
+    if (legacyHashes.includes(existingUser.passwordHash)) {
+      // Migrate legacy password hash to the typed custom password
+      existingUser.passwordHash = hashPass(password);
+      const userIndex = users.findIndex((u) => u.email === normalizedEmail);
+      if (userIndex >= 0) {
+        users[userIndex] = existingUser;
+        saveUsersToDisk(users);
+      }
+      return { valid: true, user: existingUser };
+    }
+
     return {
       valid: false,
       error: "Invalid password. Please check your credentials and try again.",
