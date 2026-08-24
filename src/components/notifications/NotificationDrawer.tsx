@@ -1,10 +1,91 @@
 "use client";
 
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Bell, X, CheckCheck, MapPin, MessageSquare, Heart, MessageCircle, Sparkles } from "lucide-react";
+import { Bell, X, CheckCheck, MapPin, MessageSquare, Heart, MessageCircle, Sparkles, Trash2 } from "lucide-react";
 import { SystemNotification, NotificationType } from "@/types/notifications";
+
+function formatNotifTime(iso: string): string {
+  try {
+    const d = new Date(iso);
+    if (isNaN(d.getTime())) return "";
+    const now = new Date();
+    const diffMs = now.getTime() - d.getTime();
+    const diffMin = Math.floor(diffMs / 60000);
+    if (diffMin < 1) return "Just now";
+    if (diffMin < 60) return `${diffMin}m ago`;
+    const diffHr = Math.floor(diffMin / 60);
+    if (diffHr < 24) return `${diffHr}h ago`;
+    return d.toLocaleDateString([], { month: "short", day: "numeric" });
+  } catch {
+    return "";
+  }
+}
+
+interface SwipeItemProps {
+  children: React.ReactNode;
+  onDismiss: () => void;
+}
+
+function SwipeItem({ children, onDismiss }: SwipeItemProps) {
+  const [offsetX, setOffsetX] = useState(0);
+  const [isDragging, setIsDragging] = useState(false);
+  const [dismissed, setDismissed] = useState(false);
+  const startXRef = useRef(0);
+  const itemRef = useRef<HTMLDivElement>(null);
+  const DISMISS_THRESHOLD = 100;
+
+  const handlePointerDown = (e: React.PointerEvent) => {
+    startXRef.current = e.clientX;
+    setIsDragging(true);
+    if (itemRef.current) itemRef.current.setPointerCapture(e.pointerId);
+  };
+
+  const handlePointerMove = (e: React.PointerEvent) => {
+    if (!isDragging) return;
+    const delta = e.clientX - startXRef.current;
+    // Only allow swiping left (negative) or right (positive) – both directions work
+    setOffsetX(delta);
+  };
+
+  const handlePointerUp = () => {
+    setIsDragging(false);
+    if (Math.abs(offsetX) >= DISMISS_THRESHOLD) {
+      // Animate out then dismiss
+      setDismissed(true);
+      setTimeout(onDismiss, 300);
+    } else {
+      // Snap back
+      setOffsetX(0);
+    }
+  };
+
+  if (dismissed) return null;
+
+  return (
+    <div
+      ref={itemRef}
+      style={{
+        transform: dismissed
+          ? `translateX(${offsetX > 0 ? "100%" : "-100%"})`
+          : `translateX(${offsetX}px)`,
+        opacity: dismissed ? 0 : Math.max(0, 1 - Math.abs(offsetX) / 200),
+        transition: isDragging ? "none" : "transform 0.28s ease, opacity 0.28s ease",
+        touchAction: "pan-y",
+        userSelect: "none",
+        cursor: "grab",
+        position: "relative",
+      }}
+      onPointerDown={handlePointerDown}
+      onPointerMove={handlePointerMove}
+      onPointerUp={handlePointerUp}
+      onPointerCancel={handlePointerUp}
+    >
+      {children}
+    </div>
+  );
+}
 
 export default function NotificationDrawer({ userEmail }: { userEmail?: string }) {
   const router = useRouter();
@@ -67,6 +148,26 @@ export default function NotificationDrawer({ userEmail }: { userEmail?: string }
     }
   };
 
+  const handleDismiss = async (id: string) => {
+    // Optimistically remove from UI immediately
+    setNotifications((prev) => {
+      const notif = prev.find((n) => n.id === id);
+      if (notif && !notif.isRead) {
+        setUnreadCount((c) => Math.max(0, c - 1));
+      }
+      return prev.filter((n) => n.id !== id);
+    });
+    try {
+      await fetch("/api/notifications", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "dismiss", id }),
+      });
+    } catch {
+      /* ignore – already removed from UI */
+    }
+  };
+
   const filteredNotifs =
     selectedFilter === "all"
       ? notifications
@@ -105,7 +206,12 @@ export default function NotificationDrawer({ userEmail }: { userEmail?: string }
 
       {/* Notifications Drawer Modal */}
       {isOpen && (
-        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-start justify-center pt-12 px-4 animate-fade-in">
+        <div
+          className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-start justify-center pt-12 px-4 animate-fade-in"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setIsOpen(false);
+          }}
+        >
           <div className="w-full max-w-md bg-white rounded-3xl p-5 space-y-4 shadow-2xl max-h-[82vh] flex flex-col border border-purple-100">
             {/* Drawer Header */}
             <div className="flex items-center justify-between border-b border-gray-100 pb-3">
@@ -116,7 +222,7 @@ export default function NotificationDrawer({ userEmail }: { userEmail?: string }
                 <div>
                   <h3 className="font-black text-sm text-gray-900">Notifications Hub</h3>
                   <p className="text-[10px] text-gray-400 font-semibold">
-                    Real-time updates across Campus Radar, DMs &amp; Guru Ji
+                    Swipe left/right to dismiss · Tap to open
                   </p>
                 </div>
               </div>
@@ -142,46 +248,23 @@ export default function NotificationDrawer({ userEmail }: { userEmail?: string }
 
             {/* Filter Tabs */}
             <div className="flex items-center gap-1.5 overflow-x-auto pb-1 no-scrollbar shrink-0">
-              <button
-                onClick={() => setSelectedFilter("all")}
-                className={`py-1 px-3 rounded-full text-[11px] font-bold border transition-all ${
-                  selectedFilter === "all"
-                    ? "bg-purple-600 text-white border-transparent shadow-sm"
-                    : "bg-gray-50 text-gray-600 border-gray-200"
-                }`}
-              >
-                All ({notifications.length})
-              </button>
-              <button
-                onClick={() => setSelectedFilter("radar")}
-                className={`py-1 px-3 rounded-full text-[11px] font-bold border transition-all ${
-                  selectedFilter === "radar"
-                    ? "bg-purple-600 text-white border-transparent shadow-sm"
-                    : "bg-gray-50 text-gray-600 border-gray-200"
-                }`}
-              >
-                📡 Radar
-              </button>
-              <button
-                onClick={() => setSelectedFilter("message")}
-                className={`py-1 px-3 rounded-full text-[11px] font-bold border transition-all ${
-                  selectedFilter === "message"
-                    ? "bg-purple-600 text-white border-transparent shadow-sm"
-                    : "bg-gray-50 text-gray-600 border-gray-200"
-                }`}
-              >
-                💬 DMs
-              </button>
-              <button
-                onClick={() => setSelectedFilter("loveguru")}
-                className={`py-1 px-3 rounded-full text-[11px] font-bold border transition-all ${
-                  selectedFilter === "loveguru"
-                    ? "bg-purple-600 text-white border-transparent shadow-sm"
-                    : "bg-gray-50 text-gray-600 border-gray-200"
-                }`}
-              >
-                ❤️ Guru Ji
-              </button>
+              {(["all", "radar", "message", "loveguru", "confession"] as const).map((f) => (
+                <button
+                  key={f}
+                  onClick={() => setSelectedFilter(f as NotificationType | "all")}
+                  className={`py-1 px-3 rounded-full text-[11px] font-bold border transition-all whitespace-nowrap ${
+                    selectedFilter === f
+                      ? "bg-purple-600 text-white border-transparent shadow-sm"
+                      : "bg-gray-50 text-gray-600 border-gray-200"
+                  }`}
+                >
+                  {f === "all" && `All (${notifications.length})`}
+                  {f === "radar" && "📡 Radar"}
+                  {f === "message" && "💬 DMs"}
+                  {f === "loveguru" && "❤️ Guru Ji"}
+                  {f === "confession" && "🤫 Confess"}
+                </button>
+              ))}
             </div>
 
             {/* Notification List */}
@@ -194,42 +277,65 @@ export default function NotificationDrawer({ userEmail }: { userEmail?: string }
                 </div>
               ) : (
                 filteredNotifs.map((n) => (
-                  <div
-                    key={n.id}
-                    onClick={() => handleMarkRead(n.id, n.link)}
-                    className={`p-3 rounded-2xl border transition-all cursor-pointer flex items-start gap-3 ${
-                      n.isRead
-                        ? "bg-gray-50/60 border-gray-100 text-gray-600"
-                        : "bg-purple-50/70 border-purple-200/80 text-gray-900 font-medium shadow-sm"
-                    }`}
-                  >
-                    <div className="w-8 h-8 rounded-full bg-white border border-gray-100 flex items-center justify-center shrink-0 shadow-xs">
-                      {getIcon(n.type)}
-                    </div>
+                  <SwipeItem key={n.id} onDismiss={() => handleDismiss(n.id)}>
+                    <div className="relative group">
+                      <div
+                        onClick={() => handleMarkRead(n.id, n.link)}
+                        className={`p-3 rounded-2xl border transition-all cursor-pointer flex items-start gap-3 ${
+                          n.isRead
+                            ? "bg-white border-gray-100 text-gray-500"
+                            : "bg-purple-50/70 border-purple-200/80 text-gray-900 shadow-sm"
+                        }`}
+                      >
+                        {/* Left icon */}
+                        <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 shadow-xs ${n.isRead ? "bg-gray-50 border border-gray-100" : "bg-white border border-gray-100"}`}>
+                          {getIcon(n.type)}
+                        </div>
 
-                    <div className="flex-1 space-y-0.5">
-                      <div className="flex items-center justify-between">
-                        <h4 className="font-extrabold text-xs text-gray-900 leading-tight">
-                          {n.title}
-                        </h4>
-                        {!n.isRead && (
-                          <span className="w-2 h-2 rounded-full bg-purple-600 shrink-0"></span>
-                        )}
+                        {/* Content */}
+                        <div className="flex-1 space-y-0.5 min-w-0">
+                          <div className="flex items-center justify-between gap-2">
+                            <h4 className={`font-extrabold text-xs leading-tight truncate ${n.isRead ? "text-gray-600" : "text-gray-900"}`}>
+                              {n.title}
+                            </h4>
+                            <div className="flex items-center gap-1.5 shrink-0">
+                              {!n.isRead && (
+                                <span className="w-2 h-2 rounded-full bg-purple-600 shrink-0" />
+                              )}
+                            </div>
+                          </div>
+                          <p className={`text-[11px] leading-relaxed line-clamp-2 ${n.isRead ? "text-gray-400" : "text-gray-600"}`}>
+                            {n.message}
+                          </p>
+                          <span className="text-[9px] font-semibold text-gray-400 block pt-0.5">
+                            {formatNotifTime(n.createdAt)}
+                          </span>
+                        </div>
+
+                        {/* Dismiss button (visible on hover, desktop) */}
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleDismiss(n.id);
+                          }}
+                          className="opacity-0 group-hover:opacity-100 transition-opacity w-6 h-6 rounded-full flex items-center justify-center text-gray-400 hover:text-red-500 hover:bg-red-50 shrink-0"
+                          title="Dismiss"
+                        >
+                          <Trash2 size={12} />
+                        </button>
                       </div>
-                      <p className="text-[11px] text-gray-600 leading-relaxed">
-                        {n.message}
-                      </p>
-                      <span className="text-[9px] font-semibold text-gray-400 block pt-0.5">
-                        {new Date(n.createdAt).toLocaleTimeString([], {
-                          hour: "2-digit",
-                          minute: "2-digit",
-                        })}
-                      </span>
                     </div>
-                  </div>
+                  </SwipeItem>
                 ))
               )}
             </div>
+
+            {/* Footer hint */}
+            {filteredNotifs.length > 0 && (
+              <p className="text-center text-[10px] text-gray-400 font-medium pt-1 border-t border-gray-50">
+                ← Swipe to remove · Tap to open →
+              </p>
+            )}
           </div>
         </div>
       )}

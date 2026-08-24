@@ -21,6 +21,29 @@ import { Conversation, DirectMessage } from "@/types/confessions";
 import { ReportModal } from "@/components/confessions/ReportModal";
 import { Button } from "@/components/ui/Button";
 
+function formatMessageTime(timestampString: string): string {
+  if (!timestampString) return "";
+  if (timestampString === "Just now") return "Just now";
+  
+  try {
+    const d = new Date(timestampString);
+    if (isNaN(d.getTime())) return timestampString;
+    
+    const now = new Date();
+    const isToday = d.toDateString() === now.toDateString();
+    const timeStr = d.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" });
+    
+    if (isToday) {
+      return timeStr;
+    } else {
+      const dateStr = d.toLocaleDateString([], { month: "short", day: "numeric" });
+      return `${dateStr}, ${timeStr}`;
+    }
+  } catch {
+    return timestampString;
+  }
+}
+
 function MessagesContent() {
   const searchParams = useSearchParams();
   const initialConvId = searchParams.get("convId");
@@ -147,7 +170,7 @@ function MessagesContent() {
       senderName: userFullName,
       isAnonymousSender: false,
       content: contentToSend,
-      timestamp: "Just now",
+      timestamp: new Date().toISOString(),
       isRead: true,
     };
     setMessages((prev) => [...prev, optimisticMsg]);
@@ -350,7 +373,7 @@ function MessagesContent() {
                             </span>
                           </div>
                           <span className="text-[10px] text-gray-400 shrink-0">
-                            {conv.lastMessageTimestamp}
+                            {formatMessageTime(conv.lastMessageTimestamp)}
                           </span>
                         </div>
 
@@ -510,7 +533,7 @@ function MessagesContent() {
                       {msg.content}
                     </div>
                     <span className="text-[10px] text-gray-400 mt-1 px-1">
-                      {msg.timestamp}
+                      {formatMessageTime(msg.timestamp)}
                     </span>
                   </div>
                 );

@@ -82,7 +82,7 @@ export async function startSharedConversation(
     participant2Avatar: authorIsAnonymous ? undefined : (authorName || "S").charAt(0).toUpperCase(),
     isIdentityRevealed: false,
     lastMessage: `Started a private chat regarding confession...`,
-    lastMessageTimestamp: "Just now",
+    lastMessageTimestamp: new Date().toISOString(),
     unreadCount: 1,
     isBlocked: false,
   };
@@ -112,7 +112,7 @@ export async function sendSharedMessage(
     senderName: isAnonymousSender ? "Anonymous" : senderName,
     isAnonymousSender,
     content: content.trim(),
-    timestamp: "Just now",
+    timestamp: new Date().toISOString(),
     isRead: true,
   };
 
@@ -125,7 +125,7 @@ export async function sendSharedMessage(
     return {
       ...c,
       lastMessage: content.trim(),
-      lastMessageTimestamp: "Just now",
+      lastMessageTimestamp: new Date().toISOString(),
       unreadCount: (c.unreadCount || 0) + 1,
     };
   });

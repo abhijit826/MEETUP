@@ -134,3 +134,13 @@ export function markAllAsRead(userEmail?: string): boolean {
   }
   return updated;
 }
+
+export function dismissNotification(id: string): boolean {
+  const notifications = readNotifications();
+  const filtered = notifications.filter((n) => n.id !== id);
+  if (filtered.length < notifications.length) {
+    writeNotifications(filtered);
+    return true;
+  }
+  return false;
+}

@@ -4,6 +4,7 @@ import {
   addNotification,
   markAsRead,
   markAllAsRead,
+  dismissNotification,
 } from "@/lib/notificationsStore";
 
 import { getSessionEmail } from "@/lib/security";
@@ -60,6 +61,11 @@ export async function POST(request: Request) {
 
     if (action === "markAllRead") {
       markAllAsRead(sessionEmail);
+      return NextResponse.json({ success: true });
+    }
+
+    if (action === "dismiss" && id) {
+      dismissNotification(id);
       return NextResponse.json({ success: true });
     }
 
