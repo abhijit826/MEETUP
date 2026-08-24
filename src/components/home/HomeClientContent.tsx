@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Link from "next/link";
-import { motion, useScroll, useTransform, Variants } from "motion/react";
+import { motion, AnimatePresence, useScroll, useTransform, Variants } from "motion/react";
 import {
   Compass,
   Users,
@@ -25,9 +25,29 @@ interface HomeClientContentProps {
 export default function HomeClientContent({ fullName, userEmail }: HomeClientContentProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const { scrollY } = useScroll();
-  const [points, setPoints] = React.useState(50);
+  const [points, setPoints] = useState(50);
+  const [showVapourSplash, setShowVapourSplash] = useState(false);
 
-  React.useEffect(() => {
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get("authenticated") === "1") {
+        setShowVapourSplash(true);
+        // Clean URL parameter
+        const url = new URL(window.location.href);
+        url.searchParams.delete("authenticated");
+        window.history.replaceState(null, "", url.pathname + url.search);
+
+        // Turn off splash after 2.2s
+        const timer = setTimeout(() => {
+          setShowVapourSplash(false);
+        }, 2200);
+        return () => clearTimeout(timer);
+      }
+    }
+  }, []);
+
+  useEffect(() => {
     if (!userEmail) return;
     const loadPoints = async () => {
       try {
@@ -74,9 +94,19 @@ export default function HomeClientContent({ fullName, userEmail }: HomeClientCon
   };
 
   return (
-    <div ref={containerRef} className="space-y-8">
-      {/* 21st.dev Horizon Hero Section with Dynamic Parallax & 3D Student Characters */}
-      <HorizonHeroSection userFullName={fullName} />
+    <>
+      <AnimatePresence>
+        {showVapourSplash && (
+          <VapourTextEffect
+            text="WELCOME BACK!"
+            subtext="Entering MEETUP Campus Social Hub..."
+          />
+        )}
+      </AnimatePresence>
+
+      <div ref={containerRef} className="space-y-8">
+        {/* 21st.dev Horizon Hero Section with Dynamic Parallax & 3D Student Characters */}
+        <HorizonHeroSection userFullName={fullName} />
 
       {/* Main Grid Section */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -303,5 +333,6 @@ export default function HomeClientContent({ fullName, userEmail }: HomeClientCon
         </motion.div>
       </div>
     </div>
+    </>
   );
 }
