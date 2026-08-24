@@ -5,7 +5,7 @@ import { sendOtpViaGmail } from "@/lib/nodemailerClient";
 export async function POST(request: Request) {
   try {
     const body = await request.json().catch(() => ({}));
-    const { email } = body;
+    const { email, password, fullName } = body;
 
     if (!email || typeof email !== "string" || !email.includes("@")) {
       return NextResponse.json(
@@ -14,9 +14,9 @@ export async function POST(request: Request) {
       );
     }
 
-        const normalizedEmail = email.trim().toLowerCase();
+    const normalizedEmail = email.trim().toLowerCase();
     const code = Math.floor(100000 + Math.random() * 900000).toString();
-    await saveOtp(normalizedEmail, code);
+    await saveOtp(normalizedEmail, code, password, fullName);
 
     let emailSent = false;
     let deliveryNotice = "";

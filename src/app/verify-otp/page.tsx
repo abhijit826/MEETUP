@@ -114,10 +114,19 @@ function VerifyOtpForm() {
     setSuccessMsg(null);
 
     try {
+      const tempPass =
+        typeof window !== "undefined"
+          ? sessionStorage.getItem("sm_temp_pass") || "StudentPass123!"
+          : "StudentPass123!";
+
       const res = await fetch("/api/auth/send-otp", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: emailParam }),
+        body: JSON.stringify({
+          email: emailParam,
+          password: tempPass,
+          fullName: nameParam,
+        }),
       });
 
       const data = await res.json();

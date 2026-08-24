@@ -4,6 +4,8 @@ export interface OtpRecord {
   email: string;
   code: string;
   expiresAt: number; // timestamp in ms
+  password?: string;
+  fullName?: string;
 }
 
 let memoryOtps: Record<string, OtpRecord> = {};
@@ -29,12 +31,23 @@ export function generateOtp(): string {
 /**
  * Store an OTP for an email with a 10-minute expiration window.
  */
-export async function saveOtp(email: string, code: string): Promise<void> {
+export async function saveOtp(
+  email: string,
+  code: string,
+  password?: string,
+  fullName?: string
+): Promise<void> {
   const normalizedEmail = email.trim().toLowerCase();
   const expiresAt = Date.now() + 10 * 60 * 1000; // 10 minutes
   
   const otps = await getLiveOtps();
-  otps[normalizedEmail] = { email: normalizedEmail, code, expiresAt };
+  otps[normalizedEmail] = {
+    email: normalizedEmail,
+    code,
+    expiresAt,
+    password,
+    fullName,
+  };
   await saveLiveOtps(otps);
 }
 
@@ -47,6 +60,8 @@ export async function verifyStoredOtp(
 ): Promise<{
   valid: boolean;
   message: string;
+  password?: string;
+  fullName?: string;
 }> {
   const normalizedEmail = email.trim().toLowerCase();
   const otps = await getLiveOtps();
@@ -75,8 +90,15 @@ export async function verifyStoredOtp(
     };
   }
 
+  const { password, fullName } = record;
+
   // Code is valid! Clean up
   delete otps[normalizedEmail];
   await saveLiveOtps(otps);
-  return { valid: true, message: "OTP verified successfully!" };
+  return {
+    valid: true,
+    message: "OTP verified successfully!",
+    password,
+    fullName,
+  };
 }

@@ -17,17 +17,18 @@ export async function POST(request: Request) {
     }
 
     // 1. Verify 6-digit code against OTP store
-        const result = await verifyStoredOtp(email, code);
+    const result = await verifyStoredOtp(email, code);
 
     if (!result.valid) {
       return NextResponse.json({ error: result.message }, { status: 400 });
     }
 
     const normalizedEmail = email.trim().toLowerCase();
-    const userPass = password || "StudentPass123!";
+    const userPass = result.password || password || "StudentPass123!";
+    const finalFullName = result.fullName || fullName || "Student";
 
     // 2. Register user account in user store for credential validation
-    registerUser(normalizedEmail, userPass, fullName || "Student");
+    registerUser(normalizedEmail, userPass, finalFullName);
 
     const supabase = await createClient();
 
