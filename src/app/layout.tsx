@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, Lora } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
+import AuthSync from "@/components/AuthSync";
 import "./globals.css";
 
 const inter = Inter({
@@ -45,6 +46,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} ${lora.variable}`}>
       <body className="antialiased">
+        <AuthSync />
         {children}
         <Analytics />
       </body>

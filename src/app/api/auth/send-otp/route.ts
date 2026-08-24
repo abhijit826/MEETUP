@@ -70,7 +70,7 @@ export async function POST(request: Request) {
     return NextResponse.json({
       success: true,
       emailSent,
-      devOtp: code,
+      devOtp: emailSent ? undefined : code,
       message: emailSent
         ? "6-digit OTP code sent to your email inbox!"
         : `OTP Code: ${code}`,
