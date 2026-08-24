@@ -10,7 +10,7 @@ import { moderateContent } from "@/lib/aiModerationEngine";
 
 // GET /api/confessions — Returns shared feed across all connected students/devices
 export async function GET() {
-  const confessions = getSharedConfessions();
+  const confessions = await getSharedConfessions();
   return NextResponse.json({ success: true, confessions });
 }
 
@@ -25,7 +25,7 @@ export async function POST(request: Request) {
       if (!confessionId || !reaction) {
         return NextResponse.json({ error: "Missing reaction params" }, { status: 400 });
       }
-      const updated = toggleSharedReaction(confessionId, reaction, userEmail);
+      const updated = await toggleSharedReaction(confessionId, reaction, userEmail);
       return NextResponse.json({ success: true, confessions: updated });
     }
 
@@ -34,7 +34,7 @@ export async function POST(request: Request) {
       if (!confessionId || !content) {
         return NextResponse.json({ error: "Comment content required" }, { status: 400 });
       }
-      const updated = addSharedComment(confessionId, content, userFullName, isAnonymous);
+      const updated = await addSharedComment(confessionId, content, userFullName, isAnonymous);
       return NextResponse.json({ success: true, confessions: updated });
     }
 
@@ -58,7 +58,7 @@ export async function POST(request: Request) {
     }
 
     // 2. Add to global shared feed
-    const newConfession = addSharedConfession(
+    const newConfession = await addSharedConfession(
       content,
       category || "General",
       !!isAnonymous,
@@ -67,7 +67,7 @@ export async function POST(request: Request) {
       userEmail
     );
 
-    const confessions = getSharedConfessions();
+    const confessions = await getSharedConfessions();
     return NextResponse.json({ success: true, confession: newConfession, confessions });
   } catch (err: unknown) {
     const msg = err instanceof Error ? err.message : "Failed to process confession";
@@ -85,7 +85,7 @@ export async function DELETE(request: Request) {
       return NextResponse.json({ error: "Confession ID is required" }, { status: 400 });
     }
 
-    const updated = deleteSharedConfession(id);
+    const updated = await deleteSharedConfession(id);
     return NextResponse.json({ success: true, confessions: updated });
   } catch (err: unknown) {
     const msg = err instanceof Error ? err.message : "Failed to delete confession";

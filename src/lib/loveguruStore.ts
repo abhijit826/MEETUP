@@ -102,7 +102,10 @@ function ensureFile() {
   }
 }
 
+import { fetchDbData, saveDbData } from "@/lib/supabaseStore";
+
 let memoryLoveGuru: LoveGuruStore | null = null;
+let isFetchingFromDb = false;
 
 function read(): LoveGuruStore {
   if (memoryLoveGuru !== null) {
@@ -111,12 +114,28 @@ function read(): LoveGuruStore {
   ensureFile();
   try {
     const raw = fs.readFileSync(DATA_FILE, "utf-8");
-    const parsed = JSON.parse(raw) as LoveGuruStore;
-    memoryLoveGuru = parsed;
-    return parsed;
+    memoryLoveGuru = JSON.parse(raw) as LoveGuruStore;
   } catch {
-    return { dilemmas: [], swipeScenarios: [], battles: [], leaderboard: [], dailyChallenge: null };
+    memoryLoveGuru = { dilemmas: [], swipeScenarios: [], battles: [], leaderboard: [], dailyChallenge: null };
   }
+
+  if (!isFetchingFromDb) {
+    isFetchingFromDb = true;
+    fetchDbData<LoveGuruStore>("loveguru", memoryLoveGuru)
+      .then((data) => {
+        if (data) {
+          memoryLoveGuru = data;
+        }
+      })
+      .catch((err) => {
+        console.error("Failed to load love guru data from Supabase:", err);
+      })
+      .finally(() => {
+        isFetchingFromDb = false;
+      });
+  }
+
+  return memoryLoveGuru;
 }
 
 function write(data: LoveGuruStore) {
@@ -124,9 +143,12 @@ function write(data: LoveGuruStore) {
   ensureFile();
   try {
     fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2), "utf-8");
-  } catch (err) {
-    console.warn("Save loveguru.json failed, falling back to memory storage:", err);
+  } catch {
+    // EROFS safety
   }
+  saveDbData<LoveGuruStore>("loveguru", data).catch((err) => {
+    console.error("Failed to save love guru data to Supabase:", err);
+  });
 }
 
 // ====== GEMINI API HELPER ======

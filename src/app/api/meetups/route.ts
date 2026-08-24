@@ -17,7 +17,7 @@ export async function GET(request: Request) {
     const category = searchParams.get("category") || undefined;
     const query = searchParams.get("query") || undefined;
 
-    const meetups = getMeetups(category, query);
+    const meetups = await getMeetups(category, query);
     return NextResponse.json({ success: true, meetups });
   } catch (err: unknown) {
     const msg = err instanceof Error ? err.message : "Failed to load meetups";
@@ -37,7 +37,7 @@ export async function POST(request: Request) {
         return NextResponse.json({ error: "Required fields missing" }, { status: 400 });
       }
 
-      const meetup = createMeetup({
+      const meetup = await createMeetup({
         title,
         description,
         category: category || "Chai & Snacks",
@@ -61,7 +61,7 @@ export async function POST(request: Request) {
         });
       } catch { /* ignore */ }
 
-      return NextResponse.json({ success: true, meetup, meetups: getMeetups() });
+      return NextResponse.json({ success: true, meetup, meetups: await getMeetups() });
     }
 
     // 2. Join / Leave Meetup
@@ -71,7 +71,7 @@ export async function POST(request: Request) {
         return NextResponse.json({ error: "meetupId & userId required" }, { status: 400 });
       }
 
-      const res = toggleJoinMeetup(meetupId, userId, userName || "Student");
+      const res = await toggleJoinMeetup(meetupId, userId, userName || "Student");
       if (!res) return NextResponse.json({ error: "Meetup not found" }, { status: 404 });
       if (res.error) return NextResponse.json({ error: res.error }, { status: 400 });
 
@@ -96,7 +96,7 @@ export async function POST(request: Request) {
         return NextResponse.json({ error: "meetupId & text required" }, { status: 400 });
       }
 
-      const res = sendMeetupChatMessage(meetupId, senderId || "anon", senderName || "Student", text);
+      const res = await sendMeetupChatMessage(meetupId, senderId || "anon", senderName || "Student", text);
       if (!res) return NextResponse.json({ error: "Meetup not found" }, { status: 404 });
 
       return NextResponse.json({ success: true, meetup: res.meetup, msg: res.msg });
@@ -109,7 +109,7 @@ export async function POST(request: Request) {
         return NextResponse.json({ error: "meetupId & userId required" }, { status: 400 });
       }
 
-      const meetup = addMeetupCheckIn(meetupId, userId, userName || "Student", userLat, userLng);
+      const meetup = await addMeetupCheckIn(meetupId, userId, userName || "Student", userLat, userLng);
       if (!meetup) return NextResponse.json({ error: "Meetup not found" }, { status: 404 });
 
       return NextResponse.json({ success: true, meetup, checkedIn: true });
@@ -122,7 +122,7 @@ export async function POST(request: Request) {
         return NextResponse.json({ error: "Missing expense details" }, { status: 400 });
       }
 
-      const res = addMeetupExpense(meetupId, title, Number(totalAmount), paidBy || "anon", paidByName || "Student");
+      const res = await addMeetupExpense(meetupId, title, Number(totalAmount), paidBy || "anon", paidByName || "Student");
       if (!res) return NextResponse.json({ error: "Meetup not found" }, { status: 404 });
 
       return NextResponse.json({ success: true, meetup: res.meetup, expense: res.expense });
@@ -135,7 +135,7 @@ export async function POST(request: Request) {
         return NextResponse.json({ error: "Missing poll parameters" }, { status: 400 });
       }
 
-      const res = addMeetupPoll(meetupId, question, options);
+      const res = await addMeetupPoll(meetupId, question, options);
       if (!res) return NextResponse.json({ error: "Meetup not found" }, { status: 404 });
 
       return NextResponse.json({ success: true, meetup: res.meetup, poll: res.poll });
@@ -148,7 +148,7 @@ export async function POST(request: Request) {
         return NextResponse.json({ error: "Missing vote parameters" }, { status: 400 });
       }
 
-      const meetup = voteMeetupPoll(meetupId, pollId, optionId, userId);
+      const meetup = await voteMeetupPoll(meetupId, pollId, optionId, userId);
       if (!meetup) return NextResponse.json({ error: "Meetup not found" }, { status: 404 });
 
       return NextResponse.json({ success: true, meetup });

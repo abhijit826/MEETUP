@@ -1,23 +1,51 @@
 import fs from "fs";
 import path from "path";
 import { SystemNotification, NotificationType } from "@/types/notifications";
+import { fetchDbData, saveDbData } from "@/lib/supabaseStore";
 
 const DATA_FILE = path.join(process.cwd(), "src", "data", "notifications.json");
 
+let memoryNotifications: SystemNotification[] | null = null;
+let isFetchingFromDb = false;
+
 function readNotifications(): SystemNotification[] {
+  if (memoryNotifications !== null) {
+    return memoryNotifications;
+  }
+  
   try {
-    if (!fs.existsSync(DATA_FILE)) {
-      return [];
+    if (fs.existsSync(DATA_FILE)) {
+      const raw = fs.readFileSync(DATA_FILE, "utf-8");
+      memoryNotifications = JSON.parse(raw) as SystemNotification[];
+    } else {
+      memoryNotifications = [];
     }
-    const raw = fs.readFileSync(DATA_FILE, "utf-8");
-    return JSON.parse(raw);
   } catch (err) {
     console.error("Error reading notifications.json:", err);
-    return [];
+    memoryNotifications = [];
   }
+
+  if (!isFetchingFromDb) {
+    isFetchingFromDb = true;
+    fetchDbData<SystemNotification[]>("notifications", memoryNotifications)
+      .then((data) => {
+        if (data) {
+          memoryNotifications = data;
+        }
+      })
+      .catch((err) => {
+        console.error("Failed to load notifications from Supabase:", err);
+      })
+      .finally(() => {
+        isFetchingFromDb = false;
+      });
+  }
+
+  return memoryNotifications;
 }
 
 function writeNotifications(notifications: SystemNotification[]): void {
+  memoryNotifications = notifications;
   try {
     const dir = path.dirname(DATA_FILE);
     if (!fs.existsSync(dir)) {
@@ -25,8 +53,12 @@ function writeNotifications(notifications: SystemNotification[]): void {
     }
     fs.writeFileSync(DATA_FILE, JSON.stringify(notifications, null, 2), "utf-8");
   } catch (err) {
-    console.error("Error writing notifications.json:", err);
+    // EROFS safety
   }
+
+  saveDbData<SystemNotification[]>("notifications", notifications).catch((err) => {
+    console.error("Failed to save notifications to Supabase:", err);
+  });
 }
 
 export function getNotificationsForUser(userEmail?: string): SystemNotification[] {

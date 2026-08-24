@@ -1,52 +1,29 @@
-import fs from "fs";
-import path from "path";
 import { MeetupItem, MeetupCategory, MeetupChatMessage, MeetupExpense, MeetupPoll } from "@/types/meetups";
-
-const MEETUPS_FILE = path.join(process.cwd(), "src", "data", "meetups.json");
-
-function ensureFile() {
-  try {
-    const dir = path.dirname(MEETUPS_FILE);
-    if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
-    if (!fs.existsSync(MEETUPS_FILE)) {
-      fs.writeFileSync(MEETUPS_FILE, JSON.stringify([], null, 2), "utf-8");
-    }
-  } catch (err) {
-    console.error("Error creating meetups.json:", err);
-  }
-}
+import { fetchDbData, saveDbData } from "@/lib/supabaseStore";
+import { CampusActivity } from "@/types/radar";
 
 let memoryMeetups: MeetupItem[] | null = null;
 
-export function getDiskMeetups(): MeetupItem[] {
+export async function getDiskMeetups(): Promise<MeetupItem[]> {
   if (memoryMeetups !== null) {
+    // Return cache immediately, sync in background
+    fetchDbData<MeetupItem[]>("meetups", []).then(res => {
+      memoryMeetups = res;
+    }).catch(() => {});
     return memoryMeetups;
   }
-  ensureFile();
-  try {
-    const data = fs.readFileSync(MEETUPS_FILE, "utf-8");
-    if (!data.trim()) return [];
-    const parsed = JSON.parse(data) as MeetupItem[];
-    memoryMeetups = parsed;
-    return parsed;
-  } catch (err) {
-    console.error("Error reading meetups.json:", err);
-    return [];
-  }
-}
-
-export function saveDiskMeetups(meetups: MeetupItem[]): void {
+  const meetups = await fetchDbData<MeetupItem[]>("meetups", []);
   memoryMeetups = meetups;
-  ensureFile();
-  try {
-    fs.writeFileSync(MEETUPS_FILE, JSON.stringify(meetups, null, 2), "utf-8");
-  } catch (err) {
-    console.warn("Save meetups.json failed, falling back to memory storage:", err);
-  }
+  return meetups;
 }
 
-export function getMeetups(category?: string, query?: string): MeetupItem[] {
-  let list = getDiskMeetups();
+export async function saveDiskMeetups(meetups: MeetupItem[]): Promise<void> {
+  memoryMeetups = meetups;
+  await saveDbData<MeetupItem[]>("meetups", meetups);
+}
+
+export async function getMeetups(category?: string, query?: string): Promise<MeetupItem[]> {
+  let list = await getDiskMeetups();
 
   if (category && category !== "All") {
     list = list.filter((m) => m.category === category);
@@ -65,7 +42,7 @@ export function getMeetups(category?: string, query?: string): MeetupItem[] {
   return list.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 }
 
-export function createMeetup(params: {
+export async function createMeetup(params: {
   title: string;
   description: string;
   category: MeetupCategory;
@@ -76,8 +53,8 @@ export function createMeetup(params: {
   hostId: string;
   hostName: string;
   maxParticipants?: number;
-}): MeetupItem {
-  const meetups = getDiskMeetups();
+}): Promise<MeetupItem> {
+  const meetups = await getDiskMeetups();
 
   const newMeetup: MeetupItem = {
     id: `meetup-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
@@ -107,18 +84,17 @@ export function createMeetup(params: {
   };
 
   meetups.unshift(newMeetup);
-  saveDiskMeetups(meetups);
+  await saveDiskMeetups(meetups);
 
   // Sync to Radar Store so every Meetup shows on Campus Radar Map
   try {
-    const { getActivities, writeActivities } = require("./radarStore");
-    const activities = getActivities();
+    const activities = await fetchDbData<CampusActivity[]>("radar", []);
     if (!activities.some((a: any) => a.id === newMeetup.id)) {
       activities.unshift({
         id: newMeetup.id,
         title: newMeetup.title,
         description: newMeetup.description,
-        category: newMeetup.category,
+        category: newMeetup.category as any,
         locationName: newMeetup.locationName,
         approxDistance: "~150m away",
         latitude: newMeetup.latitude,
@@ -133,21 +109,17 @@ export function createMeetup(params: {
         createdAt: newMeetup.createdAt,
         tags: [],
       });
-      const fs = require("fs");
-      const path = require("path");
-      fs.writeFileSync(
-        path.join(process.cwd(), "src", "data", "radar.json"),
-        JSON.stringify(activities, null, 2),
-        "utf-8"
-      );
+      await saveDbData<CampusActivity[]>("radar", activities);
     }
-  } catch { /* ignore */ }
+  } catch (err) {
+    console.error("Failed to sync meetup to radar in Supabase:", err);
+  }
 
   return newMeetup;
 }
 
-export function toggleJoinMeetup(meetupId: string, userId: string, userName: string) {
-  const meetups = getDiskMeetups();
+export async function toggleJoinMeetup(meetupId: string, userId: string, userName: string) {
+  const meetups = await getDiskMeetups();
   const index = meetups.findIndex((m) => m.id === meetupId);
 
   if (index === -1) return null;
@@ -168,12 +140,12 @@ export function toggleJoinMeetup(meetupId: string, userId: string, userName: str
     }
   }
 
-  saveDiskMeetups(meetups);
+  await saveDiskMeetups(meetups);
   return { meetup, joined: !isJoined };
 }
 
-export function sendMeetupChatMessage(meetupId: string, senderId: string, senderName: string, text: string) {
-  const meetups = getDiskMeetups();
+export async function sendMeetupChatMessage(meetupId: string, senderId: string, senderName: string, text: string) {
+  const meetups = await getDiskMeetups();
   const index = meetups.findIndex((m) => m.id === meetupId);
   if (index === -1) return null;
 
@@ -187,12 +159,12 @@ export function sendMeetupChatMessage(meetupId: string, senderId: string, sender
   };
 
   meetup.chatMessages.push(msg);
-  saveDiskMeetups(meetups);
+  await saveDiskMeetups(meetups);
   return { meetup, msg };
 }
 
-export function addMeetupCheckIn(meetupId: string, userId: string, userName: string, userLat?: number, userLng?: number) {
-  const meetups = getDiskMeetups();
+export async function addMeetupCheckIn(meetupId: string, userId: string, userName: string, userLat?: number, userLng?: number) {
+  const meetups = await getDiskMeetups();
   const index = meetups.findIndex((m) => m.id === meetupId);
   if (index === -1) return null;
 
@@ -207,14 +179,14 @@ export function addMeetupCheckIn(meetupId: string, userId: string, userName: str
       lat: userLat,
       lng: userLng,
     });
-    saveDiskMeetups(meetups);
+    await saveDiskMeetups(meetups);
   }
 
   return meetup;
 }
 
-export function addMeetupExpense(meetupId: string, title: string, totalAmount: number, paidBy: string, paidByName: string) {
-  const meetups = getDiskMeetups();
+export async function addMeetupExpense(meetupId: string, title: string, totalAmount: number, paidBy: string, paidByName: string) {
+  const meetups = await getDiskMeetups();
   const index = meetups.findIndex((m) => m.id === meetupId);
   if (index === -1) return null;
 
@@ -233,12 +205,12 @@ export function addMeetupExpense(meetupId: string, title: string, totalAmount: n
   };
 
   meetup.expenses.push(expense);
-  saveDiskMeetups(meetups);
+  await saveDiskMeetups(meetups);
   return { meetup, expense };
 }
 
-export function addMeetupPoll(meetupId: string, question: string, options: string[]) {
-  const meetups = getDiskMeetups();
+export async function addMeetupPoll(meetupId: string, question: string, options: string[]) {
+  const meetups = await getDiskMeetups();
   const index = meetups.findIndex((m) => m.id === meetupId);
   if (index === -1) return null;
 
@@ -255,12 +227,12 @@ export function addMeetupPoll(meetupId: string, question: string, options: strin
   };
 
   meetup.polls.push(poll);
-  saveDiskMeetups(meetups);
+  await saveDiskMeetups(meetups);
   return { meetup, poll };
 }
 
-export function voteMeetupPoll(meetupId: string, pollId: string, optionId: string, userId: string) {
-  const meetups = getDiskMeetups();
+export async function voteMeetupPoll(meetupId: string, pollId: string, optionId: string, userId: string) {
+  const meetups = await getDiskMeetups();
   const index = meetups.findIndex((m) => m.id === meetupId);
   if (index === -1) return null;
 
@@ -275,6 +247,6 @@ export function voteMeetupPoll(meetupId: string, pollId: string, optionId: strin
     }
   });
 
-  saveDiskMeetups(meetups);
+  await saveDiskMeetups(meetups);
   return meetup;
 }

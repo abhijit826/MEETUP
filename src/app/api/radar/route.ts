@@ -12,7 +12,7 @@ export async function GET(request: Request) {
     const category = searchParams.get("category") || undefined;
     const query = searchParams.get("query") || undefined;
 
-    const activities = getActivities(category, query);
+    const activities = await getActivities(category, query);
     return NextResponse.json({ success: true, activities });
   } catch (err: unknown) {
     return NextResponse.json(
@@ -52,7 +52,7 @@ export async function POST(request: Request) {
           );
         }
 
-        const activity = addActivity({
+        const activity = await addActivity({
           title,
           description,
           category: category || "Others",
@@ -80,7 +80,7 @@ export async function POST(request: Request) {
           });
         } catch { /* ignore */ }
 
-        return NextResponse.json({ success: true, activity, activities: getActivities() });
+        return NextResponse.json({ success: true, activity, activities: await getActivities() });
       }
 
       case "join": {
@@ -89,7 +89,7 @@ export async function POST(request: Request) {
           return NextResponse.json({ error: "activityId and userId required" }, { status: 400 });
         }
 
-        const res = toggleJoinActivity(activityId, userId);
+        const res = await toggleJoinActivity(activityId, userId);
         if (!res) {
           return NextResponse.json({ error: "Activity not found" }, { status: 404 });
         }
@@ -110,7 +110,7 @@ export async function POST(request: Request) {
           success: true,
           activity: res.activity,
           joined: res.joined,
-          activities: getActivities(),
+          activities: await getActivities(),
         });
       }
 
@@ -120,12 +120,12 @@ export async function POST(request: Request) {
           return NextResponse.json({ error: "activityId required" }, { status: 400 });
         }
 
-        const deleted = deleteActivity(activityId);
+        const deleted = await deleteActivity(activityId);
         if (!deleted) {
           return NextResponse.json({ error: "Activity not found" }, { status: 404 });
         }
 
-        return NextResponse.json({ success: true, activities: getActivities() });
+        return NextResponse.json({ success: true, activities: await getActivities() });
       }
 
       default:

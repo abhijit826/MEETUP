@@ -1,60 +1,33 @@
-import fs from "fs";
-import path from "path";
 import { Conversation, DirectMessage } from "@/types/confessions";
-
-const MESSAGES_FILE_PATH = path.join(process.cwd(), "src", "data", "messages.json");
+import { fetchDbData, saveDbData } from "@/lib/supabaseStore";
 
 interface MessagesDataStore {
   conversations: Conversation[];
   messages: Record<string, DirectMessage[]>;
 }
 
-function ensureMessagesFile() {
-  try {
-    const dir = path.dirname(MESSAGES_FILE_PATH);
-    if (!fs.existsSync(dir)) {
-      fs.mkdirSync(dir, { recursive: true });
-    }
-    if (!fs.existsSync(MESSAGES_FILE_PATH)) {
-      const initial: MessagesDataStore = { conversations: [], messages: {} };
-      fs.writeFileSync(MESSAGES_FILE_PATH, JSON.stringify(initial, null, 2), "utf-8");
-    }
-  } catch (err) {
-    console.error("Error ensuring messages data file:", err);
-  }
-}
-
 let memoryMessagesData: MessagesDataStore | null = null;
 
-export function getDiskMessagesData(): MessagesDataStore {
+export async function getDiskMessagesData(): Promise<MessagesDataStore> {
   if (memoryMessagesData !== null) {
+    // Return cache immediately, sync in background
+    fetchDbData<MessagesDataStore>("messages", { conversations: [], messages: {} }).then(res => {
+      memoryMessagesData = res;
+    }).catch(() => {});
     return memoryMessagesData;
   }
-  ensureMessagesFile();
-  try {
-    const fileData = fs.readFileSync(MESSAGES_FILE_PATH, "utf-8");
-    if (!fileData.trim()) return { conversations: [], messages: {} };
-    const parsed = JSON.parse(fileData) as MessagesDataStore;
-    memoryMessagesData = parsed;
-    return parsed;
-  } catch (err) {
-    console.error("Error reading messages.json:", err);
-    return { conversations: [], messages: {} };
-  }
-}
-
-function saveDiskMessagesData(data: MessagesDataStore): void {
+  const data = await fetchDbData<MessagesDataStore>("messages", { conversations: [], messages: {} });
   memoryMessagesData = data;
-  ensureMessagesFile();
-  try {
-    fs.writeFileSync(MESSAGES_FILE_PATH, JSON.stringify(data, null, 2), "utf-8");
-  } catch (err) {
-    console.warn("Save messages.json failed, falling back to memory storage:", err);
-  }
+  return data;
 }
 
-export function getSharedConversationsForUser(userEmail?: string): Conversation[] {
-  const store = getDiskMessagesData();
+async function saveDiskMessagesData(data: MessagesDataStore): Promise<void> {
+  memoryMessagesData = data;
+  await saveDbData<MessagesDataStore>("messages", data);
+}
+
+export async function getSharedConversationsForUser(userEmail?: string): Promise<Conversation[]> {
+  const store = await getDiskMessagesData();
   if (!userEmail || !userEmail.trim()) return store.conversations;
 
   const normalized = userEmail.trim().toLowerCase();
@@ -65,12 +38,12 @@ export function getSharedConversationsForUser(userEmail?: string): Conversation[
   });
 }
 
-export function getSharedMessagesForConv(convId: string): DirectMessage[] {
-  const store = getDiskMessagesData();
+export async function getSharedMessagesForConv(convId: string): Promise<DirectMessage[]> {
+  const store = await getDiskMessagesData();
   return store.messages[convId] || [];
 }
 
-export function startSharedConversation(
+export async function startSharedConversation(
   confessionId: string,
   confessionSnippet: string,
   authorId: string,
@@ -78,8 +51,8 @@ export function startSharedConversation(
   authorIsAnonymous: boolean,
   currentUserId: string,
   currentUserName: string
-): Conversation {
-  const store = getDiskMessagesData();
+): Promise<Conversation> {
+  const store = await getDiskMessagesData();
 
   const p1Id = currentUserId ? `user-${currentUserId.trim().toLowerCase()}` : "user-current";
   const p2Id = authorId ? (authorId.startsWith("user-") ? authorId : `user-${authorId.trim().toLowerCase()}`) : `user-author-${Date.now()}`;
@@ -119,18 +92,18 @@ export function startSharedConversation(
     store.messages[newConv.id] = [];
   }
 
-  saveDiskMessagesData(store);
+  await saveDiskMessagesData(store);
   return newConv;
 }
 
-export function sendSharedMessage(
+export async function sendSharedMessage(
   convId: string,
   content: string,
   senderId: string,
   senderName: string,
   isAnonymousSender: boolean
-): DirectMessage {
-  const store = getDiskMessagesData();
+): Promise<DirectMessage> {
+  const store = await getDiskMessagesData();
 
   const newMsg: DirectMessage = {
     id: `msg-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
@@ -157,12 +130,12 @@ export function sendSharedMessage(
     };
   });
 
-  saveDiskMessagesData(store);
+  await saveDiskMessagesData(store);
   return newMsg;
 }
 
-export function revealSharedIdentity(convId: string, realName: string): Conversation[] {
-  const store = getDiskMessagesData();
+export async function revealSharedIdentity(convId: string, realName: string): Promise<Conversation[]> {
+  const store = await getDiskMessagesData();
   store.conversations = store.conversations.map((c) => {
     if (c.id !== convId) return c;
     return {
@@ -173,12 +146,12 @@ export function revealSharedIdentity(convId: string, realName: string): Conversa
       isIdentityRevealed: true,
     };
   });
-  saveDiskMessagesData(store);
+  await saveDiskMessagesData(store);
   return store.conversations;
 }
 
-export function toggleSharedBlockUser(convId: string): Conversation[] {
-  const store = getDiskMessagesData();
+export async function toggleSharedBlockUser(convId: string): Promise<Conversation[]> {
+  const store = await getDiskMessagesData();
   store.conversations = store.conversations.map((c) => {
     if (c.id !== convId) return c;
     return {
@@ -186,6 +159,6 @@ export function toggleSharedBlockUser(convId: string): Conversation[] {
       isBlocked: !c.isBlocked,
     };
   });
-  saveDiskMessagesData(store);
+  await saveDiskMessagesData(store);
   return store.conversations;
 }

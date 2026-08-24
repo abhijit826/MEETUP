@@ -1,44 +1,29 @@
-import fs from "fs";
-import path from "path";
 import { CampusActivity, RadarCategory } from "@/types/radar";
-
-const DATA_FILE = path.join(process.cwd(), "src", "data", "radar.json");
+import { fetchDbData, saveDbData } from "@/lib/supabaseStore";
+import { MeetupItem } from "@/types/meetups";
 
 let memoryActivities: CampusActivity[] | null = null;
 
-function readActivities(): CampusActivity[] {
+async function readActivities(): Promise<CampusActivity[]> {
   if (memoryActivities !== null) {
+    // Return cache immediately, sync in background
+    fetchDbData<CampusActivity[]>("radar", []).then(res => {
+      memoryActivities = res;
+    }).catch(() => {});
     return memoryActivities;
   }
-  try {
-    if (!fs.existsSync(DATA_FILE)) {
-      return [];
-    }
-    const raw = fs.readFileSync(DATA_FILE, "utf-8");
-    const parsed = JSON.parse(raw) as CampusActivity[];
-    memoryActivities = parsed;
-    return parsed;
-  } catch (err) {
-    console.error("Error reading radar.json:", err);
-    return [];
-  }
-}
-
-function writeActivities(activities: CampusActivity[]): void {
+  const activities = await fetchDbData<CampusActivity[]>("radar", []);
   memoryActivities = activities;
-  try {
-    const dir = path.dirname(DATA_FILE);
-    if (!fs.existsSync(dir)) {
-      fs.mkdirSync(dir, { recursive: true });
-    }
-    fs.writeFileSync(DATA_FILE, JSON.stringify(activities, null, 2), "utf-8");
-  } catch (err) {
-    console.warn("Save radar.json failed, falling back to memory storage:", err);
-  }
+  return activities;
 }
 
-export function getActivities(category?: string, query?: string): CampusActivity[] {
-  let activities = readActivities();
+async function writeActivities(activities: CampusActivity[]): Promise<void> {
+  memoryActivities = activities;
+  await saveDbData<CampusActivity[]>("radar", activities);
+}
+
+export async function getActivities(category?: string, query?: string): Promise<CampusActivity[]> {
+  let activities = await readActivities();
 
   if (category && category !== "All") {
     activities = activities.filter((a) => a.category === category);
@@ -59,12 +44,12 @@ export function getActivities(category?: string, query?: string): CampusActivity
   return activities;
 }
 
-export function getActivityById(id: string): CampusActivity | null {
-  const activities = readActivities();
+export async function getActivityById(id: string): Promise<CampusActivity | null> {
+  const activities = await readActivities();
   return activities.find((a) => a.id === id) || null;
 }
 
-export function addActivity(params: {
+export async function addActivity(params: {
   title: string;
   description: string;
   category: RadarCategory;
@@ -78,10 +63,9 @@ export function addActivity(params: {
   isAnonymousHost: boolean;
   maxParticipants?: number;
   tags?: string[];
-}): CampusActivity {
-  const activities = readActivities();
+}): Promise<CampusActivity> {
+  const activities = await readActivities();
 
-  // Use exact coordinates provided from interactive map picker or GPS
   const baseLat = params.latitude !== undefined ? params.latitude : 12.82247;
   const baseLng = params.longitude !== undefined ? params.longitude : 80.02622;
   const distance = params.approxDistance || "~150m away";
@@ -107,18 +91,17 @@ export function addActivity(params: {
   };
 
   activities.unshift(newActivity);
-  writeActivities(activities);
+  await writeActivities(activities);
 
   // Sync to Meetups Hub so every Radar activity has a Meetup Squad Hub
   try {
-    const { getDiskMeetups, saveDiskMeetups } = require("./meetupsStore");
-    const meetups = getDiskMeetups();
+    const meetups = await fetchDbData<MeetupItem[]>("meetups", []);
     if (!meetups.some((m: any) => m.id === newActivity.id)) {
       meetups.unshift({
         id: newActivity.id,
         title: newActivity.title,
         description: newActivity.description,
-        category: newActivity.category,
+        category: newActivity.category as any,
         locationName: newActivity.locationName,
         latitude: newActivity.latitude,
         longitude: newActivity.longitude,
@@ -140,15 +123,17 @@ export function addActivity(params: {
         polls: [],
         createdAt: newActivity.createdAt,
       });
-      saveDiskMeetups(meetups);
+      await saveDbData<MeetupItem[]>("meetups", meetups);
     }
-  } catch { /* ignore */ }
+  } catch (err) {
+    console.error("Failed to sync radar pin to meetup in Supabase:", err);
+  }
 
   return newActivity;
 }
 
-export function toggleJoinActivity(activityId: string, userId: string): { activity: CampusActivity; joined: boolean } | null {
-  const activities = readActivities();
+export async function toggleJoinActivity(activityId: string, userId: string): Promise<{ activity: CampusActivity; joined: boolean } | null> {
+  const activities = await readActivities();
   const idx = activities.findIndex((a) => a.id === activityId);
   if (idx === -1) return null;
 
@@ -172,15 +157,15 @@ export function toggleJoinActivity(activityId: string, userId: string): { activi
   }
 
   activities[idx] = activity;
-  writeActivities(activities);
+  await writeActivities(activities);
   return { activity, joined };
 }
 
-export function deleteActivity(activityId: string): boolean {
-  const activities = readActivities();
+export async function deleteActivity(activityId: string): Promise<boolean> {
+  const activities = await readActivities();
   const filtered = activities.filter((a) => a.id !== activityId);
   if (filtered.length !== activities.length) {
-    writeActivities(filtered);
+    await writeActivities(filtered);
     return true;
   }
   return false;

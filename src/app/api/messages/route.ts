@@ -16,11 +16,11 @@ export async function GET(request: Request) {
     const convId = searchParams.get("convId");
 
     if (convId) {
-      const messages = getSharedMessagesForConv(convId);
+      const messages = await getSharedMessagesForConv(convId);
       return NextResponse.json({ success: true, messages });
     }
 
-    const conversations = getSharedConversationsForUser(email || undefined);
+    const conversations = await getSharedConversationsForUser(email || undefined);
     return NextResponse.json({ success: true, conversations });
   } catch (err: unknown) {
     const msg = err instanceof Error ? err.message : "Failed to load messages";
@@ -39,7 +39,7 @@ export async function POST(request: Request) {
       if (!confessionId) {
         return NextResponse.json({ error: "confessionId is required" }, { status: 400 });
       }
-      const conversation = startSharedConversation(
+      const conversation = await startSharedConversation(
         confessionId,
         confessionSnippet || "",
         authorId || "",
@@ -56,7 +56,7 @@ export async function POST(request: Request) {
       if (!convId || !content || !content.trim()) {
         return NextResponse.json({ error: "convId and content are required" }, { status: 400 });
       }
-      const message = sendSharedMessage(
+      const message = await sendSharedMessage(
         convId,
         content,
         senderId || "user-current",
@@ -76,8 +76,8 @@ export async function POST(request: Request) {
         });
       } catch { /* ignore */ }
 
-      const messages = getSharedMessagesForConv(convId);
-      const conversations = getSharedConversationsForUser(senderId);
+      const messages = await getSharedMessagesForConv(convId);
+      const conversations = await getSharedConversationsForUser(senderId);
       return NextResponse.json({ success: true, message, messages, conversations });
     }
 
@@ -86,7 +86,7 @@ export async function POST(request: Request) {
       if (!convId || !realName) {
         return NextResponse.json({ error: "convId and realName required" }, { status: 400 });
       }
-      const conversations = revealSharedIdentity(convId, realName);
+      const conversations = await revealSharedIdentity(convId, realName);
       return NextResponse.json({ success: true, conversations });
     }
 
@@ -95,7 +95,7 @@ export async function POST(request: Request) {
       if (!convId) {
         return NextResponse.json({ error: "convId required" }, { status: 400 });
       }
-      const conversations = toggleSharedBlockUser(convId);
+      const conversations = await toggleSharedBlockUser(convId);
       return NextResponse.json({ success: true, conversations });
     }
 
