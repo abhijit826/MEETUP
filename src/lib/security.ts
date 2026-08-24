@@ -36,3 +36,23 @@ export function isValidEmail(email: string): boolean {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return emailRegex.test(email);
 }
+
+/**
+ * Retrieves the currently authenticated user's email from request cookies
+ */
+export async function getSessionEmail(): Promise<string | null> {
+  try {
+    const { cookies } = await import("next/headers");
+    const cookieStore = await cookies();
+    const sessionCookie = cookieStore.get("sm_user_session");
+    if (!sessionCookie || !sessionCookie.value) return null;
+
+    const session = JSON.parse(decodeURIComponent(sessionCookie.value));
+    if (session && session.email) {
+      return session.email.trim().toLowerCase();
+    }
+  } catch (err) {
+    console.error("Error parsing user session cookie:", err);
+  }
+  return null;
+}

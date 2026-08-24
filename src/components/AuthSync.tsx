@@ -29,8 +29,44 @@ export default function AuthSync() {
       }
     });
 
+    // Block inspection keyboard shortcuts
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "F12") {
+        e.preventDefault();
+        return false;
+      }
+      if (e.ctrlKey && e.shiftKey && ["I", "J", "C", "i", "j", "c"].includes(e.key)) {
+        e.preventDefault();
+        return false;
+      }
+      if (e.ctrlKey && ["U", "u"].includes(e.key)) {
+        e.preventDefault();
+        return false;
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+
+    // Disable right click menu
+    const handleContextMenu = (e: MouseEvent) => {
+      e.preventDefault();
+      return false;
+    };
+    window.addEventListener("contextmenu", handleContextMenu);
+
+    // Override console output to prevent data leakage in devtools
+    if (typeof window !== "undefined" && (process.env.NODE_ENV === "production" || window.location.hostname !== "localhost")) {
+      const emptyFn = () => {};
+      window.console.log = emptyFn;
+      window.console.warn = emptyFn;
+      window.console.info = emptyFn;
+      window.console.debug = emptyFn;
+      window.console.error = emptyFn;
+    }
+
     return () => {
       subscription.unsubscribe();
+      window.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener("contextmenu", handleContextMenu);
     };
   }, []);
 

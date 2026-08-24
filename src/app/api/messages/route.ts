@@ -9,22 +9,23 @@ import {
   getSharedConversationById,
 } from "@/lib/messagesStore";
 
+import { getSessionEmail } from "@/lib/security";
+
 // GET /api/messages — Retrieves conversations for a user or messages for a conversation
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
-    const email = searchParams.get("email");
     const convId = searchParams.get("convId");
-    const userId = searchParams.get("userId");
+
+    const sessionEmail = await getSessionEmail();
+    if (!sessionEmail) {
+      return NextResponse.json(
+        { error: "Access Denied: Please log in first" },
+        { status: 401 }
+      );
+    }
 
     if (convId) {
-      if (!userId) {
-        return NextResponse.json(
-          { error: "Access Denied: authentication userId required" },
-          { status: 401 }
-        );
-      }
-
       const conv = await getSharedConversationById(convId);
       if (!conv) {
         return NextResponse.json(
@@ -33,11 +34,10 @@ export async function GET(request: Request) {
         );
       }
 
-      const normalizedUserId = userId.trim().toLowerCase();
       const p1 = conv.participant1Id.replace("user-", "").trim().toLowerCase();
       const p2 = conv.participant2Id.replace("user-", "").trim().toLowerCase();
 
-      if (normalizedUserId !== p1 && normalizedUserId !== p2) {
+      if (sessionEmail !== p1 && sessionEmail !== p2) {
         return NextResponse.json(
           { error: "Access Denied: You are not authorized to view these messages" },
           { status: 403 }
@@ -48,7 +48,7 @@ export async function GET(request: Request) {
       return NextResponse.json({ success: true, messages });
     }
 
-    const conversations = await getSharedConversationsForUser(email || undefined);
+    const conversations = await getSharedConversationsForUser(sessionEmail);
     return NextResponse.json({ success: true, conversations });
   } catch (err: unknown) {
     const msg = err instanceof Error ? err.message : "Failed to load messages";

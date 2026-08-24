@@ -6,11 +6,23 @@ import {
   markAllAsRead,
 } from "@/lib/notificationsStore";
 
+import { getSessionEmail } from "@/lib/security";
+
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
-    const email = searchParams.get("email") || undefined;
-    const notifications = getNotificationsForUser(email);
+    const email = searchParams.get("email");
+
+    const sessionEmail = await getSessionEmail();
+    if (!sessionEmail) {
+      return NextResponse.json({ error: "Access Denied: Please log in first" }, { status: 401 });
+    }
+
+    if (!email || email.trim().toLowerCase() !== sessionEmail) {
+      return NextResponse.json({ error: "Access Denied: Unauthorized request" }, { status: 403 });
+    }
+
+    const notifications = getNotificationsForUser(sessionEmail);
     const unreadCount = notifications.filter((n) => !n.isRead).length;
 
     return NextResponse.json({
@@ -29,13 +41,25 @@ export async function POST(request: Request) {
     const body = await request.json();
     const { action, id, email, type, title, message, link, actorName } = body;
 
+    const sessionEmail = await getSessionEmail();
+    if (!sessionEmail) {
+      return NextResponse.json({ error: "Access Denied: Please log in first" }, { status: 401 });
+    }
+
+    // Mark notifications read must check ownership
+    if ((action === "markRead" || action === "markAllRead") && email) {
+      if (email.trim().toLowerCase() !== sessionEmail) {
+        return NextResponse.json({ error: "Access Denied: Unauthorized request" }, { status: 403 });
+      }
+    }
+
     if (action === "markRead" && id) {
       markAsRead(id);
       return NextResponse.json({ success: true });
     }
 
     if (action === "markAllRead") {
-      markAllAsRead(email);
+      markAllAsRead(sessionEmail);
       return NextResponse.json({ success: true });
     }
 
