@@ -1,6 +1,4 @@
-// ============================================================
-// Student Meetup — In-Memory & Database OTP Store
-// ============================================================
+import { fetchDbData, saveDbData } from "@/lib/supabaseStore";
 
 export interface OtpRecord {
   email: string;
@@ -8,16 +6,17 @@ export interface OtpRecord {
   expiresAt: number; // timestamp in ms
 }
 
-// Global in-memory store for development & server runtime
-const globalForOtp = globalThis as unknown as {
-  otpStore?: Map<string, OtpRecord>;
-};
+let memoryOtps: Record<string, OtpRecord> = {};
 
-export const otpStore =
-  globalForOtp.otpStore || new Map<string, OtpRecord>();
+async function getLiveOtps(): Promise<Record<string, OtpRecord>> {
+  const data = await fetchDbData<Record<string, OtpRecord>>("otps", {});
+  memoryOtps = data || {};
+  return memoryOtps;
+}
 
-if ((process.env as Record<string, string | undefined>).NODE_ENV !== "production") {
-  globalForOtp.otpStore = otpStore;
+async function saveLiveOtps(data: Record<string, OtpRecord>): Promise<void> {
+  memoryOtps = data;
+  await saveDbData<Record<string, OtpRecord>>("otps", data);
 }
 
 /**
@@ -30,21 +29,28 @@ export function generateOtp(): string {
 /**
  * Store an OTP for an email with a 10-minute expiration window.
  */
-export function saveOtp(email: string, code: string): void {
+export async function saveOtp(email: string, code: string): Promise<void> {
   const normalizedEmail = email.trim().toLowerCase();
   const expiresAt = Date.now() + 10 * 60 * 1000; // 10 minutes
-  otpStore.set(normalizedEmail, { email: normalizedEmail, code, expiresAt });
+  
+  const otps = await getLiveOtps();
+  otps[normalizedEmail] = { email: normalizedEmail, code, expiresAt };
+  await saveLiveOtps(otps);
 }
 
 /**
  * Verify if an OTP code is valid for an email.
  */
-export function verifyStoredOtp(email: string, code: string): {
+export async function verifyStoredOtp(
+  email: string,
+  code: string
+): Promise<{
   valid: boolean;
   message: string;
-} {
+}> {
   const normalizedEmail = email.trim().toLowerCase();
-  const record = otpStore.get(normalizedEmail);
+  const otps = await getLiveOtps();
+  const record = otps[normalizedEmail];
 
   if (!record) {
     return {
@@ -54,7 +60,8 @@ export function verifyStoredOtp(email: string, code: string): {
   }
 
   if (Date.now() > record.expiresAt) {
-    otpStore.delete(normalizedEmail);
+    delete otps[normalizedEmail];
+    await saveLiveOtps(otps);
     return {
       valid: false,
       message: "OTP code has expired. Please request a new one.",
@@ -69,6 +76,7 @@ export function verifyStoredOtp(email: string, code: string): {
   }
 
   // Code is valid! Clean up
-  otpStore.delete(normalizedEmail);
+  delete otps[normalizedEmail];
+  await saveLiveOtps(otps);
   return { valid: true, message: "OTP verified successfully!" };
 }

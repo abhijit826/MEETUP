@@ -17,7 +17,7 @@ export async function POST(request: Request) {
     }
 
     // 1. Verify 6-digit code against OTP store
-    const result = verifyStoredOtp(email, code);
+        const result = await verifyStoredOtp(email, code);
 
     if (!result.valid) {
       return NextResponse.json({ error: result.message }, { status: 400 });

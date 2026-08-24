@@ -14,9 +14,9 @@ export async function POST(request: Request) {
       );
     }
 
-    const normalizedEmail = email.trim().toLowerCase();
+        const normalizedEmail = email.trim().toLowerCase();
     const code = Math.floor(100000 + Math.random() * 900000).toString();
-    saveOtp(normalizedEmail, code);
+    await saveOtp(normalizedEmail, code);
 
     let emailSent = false;
     let deliveryNotice = "";
