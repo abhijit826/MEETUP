@@ -66,8 +66,8 @@ export async function addActivity(params: {
 }): Promise<CampusActivity> {
   const activities = await readActivities();
 
-  const baseLat = params.latitude !== undefined ? params.latitude : 12.82247;
-  const baseLng = params.longitude !== undefined ? params.longitude : 80.02622;
+  const baseLat = params.latitude !== undefined ? params.latitude : 28.6012;
+  const baseLng = params.longitude !== undefined ? params.longitude : 77.2181;
   const distance = params.approxDistance || "~150m away";
 
   const newActivity: CampusActivity = {

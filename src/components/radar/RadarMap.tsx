@@ -41,8 +41,8 @@ export default function RadarMap({
   activities,
   selectedActivityId,
   onSelectActivity,
-  userLat = 12.82247,
-  userLng = 80.02622,
+  userLat = 28.6012,
+  userLng = 77.2181,
 }: RadarMapProps) {
   const mapRef = useRef<HTMLDivElement>(null);
   const leafletMapRef = useRef<L.Map | null>(null);
@@ -101,7 +101,7 @@ export default function RadarMap({
       userCircleRef.current = userCircle;
       leafletMapRef.current = map;
       
-      if (userLat !== 12.82247 || userLng !== 80.02622) {
+      if (userLat !== 28.6012 || userLng !== 77.2181) {
         hasCenteredRef.current = true;
       }
     } else {
@@ -114,7 +114,7 @@ export default function RadarMap({
       }
 
       // Center map initially if a real location is retrieved
-      if (!hasCenteredRef.current && (userLat !== 12.82247 || userLng !== 80.02622)) {
+      if (!hasCenteredRef.current && (userLat !== 28.6012 || userLng !== 77.2181)) {
         leafletMapRef.current.setView([userLat, userLng], 16);
         hasCenteredRef.current = true;
       }

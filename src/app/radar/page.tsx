@@ -72,8 +72,8 @@ export default function RadarPage() {
   const [userEmail, setUserEmail] = useState("");
   const [userFullName, setUserFullName] = useState("Student");
   const [userId, setUserId] = useState("anon-user");
-  const [userLat, setUserLat] = useState(12.82247);
-  const [userLng, setUserLng] = useState(80.02622);
+  const [userLat, setUserLat] = useState(28.6012);
+  const [userLng, setUserLng] = useState(77.2181);
 
   // Modal
   const [showCreateModal, setShowCreateModal] = useState(false);
