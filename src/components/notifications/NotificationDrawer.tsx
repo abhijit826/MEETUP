@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Bell, X, CheckCheck, MapPin, MessageSquare, Heart, MessageCircle, Sparkles, Trash2 } from "lucide-react";
+import { Bell, X, CheckCheck, MapPin, MessageSquare, Heart, MessageCircle, Sparkles } from "lucide-react";
 import { SystemNotification, NotificationType } from "@/types/notifications";
 
 function formatNotifTime(iso: string): string {
@@ -93,6 +93,8 @@ export default function NotificationDrawer({ userEmail }: { userEmail?: string }
   const [notifications, setNotifications] = useState<SystemNotification[]>([]);
   const [unreadCount, setUnreadCount] = useState(0);
   const [selectedFilter, setSelectedFilter] = useState<NotificationType | "all">("all");
+  // Track IDs dismissed this session — prevents polls from resurrecting them
+  const dismissedIds = useRef<Set<string>>(new Set());
 
   const fetchNotifications = useCallback(async () => {
     try {
@@ -102,8 +104,11 @@ export default function NotificationDrawer({ userEmail }: { userEmail?: string }
       const res = await fetch(url);
       const data = await res.json();
       if (data.success) {
-        setNotifications(data.notifications || []);
-        setUnreadCount(data.unreadCount || 0);
+        const fresh: SystemNotification[] = (data.notifications || []).filter(
+          (n: SystemNotification) => !dismissedIds.current.has(n.id)
+        );
+        setNotifications(fresh);
+        setUnreadCount(fresh.filter((n) => !n.isRead).length);
       }
     } catch {
       /* ignore */
@@ -149,7 +154,9 @@ export default function NotificationDrawer({ userEmail }: { userEmail?: string }
   };
 
   const handleDismiss = async (id: string) => {
-    // Optimistically remove from UI immediately
+    // Register in session-local dismissed set so polls never bring it back
+    dismissedIds.current.add(id);
+    // Remove from UI immediately
     setNotifications((prev) => {
       const notif = prev.find((n) => n.id === id);
       if (notif && !notif.isRead) {
@@ -157,6 +164,7 @@ export default function NotificationDrawer({ userEmail }: { userEmail?: string }
       }
       return prev.filter((n) => n.id !== id);
     });
+    // Permanently delete from server so it never comes back even after re-login
     try {
       await fetch("/api/notifications", {
         method: "POST",
@@ -164,7 +172,7 @@ export default function NotificationDrawer({ userEmail }: { userEmail?: string }
         body: JSON.stringify({ action: "dismiss", id }),
       });
     } catch {
-      /* ignore – already removed from UI */
+      /* ignore – session guard already prevents re-appearance */
     }
   };
 
@@ -278,51 +286,35 @@ export default function NotificationDrawer({ userEmail }: { userEmail?: string }
               ) : (
                 filteredNotifs.map((n) => (
                   <SwipeItem key={n.id} onDismiss={() => handleDismiss(n.id)}>
-                    <div className="relative group">
-                      <div
-                        onClick={() => handleMarkRead(n.id, n.link)}
-                        className={`p-3 rounded-2xl border transition-all cursor-pointer flex items-start gap-3 ${
-                          n.isRead
-                            ? "bg-white border-gray-100 text-gray-500"
-                            : "bg-purple-50/70 border-purple-200/80 text-gray-900 shadow-sm"
-                        }`}
-                      >
-                        {/* Left icon */}
-                        <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 shadow-xs ${n.isRead ? "bg-gray-50 border border-gray-100" : "bg-white border border-gray-100"}`}>
-                          {getIcon(n.type)}
-                        </div>
+                    <div
+                      onClick={() => handleMarkRead(n.id, n.link)}
+                      className={`p-3 rounded-2xl border transition-all cursor-pointer flex items-start gap-3 ${
+                        n.isRead
+                          ? "bg-white border-gray-100 text-gray-500"
+                          : "bg-purple-50/70 border-purple-200/80 text-gray-900 shadow-sm"
+                      }`}
+                    >
+                      {/* Left icon */}
+                      <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${n.isRead ? "bg-gray-50 border border-gray-100" : "bg-white border border-gray-100"}`}>
+                        {getIcon(n.type)}
+                      </div>
 
-                        {/* Content */}
-                        <div className="flex-1 space-y-0.5 min-w-0">
-                          <div className="flex items-center justify-between gap-2">
-                            <h4 className={`font-extrabold text-xs leading-tight truncate ${n.isRead ? "text-gray-600" : "text-gray-900"}`}>
-                              {n.title}
-                            </h4>
-                            <div className="flex items-center gap-1.5 shrink-0">
-                              {!n.isRead && (
-                                <span className="w-2 h-2 rounded-full bg-purple-600 shrink-0" />
-                              )}
-                            </div>
-                          </div>
-                          <p className={`text-[11px] leading-relaxed line-clamp-2 ${n.isRead ? "text-gray-400" : "text-gray-600"}`}>
-                            {n.message}
-                          </p>
-                          <span className="text-[9px] font-semibold text-gray-400 block pt-0.5">
-                            {formatNotifTime(n.createdAt)}
-                          </span>
+                      {/* Content */}
+                      <div className="flex-1 space-y-0.5 min-w-0">
+                        <div className="flex items-center justify-between gap-2">
+                          <h4 className={`font-extrabold text-xs leading-tight truncate ${n.isRead ? "text-gray-600" : "text-gray-900"}`}>
+                            {n.title}
+                          </h4>
+                          {!n.isRead && (
+                            <span className="w-2 h-2 rounded-full bg-purple-600 shrink-0" />
+                          )}
                         </div>
-
-                        {/* Dismiss button (visible on hover, desktop) */}
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleDismiss(n.id);
-                          }}
-                          className="opacity-0 group-hover:opacity-100 transition-opacity w-6 h-6 rounded-full flex items-center justify-center text-gray-400 hover:text-red-500 hover:bg-red-50 shrink-0"
-                          title="Dismiss"
-                        >
-                          <Trash2 size={12} />
-                        </button>
+                        <p className={`text-[11px] leading-relaxed line-clamp-2 ${n.isRead ? "text-gray-400" : "text-gray-600"}`}>
+                          {n.message}
+                        </p>
+                        <span className="text-[9px] font-semibold text-gray-400 block pt-0.5">
+                          {formatNotifTime(n.createdAt)}
+                        </span>
                       </div>
                     </div>
                   </SwipeItem>
