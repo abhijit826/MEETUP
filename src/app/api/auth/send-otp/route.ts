@@ -67,10 +67,19 @@ export async function POST(request: Request) {
       }
     }
 
+    const isProd = process.env.NODE_ENV === "production" || process.env.VERCEL === "1";
+
+    if (!emailSent && isProd) {
+      return NextResponse.json(
+        { error: "Email delivery failed. Please check your address or try again in a few moments." },
+        { status: 500 }
+      );
+    }
+
     return NextResponse.json({
       success: true,
       emailSent,
-      devOtp: emailSent ? undefined : code,
+      devOtp: (emailSent || isProd) ? undefined : code,
       message: emailSent
         ? "6-digit OTP code sent to your email inbox!"
         : `OTP Code: ${code}`,
