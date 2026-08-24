@@ -102,19 +102,31 @@ function ensureFile() {
   }
 }
 
+let memoryLoveGuru: LoveGuruStore | null = null;
+
 function read(): LoveGuruStore {
+  if (memoryLoveGuru !== null) {
+    return memoryLoveGuru;
+  }
   ensureFile();
   try {
     const raw = fs.readFileSync(DATA_FILE, "utf-8");
-    return JSON.parse(raw) as LoveGuruStore;
+    const parsed = JSON.parse(raw) as LoveGuruStore;
+    memoryLoveGuru = parsed;
+    return parsed;
   } catch {
     return { dilemmas: [], swipeScenarios: [], battles: [], leaderboard: [], dailyChallenge: null };
   }
 }
 
 function write(data: LoveGuruStore) {
+  memoryLoveGuru = data;
   ensureFile();
-  fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2), "utf-8");
+  try {
+    fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2), "utf-8");
+  } catch (err) {
+    console.warn("Save loveguru.json failed, falling back to memory storage:", err);
+  }
 }
 
 // ====== GEMINI API HELPER ======

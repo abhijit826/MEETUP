@@ -16,12 +16,19 @@ function ensureFile() {
   }
 }
 
+let memoryMeetups: MeetupItem[] | null = null;
+
 export function getDiskMeetups(): MeetupItem[] {
+  if (memoryMeetups !== null) {
+    return memoryMeetups;
+  }
   ensureFile();
   try {
     const data = fs.readFileSync(MEETUPS_FILE, "utf-8");
     if (!data.trim()) return [];
-    return JSON.parse(data);
+    const parsed = JSON.parse(data) as MeetupItem[];
+    memoryMeetups = parsed;
+    return parsed;
   } catch (err) {
     console.error("Error reading meetups.json:", err);
     return [];
@@ -29,11 +36,12 @@ export function getDiskMeetups(): MeetupItem[] {
 }
 
 export function saveDiskMeetups(meetups: MeetupItem[]): void {
+  memoryMeetups = meetups;
   ensureFile();
   try {
     fs.writeFileSync(MEETUPS_FILE, JSON.stringify(meetups, null, 2), "utf-8");
   } catch (err) {
-    console.error("Error writing meetups.json:", err);
+    console.warn("Save meetups.json failed, falling back to memory storage:", err);
   }
 }
 

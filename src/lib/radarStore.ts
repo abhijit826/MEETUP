@@ -4,13 +4,20 @@ import { CampusActivity, RadarCategory } from "@/types/radar";
 
 const DATA_FILE = path.join(process.cwd(), "src", "data", "radar.json");
 
+let memoryActivities: CampusActivity[] | null = null;
+
 function readActivities(): CampusActivity[] {
+  if (memoryActivities !== null) {
+    return memoryActivities;
+  }
   try {
     if (!fs.existsSync(DATA_FILE)) {
       return [];
     }
     const raw = fs.readFileSync(DATA_FILE, "utf-8");
-    return JSON.parse(raw);
+    const parsed = JSON.parse(raw) as CampusActivity[];
+    memoryActivities = parsed;
+    return parsed;
   } catch (err) {
     console.error("Error reading radar.json:", err);
     return [];
@@ -18,6 +25,7 @@ function readActivities(): CampusActivity[] {
 }
 
 function writeActivities(activities: CampusActivity[]): void {
+  memoryActivities = activities;
   try {
     const dir = path.dirname(DATA_FILE);
     if (!fs.existsSync(dir)) {
@@ -25,7 +33,7 @@ function writeActivities(activities: CampusActivity[]): void {
     }
     fs.writeFileSync(DATA_FILE, JSON.stringify(activities, null, 2), "utf-8");
   } catch (err) {
-    console.error("Error writing radar.json:", err);
+    console.warn("Save radar.json failed, falling back to memory storage:", err);
   }
 }
 

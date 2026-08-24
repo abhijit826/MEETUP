@@ -19,13 +19,19 @@ function ensureDataFile() {
   }
 }
 
+let memoryConfessions: ConfessionItem[] | null = null;
+
 // Read confessions from disk storage
 export function getSharedConfessions(): ConfessionItem[] {
+  if (memoryConfessions !== null) {
+    return memoryConfessions;
+  }
   ensureDataFile();
   try {
     const fileData = fs.readFileSync(DATA_FILE_PATH, "utf-8");
     if (!fileData.trim()) return [];
-    return JSON.parse(fileData) as ConfessionItem[];
+    memoryConfessions = JSON.parse(fileData) as ConfessionItem[];
+    return memoryConfessions;
   } catch (err) {
     console.error("Error reading confessions.json:", err);
     return [];
@@ -34,11 +40,12 @@ export function getSharedConfessions(): ConfessionItem[] {
 
 // Save confessions to disk storage
 function saveConfessionsToDisk(confessions: ConfessionItem[]): void {
+  memoryConfessions = confessions;
   ensureDataFile();
   try {
     fs.writeFileSync(DATA_FILE_PATH, JSON.stringify(confessions, null, 2), "utf-8");
   } catch (err) {
-    console.error("Error writing to confessions.json:", err);
+    console.warn("Writing to confessions.json failed, falling back to memory storage:", err);
   }
 }
 

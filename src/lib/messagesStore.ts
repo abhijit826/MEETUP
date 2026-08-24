@@ -24,12 +24,19 @@ function ensureMessagesFile() {
   }
 }
 
+let memoryMessagesData: MessagesDataStore | null = null;
+
 export function getDiskMessagesData(): MessagesDataStore {
+  if (memoryMessagesData !== null) {
+    return memoryMessagesData;
+  }
   ensureMessagesFile();
   try {
     const fileData = fs.readFileSync(MESSAGES_FILE_PATH, "utf-8");
     if (!fileData.trim()) return { conversations: [], messages: {} };
-    return JSON.parse(fileData) as MessagesDataStore;
+    const parsed = JSON.parse(fileData) as MessagesDataStore;
+    memoryMessagesData = parsed;
+    return parsed;
   } catch (err) {
     console.error("Error reading messages.json:", err);
     return { conversations: [], messages: {} };
@@ -37,11 +44,12 @@ export function getDiskMessagesData(): MessagesDataStore {
 }
 
 function saveDiskMessagesData(data: MessagesDataStore): void {
+  memoryMessagesData = data;
   ensureMessagesFile();
   try {
     fs.writeFileSync(MESSAGES_FILE_PATH, JSON.stringify(data, null, 2), "utf-8");
   } catch (err) {
-    console.error("Error writing to messages.json:", err);
+    console.warn("Save messages.json failed, falling back to memory storage:", err);
   }
 }
 
