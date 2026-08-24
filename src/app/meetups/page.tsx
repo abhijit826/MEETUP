@@ -23,6 +23,7 @@ import {
   ChevronRight,
   ShieldAlert,
   Shield,
+  Trash2,
 } from "lucide-react";
 import { MeetupItem, MeetupCategory } from "@/types/meetups";
 import ReportBlockModal from "@/components/ReportBlockModal";
@@ -904,6 +905,43 @@ function MeetupDetailModal({
             <p className="text-[11px] text-gray-500 font-medium">📍 {meetup.locationName}</p>
           </div>
           <div className="flex items-center gap-1">
+            {meetup.hostId === userId && (
+              <button
+                type="button"
+                onClick={async (e) => {
+                  e.stopPropagation();
+                  if (
+                    confirm(
+                      "Are you sure you want to delete this Meetup squad and its synced Radar activity?"
+                    )
+                  ) {
+                    try {
+                      const res = await fetch("/api/radar", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                          action: "delete",
+                          activityId: meetup.id,
+                        }),
+                      });
+                      const data = await res.json();
+                      if (data.success) {
+                        triggerToast("🗑️ Meetup squad deleted successfully!");
+                        onClose();
+                      } else {
+                        alert(data.error || "Failed to delete meetup");
+                      }
+                    } catch {
+                      alert("Error deleting meetup");
+                    }
+                  }
+                }}
+                className="p-1.5 rounded-full text-red-500 hover:text-red-700 hover:bg-red-50 transition-all cursor-pointer"
+                title="Delete Meetup Squad"
+              >
+                <Trash2 size={18} />
+              </button>
+            )}
             {meetup.hostId !== userId && onReportBlockHost && (
               <button
                 type="button"
