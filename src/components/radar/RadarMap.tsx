@@ -47,6 +47,9 @@ export default function RadarMap({
   const mapRef = useRef<HTMLDivElement>(null);
   const leafletMapRef = useRef<L.Map | null>(null);
   const markersRef = useRef<Record<string, L.Marker>>({});
+  const userMarkerRef = useRef<L.Marker | null>(null);
+  const userCircleRef = useRef<L.Circle | null>(null);
+  const hasCenteredRef = useRef(false);
 
   useEffect(() => {
     if (!mapRef.current) return;
@@ -80,12 +83,12 @@ export default function RadarMap({
         iconAnchor: [16, 16],
       });
 
-      L.marker([userLat, userLng], { icon: userIcon })
+      const userMarker = L.marker([userLat, userLng], { icon: userIcon })
         .addTo(map)
         .bindTooltip("📍 You (Approximate Location)", { permanent: false, direction: "top" });
 
       // Add approximate 500m radar boundary circle
-      L.circle([userLat, userLng], {
+      const userCircle = L.circle([userLat, userLng], {
         radius: 400,
         color: "#a855f7",
         weight: 1.5,
@@ -94,7 +97,27 @@ export default function RadarMap({
         fillOpacity: 0.05,
       }).addTo(map);
 
+      userMarkerRef.current = userMarker;
+      userCircleRef.current = userCircle;
       leafletMapRef.current = map;
+      
+      if (userLat !== 12.82247 || userLng !== 80.02622) {
+        hasCenteredRef.current = true;
+      }
+    } else {
+      // Update existing marker and circle coordinates
+      if (userMarkerRef.current) {
+        userMarkerRef.current.setLatLng([userLat, userLng]);
+      }
+      if (userCircleRef.current) {
+        userCircleRef.current.setLatLng([userLat, userLng]);
+      }
+
+      // Center map initially if a real location is retrieved
+      if (!hasCenteredRef.current && (userLat !== 12.82247 || userLng !== 80.02622)) {
+        leafletMapRef.current.setView([userLat, userLng], 16);
+        hasCenteredRef.current = true;
+      }
     }
 
     const map = leafletMapRef.current;
