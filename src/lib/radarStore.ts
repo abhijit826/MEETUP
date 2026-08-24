@@ -166,6 +166,18 @@ export async function deleteActivity(activityId: string): Promise<boolean> {
   const filtered = activities.filter((a) => a.id !== activityId);
   if (filtered.length !== activities.length) {
     await writeActivities(filtered);
+
+    // Also delete the linked Meetup squad hub
+    try {
+      const meetups = await fetchDbData<MeetupItem[]>("meetups", []);
+      const filteredMeetups = meetups.filter((m: any) => m.id !== activityId);
+      if (filteredMeetups.length !== meetups.length) {
+        await saveDbData<MeetupItem[]>("meetups", filteredMeetups);
+      }
+    } catch (err) {
+      console.error("Failed to delete synced meetup from Supabase:", err);
+    }
+
     return true;
   }
   return false;
