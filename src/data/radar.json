@@ -1,0 +1,69 @@
+[
+  {
+    "id": "meetup-1787073437823-7e1l",
+    "title": "Test Meetup Sync",
+    "description": "Testing sync to radar map",
+    "category": "Chai & Snacks",
+    "locationName": "Potheri, Chengalpattu, Tamil Nadu",
+    "approxDistance": "~150m away",
+    "latitude": 12.820712751573437,
+    "longitude": 80.02637136531564,
+    "time": "Tomorrow @ 2 PM",
+    "hostId": "ashishpalak526@gmail.com",
+    "hostName": "ashishpalak526",
+    "isAnonymousHost": false,
+    "maxParticipants": 5,
+    "participantIds": [
+      "ashishpalak526@gmail.com",
+      "abhijitgyan121@gmail.com",
+      "cinematic_final7@srm.edu"
+    ],
+    "participantCount": 3,
+    "createdAt": "2026-08-18T17:17:17.823Z",
+    "tags": []
+  },
+  {
+    "id": "act-1787066856632-dlb5",
+    "title": "Grand Finale",
+    "description": "JUST GATHERING EVENT",
+    "category": "Clubs",
+    "locationName": "SRM Tech Park Grounds",
+    "approxDistance": "~150m away",
+    "latitude": 12.824,
+    "longitude": 80.0445,
+    "time": "9:00",
+    "hostId": "abhijitgyan121@gmail.com",
+    "hostName": "Abhijit Ranjan",
+    "isAnonymousHost": false,
+    "maxParticipants": 5,
+    "participantIds": [
+      "abhijitgyan121@gmail.com",
+      "ashishpalak526@gmail.com"
+    ],
+    "participantCount": 2,
+    "createdAt": "2026-08-18T15:27:36.632Z",
+    "tags": []
+  },
+  {
+    "id": "act-1787063026032-paqr",
+    "title": "Turf",
+    "description": "just for fun",
+    "category": "Sports",
+    "locationName": "Potheri, Chengalpattu, Tamil Nadu",
+    "approxDistance": "~337m away",
+    "latitude": 12.82247,
+    "longitude": 80.02622,
+    "time": "5:30",
+    "hostId": "abhijitgyan121@gmail.com",
+    "hostName": "Abhijit Ranjan",
+    "isAnonymousHost": false,
+    "maxParticipants": 34,
+    "participantIds": [
+      "abhijitgyan121@gmail.com",
+      "ashishpalak526@gmail.com"
+    ],
+    "participantCount": 2,
+    "createdAt": "2026-08-18T14:23:46.033Z",
+    "tags": []
+  }
+]

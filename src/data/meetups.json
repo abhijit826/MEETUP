@@ -1,0 +1,122 @@
+[
+  {
+    "id": "meetup-1787073437823-7e1l",
+    "title": "Test Meetup Sync",
+    "description": "Testing sync to radar map",
+    "category": "Chai & Snacks",
+    "locationName": "Potheri, Chengalpattu, Tamil Nadu",
+    "latitude": 12.820712751573437,
+    "longitude": 80.02637136531564,
+    "time": "Tomorrow @ 2 PM",
+    "hostId": "ashishpalak526@gmail.com",
+    "hostName": "ashishpalak526",
+    "maxParticipants": 5,
+    "participantIds": [
+      "ashishpalak526@gmail.com",
+      "cinematic_final7@srm.edu"
+    ],
+    "participantNames": [
+      "ashishpalak526",
+      "Intro Message Critic"
+    ],
+    "chatMessages": [],
+    "checkIns": [
+      {
+        "userId": "ashishpalak526@gmail.com",
+        "userName": "ashishpalak526",
+        "checkedInAt": "2026-08-18T17:17:17.823Z"
+      }
+    ],
+    "expenses": [],
+    "polls": [],
+    "createdAt": "2026-08-18T17:17:17.823Z"
+  },
+  {
+    "id": "meetup-101",
+    "title": "SRM Tech Park Study & Chai Catchup ☕📚",
+    "description": "Gathering at Tech Park Canteen for group study, doubts clearing, and hot chai!",
+    "category": "Chai & Snacks",
+    "locationName": "SRM Tech Park Grounds",
+    "latitude": 12.824,
+    "longitude": 80.0445,
+    "time": "Today @ 5:00 PM",
+    "hostId": "abhijitgyan121@gmail.com",
+    "hostName": "Abhijit Ranjan",
+    "maxParticipants": 10,
+    "participantIds": [
+      "abhijitgyan121@gmail.com",
+      "ashishpalak526@gmail.com"
+    ],
+    "participantNames": [
+      "Abhijit Ranjan",
+      "ashishpalak526"
+    ],
+    "chatMessages": [
+      {
+        "id": "msg-1",
+        "senderId": "abhijitgyan121@gmail.com",
+        "senderName": "Abhijit Ranjan",
+        "text": "Hey everyone! We will be sitting near the outdoor tables near Tech Park canteen.",
+        "createdAt": "2026-08-18T15:30:00.000Z"
+      }
+    ],
+    "checkIns": [
+      {
+        "userId": "abhijitgyan121@gmail.com",
+        "userName": "Abhijit Ranjan",
+        "checkedInAt": "2026-08-18T15:30:00.000Z"
+      }
+    ],
+    "expenses": [
+      {
+        "id": "exp-1",
+        "title": "Chai & Samosa Combo",
+        "totalAmount": 150,
+        "paidBy": "abhijitgyan121@gmail.com",
+        "paidByName": "Abhijit Ranjan",
+        "perPerson": 15,
+        "createdAt": "2026-08-18T15:32:00.000Z"
+      },
+      {
+        "id": "exp-1787071451666",
+        "title": "chai",
+        "totalAmount": 1500,
+        "paidBy": "abhijitgyan121@gmail.com",
+        "paidByName": "Abhijit Ranjan",
+        "perPerson": 1500,
+        "createdAt": "2026-08-18T16:44:11.666Z"
+      },
+      {
+        "id": "exp-1787071650353",
+        "title": "patisa",
+        "totalAmount": 15,
+        "paidBy": "abhijitgyan121@gmail.com",
+        "paidByName": "Abhijit Ranjan",
+        "perPerson": 8,
+        "createdAt": "2026-08-18T16:47:30.353Z"
+      }
+    ],
+    "polls": [
+      {
+        "id": "poll-1",
+        "question": "Which snack shall we order?",
+        "options": [
+          {
+            "id": "opt-1",
+            "text": "Hot Ginger Chai & Samosa ☕",
+            "voterIds": []
+          },
+          {
+            "id": "opt-2",
+            "text": "Cold Coffee & Cheese Toast 🥤",
+            "voterIds": [
+              "abhijitgyan121@gmail.com"
+            ]
+          }
+        ],
+        "createdAt": "2026-08-18T15:31:00.000Z"
+      }
+    ],
+    "createdAt": "2026-08-18T15:28:00.000Z"
+  }
+]

@@ -1,0 +1,107 @@
+[
+  {
+    "id": "notif-1787221277392-awpr",
+    "type": "radar",
+    "title": "👥 Joined Meetup!",
+    "message": "Intro Message Critic joined 'Test Meetup Sync'",
+    "link": "/meetups",
+    "isRead": false,
+    "createdAt": "2026-08-20T10:21:17.392Z",
+    "targetUserEmail": "all"
+  },
+  {
+    "id": "notif-1787221185115-8pnt",
+    "type": "radar",
+    "title": "👥 Someone Joined Activity!",
+    "message": "A student joined 'Test Meetup Sync' (3 interested)",
+    "link": "/radar",
+    "isRead": false,
+    "createdAt": "2026-08-20T10:19:45.116Z",
+    "targetUserEmail": "all"
+  },
+  {
+    "id": "notif-1787083677522-od37",
+    "type": "radar",
+    "title": "👥 Someone Joined Activity!",
+    "message": "A student joined 'Grand Finale' (2 interested)",
+    "link": "/radar",
+    "isRead": false,
+    "createdAt": "2026-08-18T20:07:57.522Z",
+    "targetUserEmail": "all"
+  },
+  {
+    "id": "notif-1787081293749-9g5z",
+    "type": "radar",
+    "title": "👥 Someone Joined Activity!",
+    "message": "A student joined 'Test Meetup Sync' (2 interested)",
+    "link": "/radar",
+    "isRead": false,
+    "createdAt": "2026-08-18T19:28:13.750Z",
+    "targetUserEmail": "all"
+  },
+  {
+    "id": "notif-1787073437827-6qps",
+    "type": "radar",
+    "title": "☕ New Student Meetup Hosted!",
+    "message": "ashishpalak526 created 'Test Meetup Sync' at Potheri, Chengalpattu, Tamil Nadu",
+    "link": "/meetups",
+    "isRead": false,
+    "createdAt": "2026-08-18T17:17:17.827Z",
+    "targetUserEmail": "all",
+    "actorName": "ashishpalak526"
+  },
+  {
+    "id": "notif-1787071627132-h19b",
+    "type": "radar",
+    "title": "👥 Joined Meetup!",
+    "message": "ashishpalak526 joined 'SRM Tech Park Study & Chai Catchup ☕📚'",
+    "link": "/meetups",
+    "isRead": false,
+    "createdAt": "2026-08-18T16:47:07.132Z",
+    "targetUserEmail": "all"
+  },
+  {
+    "id": "notif-1787066856640-cgp3",
+    "type": "radar",
+    "title": "📡 New Campus Activity!",
+    "message": "Abhijit Ranjan hosted 'Grand Finale' near SRM Tech Park Grounds",
+    "link": "/radar",
+    "isRead": true,
+    "createdAt": "2026-08-18T15:27:36.640Z",
+    "targetUserEmail": "all",
+    "actorName": "Abhijit Ranjan"
+  },
+  {
+    "id": "notif-101",
+    "type": "radar",
+    "title": "📡 Campus Radar Activity Near You!",
+    "message": "Abhijit Ranjan hosted 'Turf' at Potheri, Chengalpattu! Tap to view details or join.",
+    "link": "/radar",
+    "isRead": true,
+    "createdAt": "2026-08-18T14:24:00.000Z",
+    "targetUserEmail": "all",
+    "actorName": "Abhijit Ranjan"
+  },
+  {
+    "id": "notif-102",
+    "type": "message",
+    "title": "💬 New Direct Message",
+    "message": "Abhijit Ranjan sent you a message regarding 'Campus Radar: Turf'.",
+    "link": "/messages",
+    "isRead": true,
+    "createdAt": "2026-08-18T14:25:10.000Z",
+    "targetUserEmail": "all",
+    "actorName": "Abhijit Ranjan"
+  },
+  {
+    "id": "notif-103",
+    "type": "loveguru",
+    "title": "🔥 Advice Battle Unlocked!",
+    "message": "A dilemma in Guru Ji received 2+ community responses. Vote in the battle now!",
+    "link": "/loveguru",
+    "isRead": true,
+    "createdAt": "2026-08-18T12:00:00.000Z",
+    "targetUserEmail": "all",
+    "actorName": "Guru Ji"
+  }
+]

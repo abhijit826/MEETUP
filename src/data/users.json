@@ -1,0 +1,20 @@
+[
+  {
+    "email": "abhijitgyan121@gmail.com",
+    "passwordHash": "h_-1359466757",
+    "fullName": "Abhijit Ranjan",
+    "registeredAt": 1787291880000
+  },
+  {
+    "email": "ashishpalak526@gmail.com",
+    "passwordHash": "h_-1359466757",
+    "fullName": "ashishpalak526",
+    "registeredAt": 1787291880000
+  },
+  {
+    "email": "meetupgroupinc@gmail.com",
+    "passwordHash": "h_463133395",
+    "fullName": "meetup",
+    "registeredAt": 1787482515849
+  }
+]

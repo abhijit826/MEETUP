@@ -1,0 +1,324 @@
+{
+  "dilemmas": [
+    {
+      "id": "dlm-1786999316551-g15",
+      "title": "how can i get protefcted...",
+      "content": "how can i get protefcted from my boyfriend.\n\n(Seeking honest student perspectives!)",
+      "category": "Relationships",
+      "authorId": "ashishpalak526@gmail.com",
+      "authorName": "ashishpalak526",
+      "isAnonymous": false,
+      "createdAt": "2026-08-17T20:41:56.551Z",
+      "responses": [
+        {
+          "id": "resp-1786999331463-jqj",
+          "dilemmaId": "dlm-1786999316551-g15",
+          "content": "just wanted to know",
+          "authorId": "ashishpalak526@gmail.com",
+          "authorName": "Anonymous",
+          "isAnonymous": true,
+          "createdAt": "2026-08-17T20:42:11.463Z",
+          "upvotes": 0,
+          "downvotes": 0,
+          "reasonTags": {}
+        }
+      ],
+      "responseCount": 1,
+      "viewCount": 0,
+      "status": "open"
+    },
+    {
+      "id": "dlm-1786998942246-vb4",
+      "title": "Lowkey Dying of Boredom Right Now",
+      "content": "I'm sitting here with zero plans and need something to do asap. What are your go-to ways to kill time on campus when you're completely uninspired? Drop your best recs, random campus side quests, or favorite distractions below.",
+      "category": "Situationships",
+      "authorId": "ashishpalak526@gmail.com",
+      "authorName": "ashishpalak526",
+      "isAnonymous": false,
+      "createdAt": "2026-08-17T20:35:42.247Z",
+      "responses": [
+        {
+          "id": "resp-1786998954001-c8l",
+          "dilemmaId": "dlm-1786998942246-vb4",
+          "content": "just chill",
+          "authorId": "ashishpalak526@gmail.com",
+          "authorName": "Anonymous",
+          "isAnonymous": true,
+          "createdAt": "2026-08-17T20:35:54.001Z",
+          "upvotes": 1,
+          "downvotes": 0,
+          "reasonTags": {
+            "give another chance": 1
+          }
+        },
+        {
+          "id": "resp-1786999166503-6f7",
+          "dilemmaId": "dlm-1786998942246-vb4",
+          "content": "just feel good",
+          "authorId": "ashishpalak526@gmail.com",
+          "authorName": "Anonymous",
+          "isAnonymous": true,
+          "createdAt": "2026-08-17T20:39:26.503Z",
+          "upvotes": 0,
+          "downvotes": 0,
+          "reasonTags": {}
+        }
+      ],
+      "responseCount": 2,
+      "viewCount": 0,
+      "status": "open"
+    },
+    {
+      "id": "dlm-1786997749663-0pn",
+      "title": "love problem",
+      "content": "i have a situation of love how can i convince her.",
+      "category": "Relationships",
+      "authorId": "ashishpalak526@gmail.com",
+      "authorName": "ashishpalak526",
+      "isAnonymous": false,
+      "createdAt": "2026-08-17T20:15:49.663Z",
+      "responses": [
+        {
+          "id": "resp-1786997774554-ytk",
+          "dilemmaId": "dlm-1786997749663-0pn",
+          "content": "just propose her directly",
+          "authorId": "ashishpalak526@gmail.com",
+          "authorName": "Anonymous",
+          "isAnonymous": true,
+          "createdAt": "2026-08-17T20:16:14.554Z",
+          "upvotes": 0,
+          "downvotes": 0,
+          "reasonTags": {}
+        },
+        {
+          "id": "resp-1786997808854-zn8",
+          "dilemmaId": "dlm-1786997749663-0pn",
+          "content": "ok then just ask someone how to propose her",
+          "authorId": "ashishpalak526@gmail.com",
+          "authorName": "Anonymous",
+          "isAnonymous": true,
+          "createdAt": "2026-08-17T20:16:48.854Z",
+          "upvotes": 0,
+          "downvotes": 0,
+          "reasonTags": {}
+        }
+      ],
+      "responseCount": 2,
+      "viewCount": 0,
+      "status": "open",
+      "aiSummary": "🤖 AI Third Friend Take: Based on 2 student responses, the general consensus recommends: \"just propose her directly...\". Most students agree that open communication and setting boundaries are key here.",
+      "aiDevilAdvocate": "😈 Devil's Advocate Angle: Alternatively, consider: \"ok then just ask someone how to propose her...\". Sometimes taking a step back protects your peace more than confronting the situation head-on."
+    },
+    {
+      "id": "dlm-1786996379765-4gg",
+      "title": "My best friend likes my crush",
+      "content": "So my best friend just told me they have feelings for the person I have been crushing on all semester. I found out through a mutual friend, not from them directly. I feel betrayed but also dont want to lose the friendship. We have been friends since first year. What should I do?",
+      "category": "Crushes",
+      "authorId": "ashish@srm.edu.in",
+      "authorName": "Anonymous",
+      "isAnonymous": true,
+      "createdAt": "2026-08-17T19:52:59.765Z",
+      "responses": [
+        {
+          "id": "resp-1786996414945-c8q",
+          "dilemmaId": "dlm-1786996379765-4gg",
+          "content": "Talk to your friend directly. They might not even know you have feelings for this person. Communication is key — a real friendship can survive this if you are both honest.",
+          "authorId": "priya@srm.edu.in",
+          "authorName": "Anonymous",
+          "isAnonymous": true,
+          "createdAt": "2026-08-17T19:53:34.945Z",
+          "upvotes": 0,
+          "downvotes": 0,
+          "reasonTags": {}
+        }
+      ],
+      "responseCount": 1,
+      "viewCount": 0,
+      "status": "open"
+    }
+  ],
+  "swipeScenarios": [
+    {
+      "id": "swp-2026-08-22-0",
+      "scenario": "They send you their meticulously organized Google Doc notes for a 9 AM lecture you overslept through without you even asking.",
+      "category": "Green Flag",
+      "correctAnswer": "green",
+      "explanation": "Pure academic angel behavior. That's top-tier provider energy right there.",
+      "redVotes": 0,
+      "greenVotes": 0
+    },
+    {
+      "id": "swp-2026-08-22-1",
+      "scenario": "You check their public Spotify profile and every single playlist is titled with your initials and aggressive sad girl indie tracks.",
+      "category": "Red Flag",
+      "correctAnswer": "red",
+      "explanation": "Moving way too fast. We are dating for three weeks, not writing a tragic Victorian novel about our souls.",
+      "redVotes": 0,
+      "greenVotes": 0
+    },
+    {
+      "id": "swp-2026-08-22-2",
+      "scenario": "They save you a table at the crowded dining hall during peak lunch hour and already grabbed your favorite oat milk latte.",
+      "category": "Green Flag",
+      "correctAnswer": "green",
+      "explanation": "Securing a table in a packed campus dining hall is the ultimate modern act of service.",
+      "redVotes": 0,
+      "greenVotes": 0
+    },
+    {
+      "id": "swp-2026-08-22-3",
+      "scenario": "They post a mirror selfie with you, but aggressively crop your face out while making sure your designer hoodie brand is clearly visible.",
+      "category": "Mixed Signal",
+      "correctAnswer": "red",
+      "explanation": "Being accessorized rather than acknowledged is wild. Are we dating or are you just styling your grid?",
+      "redVotes": 0,
+      "greenVotes": 0
+    },
+    {
+      "id": "swp-2026-08-22-4",
+      "scenario": "They passive-aggressively whisper-shout at people chewing chips too loudly on the silent floor of the campus library.",
+      "category": "Green Flag",
+      "correctAnswer": "green",
+      "explanation": "Protecting library sanctity is a non-negotiable green flag. We respect the quiet zone.",
+      "redVotes": 0,
+      "greenVotes": 0
+    }
+  ],
+  "battles": [
+    {
+      "id": "btl-2026-08-22-0",
+      "dilemmaId": "dlm-btl-2026-08-22-0",
+      "dilemmaSnippet": "You've been left on 'Delivered' for 18 hours after asking a major talking stage about weekend plans. Do you double text to salvage the vibe or match their energy and ghost?",
+      "category": "Dating",
+      "response1": {
+        "id": "r1-2026-08-22-0",
+        "dilemmaId": "dlm-btl-2026-08-22-0",
+        "content": "Life is too short for ego games. Send a funny meme or a casual follow-up. If they're genuinely busy, they'll appreciate the low-pressure check-in.",
+        "authorId": "ai-guru-1",
+        "authorName": "The Double-Text CEO",
+        "isAnonymous": false,
+        "createdAt": "2026-08-22T11:19:50.408Z",
+        "upvotes": 0,
+        "downvotes": 0,
+        "reasonTags": {}
+      },
+      "response2": {
+        "id": "r2-2026-08-22-0",
+        "dilemmaId": "dlm-btl-2026-08-22-0",
+        "content": "No response *is* a response. Leave it alone and let them come to you. If they wanted to talk to you, they would. Protect your peace and your mystery.",
+        "authorId": "ai-guru-2",
+        "authorName": "The Silence Strategist",
+        "isAnonymous": false,
+        "createdAt": "2026-08-22T11:19:50.409Z",
+        "upvotes": 0,
+        "downvotes": 0,
+        "reasonTags": {}
+      },
+      "response1Votes": 0,
+      "response2Votes": 0,
+      "status": "active",
+      "expiresAt": "2026-08-22T23:59:59.000Z"
+    },
+    {
+      "id": "btl-2026-08-22-1",
+      "dilemmaId": "dlm-btl-2026-08-22-1",
+      "dilemmaSnippet": "Your new partner still has heavily aesthetic, curated photo dumps of their ex up on Instagram. Do you ask them to archive the ghosts of the past or just ignore the grid?",
+      "category": "Relationships",
+      "response1": {
+        "id": "r1-2026-08-22-1",
+        "dilemmaId": "dlm-btl-2026-08-22-1",
+        "content": "Communication is key. Express how it makes you feel without sounding insecure. It's totally fair to ask for a clean slate for the current relationship.",
+        "authorId": "ai-guru-1",
+        "authorName": "The Boundary Boss",
+        "isAnonymous": false,
+        "createdAt": "2026-08-22T11:19:50.409Z",
+        "upvotes": 0,
+        "downvotes": 0,
+        "reasonTags": {}
+      },
+      "response2": {
+        "id": "r2-2026-08-22-1",
+        "dilemmaId": "dlm-btl-2026-08-22-1",
+        "content": "It's just pixels on a screen. Social media isn't real life. Worrying about old archives shows a lack of trust in what you two have right now.",
+        "authorId": "ai-guru-2",
+        "authorName": "The Digital Minimalist",
+        "isAnonymous": false,
+        "createdAt": "2026-08-22T11:19:50.409Z",
+        "upvotes": 0,
+        "downvotes": 0,
+        "reasonTags": {}
+      },
+      "response1Votes": 0,
+      "response2Votes": 0,
+      "status": "active",
+      "expiresAt": "2026-08-22T23:59:59.000Z"
+    }
+  ],
+  "leaderboard": [
+    {
+      "id": "ashish@srm.edu.in",
+      "name": "Anonymous Guru",
+      "isAnonymous": true,
+      "guruPoints": 5,
+      "responsesGiven": 0,
+      "adviceWins": 0,
+      "streak": 1,
+      "badges": []
+    },
+    {
+      "id": "priya@srm.edu.in",
+      "name": "Anonymous Guru",
+      "isAnonymous": true,
+      "guruPoints": 10,
+      "responsesGiven": 1,
+      "adviceWins": 0,
+      "streak": 1,
+      "badges": []
+    },
+    {
+      "id": "ashishpalak526@gmail.com",
+      "name": "ashishpalak526",
+      "isAnonymous": false,
+      "guruPoints": 67,
+      "responsesGiven": 5,
+      "adviceWins": 0,
+      "streak": 1,
+      "badges": [
+        "Rising Star"
+      ]
+    },
+    {
+      "id": "ashishpalak536@gmail.com",
+      "name": "Anonymous Guru",
+      "isAnonymous": true,
+      "guruPoints": 5,
+      "responsesGiven": 0,
+      "adviceWins": 0,
+      "streak": 1,
+      "badges": []
+    }
+  ],
+  "dailyChallenge": {
+    "id": "dc-2026-08-22",
+    "title": "The Accidental Group Chat Spill",
+    "description": "You accidentally dropped a voice note meant for your best friend—venting about your TA's weird grading—into the main class Discord server. It's been up for three minutes and everyone is reacting with skull emojis.",
+    "type": "wwyd",
+    "content": "What would you do?",
+    "options": [
+      "Quickly delete it and pretend your account got hacked by a bot.",
+      "Lean into the chaos and post a meme about failing the next quiz anyway.",
+      "Own it completely and DM the TA a screenshot to apologize in advance.",
+      "Close the app, throw your phone across the dorm bed, and take a nap."
+    ],
+    "date": "2026-08-22",
+    "votes": {
+      "Quickly delete it and pretend your account got hacked by a bot.": 0,
+      "Lean into the chaos and post a meme about failing the next quiz anyway.": 0,
+      "Own it completely and DM the TA a screenshot to apologize in advance.": 0,
+      "Close the app, throw your phone across the dorm bed, and take a nap.": 0
+    },
+    "participantCount": 0
+  },
+  "swipeDate": "2026-08-22",
+  "battleDate": "2026-08-22"
+}
