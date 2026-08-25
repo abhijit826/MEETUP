@@ -244,7 +244,7 @@ export default function NotificationDrawer({ userEmail }: { userEmail?: string }
     <>
       <button
         onClick={() => setIsOpen(true)}
-        className="relative p-2 rounded-full bg-purple-50 hover:bg-purple-100 text-purple-700 transition-all border border-purple-200/60 shadow-sm flex items-center justify-center"
+        className="relative p-2 rounded-full bg-purple-50 dark:bg-slate-800 hover:bg-purple-100 dark:hover:bg-slate-700 text-purple-700 dark:text-purple-300 transition-all border border-purple-200/60 dark:border-slate-700 shadow-sm flex items-center justify-center"
         title="Campus Notifications"
       >
         <Bell size={18} />
@@ -262,15 +262,15 @@ export default function NotificationDrawer({ userEmail }: { userEmail?: string }
             if (e.target === e.currentTarget) setIsOpen(false);
           }}
         >
-          <div className="w-full max-w-md bg-white rounded-3xl p-5 space-y-4 shadow-2xl max-h-[82vh] flex flex-col border border-purple-100">
-            <div className="flex items-center justify-between border-b border-gray-100 pb-3">
+          <div className="w-full max-w-md bg-white dark:bg-slate-900 rounded-3xl p-5 space-y-4 shadow-2xl max-h-[82vh] flex flex-col border border-purple-100 dark:border-slate-800 text-slate-900 dark:text-slate-100 transition-colors duration-200">
+            <div className="flex items-center justify-between border-b border-gray-100 dark:border-slate-800 pb-3">
               <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-full bg-purple-100 text-purple-700 flex items-center justify-center font-bold">
+                <div className="w-8 h-8 rounded-full bg-purple-100 dark:bg-purple-950/70 text-purple-700 dark:text-purple-300 flex items-center justify-center font-bold">
                   <Bell size={16} />
                 </div>
                 <div>
-                  <h3 className="font-black text-sm text-gray-900">Notifications Hub</h3>
-                  <p className="text-[10px] text-gray-400 font-semibold">
+                  <h3 className="font-black text-sm text-gray-900 dark:text-white">Notifications Hub</h3>
+                  <p className="text-[10px] text-gray-400 dark:text-slate-400 font-semibold">
                     Swipe left/right to dismiss · Tap to open
                   </p>
                 </div>
@@ -280,7 +280,7 @@ export default function NotificationDrawer({ userEmail }: { userEmail?: string }
                 {unreadCount > 0 && (
                   <button
                     onClick={handleMarkAllRead}
-                    className="text-[10px] font-bold text-purple-600 hover:text-purple-800 flex items-center gap-0.5"
+                    className="text-[10px] font-bold text-purple-600 dark:text-purple-400 hover:text-purple-800 dark:hover:text-purple-300 flex items-center gap-0.5"
                     title="Mark all as read"
                   >
                     <CheckCheck size={12} /> Mark read
@@ -288,7 +288,7 @@ export default function NotificationDrawer({ userEmail }: { userEmail?: string }
                 )}
                 <button
                   onClick={() => setIsOpen(false)}
-                  className="p-1 rounded-full text-gray-400 hover:text-gray-600"
+                  className="p-1 rounded-full text-gray-400 hover:text-gray-600 dark:hover:text-slate-200"
                 >
                   <X size={18} />
                 </button>
@@ -303,7 +303,7 @@ export default function NotificationDrawer({ userEmail }: { userEmail?: string }
                   className={`py-1 px-3 rounded-full text-[11px] font-bold border transition-all whitespace-nowrap ${
                     selectedFilter === f
                       ? "bg-purple-600 text-white border-transparent shadow-sm"
-                      : "bg-gray-50 text-gray-600 border-gray-200"
+                      : "bg-gray-50 dark:bg-slate-800 text-gray-600 dark:text-slate-300 border-gray-200 dark:border-slate-700"
                   }`}
                 >
                   {f === "all" && `All (${notifications.length})`}
@@ -317,9 +317,9 @@ export default function NotificationDrawer({ userEmail }: { userEmail?: string }
 
             <div className="flex-1 overflow-y-auto space-y-2 pr-0.5">
               {filteredNotifs.length === 0 ? (
-                <div className="py-12 text-center text-gray-400 space-y-1">
-                  <Bell size={28} className="mx-auto text-gray-300" />
-                  <p className="text-xs font-bold">No notifications found</p>
+                <div className="py-12 text-center text-gray-400 dark:text-slate-500 space-y-1">
+                  <Bell size={28} className="mx-auto text-gray-300 dark:text-slate-700" />
+                  <p className="text-xs font-bold text-gray-700 dark:text-slate-300">No notifications found</p>
                   <p className="text-[10px]">You are all caught up!</p>
                 </div>
               ) : (
@@ -329,27 +329,27 @@ export default function NotificationDrawer({ userEmail }: { userEmail?: string }
                       onClick={() => handleMarkReadAndNavigate(n.id, n.link)}
                       className={`p-3 rounded-2xl border transition-all cursor-pointer flex items-start gap-3 w-full text-left outline-none ${
                         n.isRead
-                          ? "bg-white border-gray-100 text-gray-500 hover:bg-gray-50/80"
-                          : "bg-purple-50/70 border-purple-200/80 text-gray-900 shadow-sm hover:bg-purple-100/60"
+                          ? "bg-white dark:bg-slate-900 border-gray-100 dark:border-slate-800 text-gray-500 dark:text-slate-400 hover:bg-gray-50/80 dark:hover:bg-slate-800/60"
+                          : "bg-purple-50/70 dark:bg-purple-950/40 border-purple-200/80 dark:border-purple-800/60 text-gray-900 dark:text-white shadow-sm hover:bg-purple-100/60 dark:hover:bg-purple-900/50"
                       }`}
                     >
-                      <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${n.isRead ? "bg-gray-50 border border-gray-100" : "bg-white border border-gray-100"}`}>
+                      <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${n.isRead ? "bg-gray-50 dark:bg-slate-800 border border-gray-100 dark:border-slate-700" : "bg-white dark:bg-slate-800 border border-gray-100 dark:border-slate-700"}`}>
                         {getIcon(n.type)}
                       </div>
 
                       <div className="flex-1 space-y-0.5 min-w-0">
                         <div className="flex items-center justify-between gap-2">
-                          <h4 className={`font-extrabold text-xs leading-tight truncate ${n.isRead ? "text-gray-600" : "text-gray-900"}`}>
+                          <h4 className={`font-extrabold text-xs leading-tight truncate ${n.isRead ? "text-gray-600 dark:text-slate-400" : "text-gray-900 dark:text-white"}`}>
                             {n.title}
                           </h4>
                           {!n.isRead && (
-                            <span className="w-2 h-2 rounded-full bg-purple-600 shrink-0" />
+                            <span className="w-2 h-2 rounded-full bg-purple-600 dark:bg-purple-400 shrink-0" />
                           )}
                         </div>
-                        <p className={`text-[11px] leading-relaxed line-clamp-2 ${n.isRead ? "text-gray-400" : "text-gray-600"}`}>
+                        <p className={`text-[11px] leading-relaxed line-clamp-2 ${n.isRead ? "text-gray-400 dark:text-slate-500" : "text-gray-600 dark:text-slate-300"}`}>
                           {n.message}
                         </p>
-                        <span className="text-[9px] font-semibold text-gray-400 block pt-0.5">
+                        <span className="text-[9px] font-semibold text-gray-400 dark:text-slate-500 block pt-0.5">
                           {formatNotifTime(n.createdAt)}
                         </span>
                       </div>
@@ -360,7 +360,7 @@ export default function NotificationDrawer({ userEmail }: { userEmail?: string }
             </div>
 
             {filteredNotifs.length > 0 && (
-              <p className="text-center text-[10px] text-gray-400 font-medium pt-1 border-t border-gray-50">
+              <p className="text-center text-[10px] text-gray-400 dark:text-slate-500 font-medium pt-1 border-t border-gray-50 dark:border-slate-800">
                 ← Swipe to remove · Tap to open →
               </p>
             )}

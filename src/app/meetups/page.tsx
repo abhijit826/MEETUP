@@ -207,12 +207,12 @@ export default function MeetupsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50/40 via-white to-indigo-50/30 text-gray-900 flex flex-col pb-20">
+    <div className="min-h-screen bg-slate-100/70 dark:bg-slate-950 text-slate-900 dark:text-slate-100 flex flex-col pb-20 transition-colors duration-200">
       <Navbar userEmail={userEmail} userFullName={userFullName} />
 
       {/* Toast Notification */}
       {toast && (
-        <div className="fixed top-20 left-1/2 -translate-x-1/2 z-50 px-4 py-2.5 rounded-2xl bg-gray-900/90 backdrop-blur-md text-white text-xs font-bold shadow-xl animate-fade-in flex items-center gap-2">
+        <div className="fixed top-20 left-1/2 -translate-x-1/2 z-50 px-4 py-2.5 rounded-2xl bg-gray-900/90 dark:bg-slate-800/90 backdrop-blur-md text-white text-xs font-bold shadow-xl animate-fade-in flex items-center gap-2 border border-slate-700">
           <span>{toast}</span>
         </div>
       )}
@@ -220,35 +220,37 @@ export default function MeetupsPage() {
       {/* Main Responsive App Container */}
       <div className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col space-y-6">
         {/* Header Controls Bar */}
-        <div className="bg-white/90 backdrop-blur-md border border-gray-100 rounded-3xl p-5 shadow-sm space-y-4">
+        <div className="bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border border-gray-100 dark:border-slate-800 rounded-3xl p-5 shadow-sm space-y-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <Link
                 href="/home"
-                className="w-9 h-9 rounded-2xl bg-purple-50 hover:bg-purple-100 flex items-center justify-center text-purple-700 transition-all border border-purple-100"
+                className="w-9 h-9 rounded-2xl bg-purple-50 dark:bg-purple-950/60 hover:bg-purple-100 dark:hover:bg-purple-900/60 flex items-center justify-center text-purple-700 dark:text-purple-300 transition-all border border-purple-100 dark:border-purple-800/50"
               >
                 <ArrowLeft size={18} />
               </Link>
               <div>
                 <div className="flex items-center gap-2">
-                  <h1 className="font-black text-lg tracking-tight text-gray-900">MEETUP Hub</h1>
+                  <h1 className="font-black text-lg tracking-tight text-gray-900 dark:text-white">MEETUP Hub</h1>
                   <span className="flex h-2.5 w-2.5 relative">
                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
                     <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
                   </span>
                 </div>
-                <p className="text-xs font-semibold text-gray-500">
+                <p className="text-xs font-semibold text-gray-500 dark:text-slate-400">
                   Join campus study squads, chai catchups &amp; sports meetups
                 </p>
               </div>
             </div>
 
             {/* Feed / Map View Toggle */}
-            <div className="flex items-center bg-gray-100 p-1 rounded-2xl gap-1">
+            <div className="flex items-center bg-gray-100 dark:bg-slate-800 p-1 rounded-2xl gap-1">
               <button
                 onClick={() => setViewMode("feed")}
                 className={`py-1.5 px-3 rounded-xl text-xs transition-all font-bold ${
-                  viewMode === "feed" ? "bg-white text-purple-700 shadow-xs" : "text-gray-500 hover:text-gray-800"
+                  viewMode === "feed"
+                    ? "bg-white dark:bg-slate-900 text-purple-700 dark:text-purple-300 shadow-xs"
+                    : "text-gray-500 dark:text-slate-400 hover:text-gray-800 dark:hover:text-slate-200"
                 }`}
               >
                 Feed Grid
@@ -256,7 +258,9 @@ export default function MeetupsPage() {
               <button
                 onClick={() => setViewMode("map")}
                 className={`py-1.5 px-3 rounded-xl text-xs transition-all font-bold ${
-                  viewMode === "map" ? "bg-white text-purple-700 shadow-xs" : "text-gray-500 hover:text-gray-800"
+                  viewMode === "map"
+                    ? "bg-white dark:bg-slate-900 text-purple-700 dark:text-purple-300 shadow-xs"
+                    : "text-gray-500 dark:text-slate-400 hover:text-gray-800 dark:hover:text-slate-200"
                 }`}
               >
                 Radar Map
@@ -267,13 +271,13 @@ export default function MeetupsPage() {
           {/* Search & Categories Bar */}
           <div className="flex flex-col md:flex-row items-center gap-3">
             <div className="relative w-full md:w-80">
-              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" size={15} />
+              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 dark:text-slate-500" size={15} />
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search chai meetups, study pods, turf games..."
-                className="w-full py-2 pl-10 pr-3 text-xs bg-gray-50 rounded-2xl border border-gray-200 focus:border-purple-500 focus:bg-white outline-none transition-all"
+                className="w-full py-2 pl-10 pr-3 text-xs bg-gray-50 dark:bg-slate-800/80 rounded-2xl border border-gray-200 dark:border-slate-700 focus:border-purple-500 focus:bg-white dark:focus:bg-slate-800 outline-none transition-all text-slate-900 dark:text-white"
               />
             </div>
 
@@ -285,7 +289,7 @@ export default function MeetupsPage() {
                   className={`shrink-0 flex items-center gap-1.5 py-1.5 px-3.5 rounded-full text-xs font-bold border transition-all ${
                     selectedCategory === cat.value
                       ? "bg-gradient-to-r from-purple-600 to-indigo-600 text-white border-transparent shadow-xs"
-                      : "bg-white text-gray-600 border-gray-200 hover:border-purple-300"
+                      : "bg-white dark:bg-slate-800 text-gray-600 dark:text-slate-300 border-gray-200 dark:border-slate-700 hover:border-purple-300 dark:hover:border-purple-700"
                   }`}
                 >
                   <span>{cat.emoji}</span>
@@ -299,7 +303,7 @@ export default function MeetupsPage() {
         {/* Content View */}
         <div className="flex-1 space-y-4">
           {viewMode === "map" ? (
-            <div className="h-[calc(100vh-230px)] min-h-[450px] rounded-3xl overflow-hidden border border-purple-200 shadow-lg">
+            <div className="h-[calc(100vh-230px)] min-h-[450px] rounded-3xl overflow-hidden border border-purple-200 dark:border-slate-800 shadow-lg">
               <RadarMap
                 activities={meetups.map((m) => ({
                   id: m.id,
@@ -333,20 +337,20 @@ export default function MeetupsPage() {
             /* Feed List — Multi-Column Responsive Grid on Desktop */
             <div className="space-y-4">
               <div className="flex items-center justify-between px-1">
-                <span className="text-xs font-extrabold uppercase tracking-wider text-gray-400">
+                <span className="text-xs font-extrabold uppercase tracking-wider text-gray-400 dark:text-slate-500">
                   {meetups.length} Active MEETUP Squads
                 </span>
-                <span className="text-xs text-purple-700 font-bold bg-purple-50 px-3 py-1 rounded-full flex items-center gap-1.5 border border-purple-200">
+                <span className="text-xs text-purple-700 dark:text-purple-300 font-bold bg-purple-50 dark:bg-purple-950/60 px-3 py-1 rounded-full flex items-center gap-1.5 border border-purple-200 dark:border-purple-800/50">
                   <span className="w-2 h-2 rounded-full bg-purple-500 animate-ping"></span>
                   Live GPS Synced
                 </span>
               </div>
 
               {meetups.length === 0 ? (
-                <div className="py-16 text-center bg-white rounded-3xl border border-dashed border-gray-200 p-8 space-y-3 shadow-xs">
+                <div className="py-16 text-center bg-white dark:bg-slate-900 rounded-3xl border border-dashed border-gray-200 dark:border-slate-800 p-8 space-y-3 shadow-xs">
                   <Compass size={36} className="mx-auto text-purple-400 animate-spin" />
-                  <h3 className="font-extrabold text-base text-gray-800">No meetups found</h3>
-                  <p className="text-xs text-gray-500 max-w-sm mx-auto">
+                  <h3 className="font-extrabold text-base text-gray-800 dark:text-slate-200">No meetups found</h3>
+                  <p className="text-xs text-gray-500 dark:text-slate-400 max-w-sm mx-auto">
                     Be the first to host a chai catchup, study squad, or sports meetup near campus!
                   </p>
                   <button
@@ -364,30 +368,30 @@ export default function MeetupsPage() {
                       <article
                         key={m.id}
                         onClick={() => setActiveMeetup(m)}
-                        className="rounded-3xl bg-white border border-gray-100 hover:border-purple-300 p-5 shadow-xs hover:shadow-xl transition-all cursor-pointer flex flex-col justify-between space-y-4 group"
+                        className="rounded-3xl bg-white dark:bg-slate-900 border border-gray-100 dark:border-slate-800 hover:border-purple-300 dark:hover:border-purple-700 p-5 shadow-xs hover:shadow-xl transition-all cursor-pointer flex flex-col justify-between space-y-4 group"
                       >
                         {/* Top Bar */}
                         <div className="flex items-center justify-between">
-                          <span className="text-xs font-extrabold px-3 py-1 rounded-full bg-purple-100 text-purple-700">
+                          <span className="text-xs font-extrabold px-3 py-1 rounded-full bg-purple-100 dark:bg-purple-950/60 text-purple-700 dark:text-purple-300">
                             {m.category}
                           </span>
-                          <span className="text-xs font-bold text-gray-500 bg-gray-50 px-2.5 py-1 rounded-full border border-gray-100">
+                          <span className="text-xs font-bold text-gray-500 dark:text-slate-400 bg-gray-50 dark:bg-slate-800/80 px-2.5 py-1 rounded-full border border-gray-100 dark:border-slate-700">
                             👥 {m.participantIds.length} {m.maxParticipants ? `/ ${m.maxParticipants}` : ""} Attending
                           </span>
                         </div>
 
                         {/* Title & Description */}
                         <div>
-                          <h3 className="font-black text-base text-gray-900 leading-snug group-hover:text-purple-700 transition-colors">
+                          <h3 className="font-black text-base text-gray-900 dark:text-white leading-snug group-hover:text-purple-700 dark:group-hover:text-purple-300 transition-colors">
                             {m.title}
                           </h3>
-                          <p className="text-xs text-gray-500 mt-1.5 leading-relaxed line-clamp-2">
+                          <p className="text-xs text-gray-500 dark:text-slate-400 mt-1.5 leading-relaxed line-clamp-2">
                             {m.description}
                           </p>
                         </div>
 
                         {/* Location & Time Info */}
-                        <div className="grid grid-cols-2 gap-2 text-xs font-semibold text-gray-600 bg-gray-50 p-3 rounded-2xl border border-gray-100">
+                        <div className="grid grid-cols-2 gap-2 text-xs font-semibold text-gray-600 dark:text-slate-300 bg-gray-50 dark:bg-slate-800/60 p-3 rounded-2xl border border-gray-100 dark:border-slate-700">
                           <div className="flex items-center gap-1.5 truncate">
                             <MapPin size={14} className="text-purple-500 shrink-0" />
                             <span className="truncate">{m.locationName}</span>
@@ -399,13 +403,13 @@ export default function MeetupsPage() {
                         </div>
 
                         {/* Interactive Badges & Action Bar */}
-                        <div className="flex items-center justify-between pt-1 border-t border-gray-100">
+                        <div className="flex items-center justify-between pt-1 border-t border-gray-100 dark:border-slate-800">
                           <div className="flex items-center gap-1.5">
-                            <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-md flex items-center gap-1 border border-emerald-100">
+                            <span className="text-[10px] font-bold text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/60 px-2 py-0.5 rounded-md flex items-center gap-1 border border-emerald-100 dark:border-emerald-800/50">
                               <Award size={11} /> {m.checkIns.length} Checked In
                             </span>
                             {m.expenses.length > 0 && (
-                              <span className="text-[10px] font-bold text-blue-700 bg-blue-50 px-2 py-0.5 rounded-md flex items-center gap-1 border border-blue-100">
+                              <span className="text-[10px] font-bold text-blue-700 dark:text-blue-300 bg-blue-50 dark:bg-blue-950/60 px-2 py-0.5 rounded-md flex items-center gap-1 border border-blue-100 dark:border-blue-800/50">
                                 <DollarSign size={11} /> Split Bill
                               </span>
                             )}
@@ -418,7 +422,7 @@ export default function MeetupsPage() {
                             }}
                             className={`py-1.5 px-3.5 rounded-xl text-xs font-extrabold transition-all flex items-center gap-1 ${
                               isJoined
-                                ? "bg-green-100 text-green-700 border border-green-200"
+                                ? "bg-green-100 dark:bg-emerald-950/60 text-green-700 dark:text-emerald-300 border border-green-200 dark:border-emerald-800/50"
                                 : "bg-purple-600 text-white shadow-xs hover:bg-purple-700"
                             }`}
                           >

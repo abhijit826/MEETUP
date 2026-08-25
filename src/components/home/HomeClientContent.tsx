@@ -114,15 +114,15 @@ export default function HomeClientContent({ fullName, userEmail }: HomeClientCon
         <div className="lg:col-span-2 space-y-6">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="text-2xl font-black text-gray-900 tracking-tight">Welcome back, {fullName}! 👋</h2>
-              <p className="text-xs text-gray-500 font-medium font-semibold">Campus Social Portal • Select a feature below</p>
+              <h2 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight">Welcome back, {fullName}! 👋</h2>
+              <p className="text-xs text-slate-500 dark:text-slate-400 font-semibold">Campus Social Portal • Select a feature below</p>
             </div>
 
             <Link href="/messages">
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="py-2 px-3.5 rounded-2xl bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-extrabold text-xs transition-all flex items-center gap-2 border border-indigo-200/80"
+                className="py-2 px-3.5 rounded-2xl bg-indigo-50 dark:bg-indigo-950/50 hover:bg-indigo-100 dark:hover:bg-indigo-900/60 text-indigo-700 dark:text-indigo-300 font-extrabold text-xs transition-all flex items-center gap-2 border border-indigo-200/80 dark:border-indigo-800/60"
               >
                 <MessageSquare size={15} /> Private Messages
               </motion.button>
@@ -141,26 +141,26 @@ export default function HomeClientContent({ fullName, userEmail }: HomeClientCon
               <Link href="/radar" className="block h-full">
                 <motion.div
                   whileHover={{ y: -6, scale: 1.015 }}
-                  className="group relative h-full bg-white/90 backdrop-blur-md border border-purple-100 rounded-3xl p-5 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between overflow-hidden"
+                  className="group relative h-full bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border border-purple-100 dark:border-slate-800 rounded-3xl p-5 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between overflow-hidden"
                 >
-                  <div className="absolute right-0 top-0 w-32 h-32 bg-purple-50 rounded-full blur-2xl group-hover:bg-purple-100 transition-all pointer-events-none" />
+                  <div className="absolute right-0 top-0 w-32 h-32 bg-purple-50 dark:bg-purple-950/20 rounded-full blur-2xl group-hover:bg-purple-100 dark:group-hover:bg-purple-900/30 transition-all pointer-events-none" />
 
                   <div>
-                    <div className="w-12 h-12 rounded-2xl bg-purple-600 text-white flex items-center justify-center mb-4 shadow-md group-hover:scale-110 transition-transform">
+                    <div className="w-12 h-12 rounded-2xl bg-purple-600 dark:bg-purple-500 text-white flex items-center justify-center mb-4 shadow-md group-hover:scale-110 transition-transform">
                       <Compass size={24} />
                     </div>
-                    <span className="text-[10px] font-black uppercase tracking-wider text-purple-600 bg-purple-50 px-2.5 py-1 rounded-full border border-purple-100">
+                    <span className="text-[10px] font-black uppercase tracking-wider text-purple-600 dark:text-purple-300 bg-purple-50 dark:bg-purple-950/60 px-2.5 py-1 rounded-full border border-purple-100 dark:border-purple-800/50">
                       Live Map
                     </span>
-                    <h3 className="text-lg font-black text-gray-900 mt-2 tracking-tight group-hover:text-purple-700 transition-colors">
+                    <h3 className="text-lg font-black text-slate-900 dark:text-white mt-2 tracking-tight group-hover:text-purple-700 dark:group-hover:text-purple-300 transition-colors">
                       Campus Radar
                     </h3>
-                    <p className="text-xs text-gray-500 mt-1 leading-relaxed">
+                    <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 leading-relaxed">
                       Interactive live map showing nearby student activities &amp; sports.
                     </p>
                   </div>
 
-                  <div className="mt-5 pt-3 border-t border-gray-100 flex items-center justify-between text-xs font-black text-purple-600">
+                  <div className="mt-5 pt-3 border-t border-gray-100 dark:border-slate-800 flex items-center justify-between text-xs font-black text-purple-600 dark:text-purple-400">
                     <span>Explore Live Map</span>
                     <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
                   </div>
@@ -173,26 +173,26 @@ export default function HomeClientContent({ fullName, userEmail }: HomeClientCon
               <Link href="/meetups" className="block h-full">
                 <motion.div
                   whileHover={{ y: -6, scale: 1.015 }}
-                  className="group relative h-full bg-white/90 backdrop-blur-md border border-amber-100 rounded-3xl p-5 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between overflow-hidden"
+                  className="group relative h-full bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border border-amber-100 dark:border-slate-800 rounded-3xl p-5 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between overflow-hidden"
                 >
-                  <div className="absolute right-0 top-0 w-32 h-32 bg-amber-50 rounded-full blur-2xl group-hover:bg-amber-100 transition-all pointer-events-none" />
+                  <div className="absolute right-0 top-0 w-32 h-32 bg-amber-50 dark:bg-amber-950/20 rounded-full blur-2xl group-hover:bg-amber-100 dark:group-hover:bg-amber-900/30 transition-all pointer-events-none" />
 
                   <div>
                     <div className="w-12 h-12 rounded-2xl bg-amber-500 text-white flex items-center justify-center mb-4 shadow-md group-hover:scale-110 transition-transform">
                       <Users size={24} />
                     </div>
-                    <span className="text-[10px] font-black uppercase tracking-wider text-amber-700 bg-amber-50 px-2.5 py-1 rounded-full border border-amber-100">
+                    <span className="text-[10px] font-black uppercase tracking-wider text-amber-700 dark:text-amber-300 bg-amber-50 dark:bg-amber-950/60 px-2.5 py-1 rounded-full border border-amber-100 dark:border-amber-800/50">
                       Squad Meetups
                     </span>
-                    <h3 className="text-lg font-black text-gray-900 mt-2 tracking-tight group-hover:text-amber-700 transition-colors">
+                    <h3 className="text-lg font-black text-slate-900 dark:text-white mt-2 tracking-tight group-hover:text-amber-700 dark:group-hover:text-amber-300 transition-colors">
                       Meetups Hub
                     </h3>
-                    <p className="text-xs text-gray-500 mt-1 leading-relaxed">
+                    <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 leading-relaxed">
                       Join study groups, chai catchups, chat, split bills &amp; run polls.
                     </p>
                   </div>
 
-                  <div className="mt-5 pt-3 border-t border-gray-100 flex items-center justify-between text-xs font-black text-amber-600">
+                  <div className="mt-5 pt-3 border-t border-gray-100 dark:border-slate-800 flex items-center justify-between text-xs font-black text-amber-600 dark:text-amber-400">
                     <span>Browse Meetup Squads</span>
                     <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
                   </div>
@@ -205,26 +205,26 @@ export default function HomeClientContent({ fullName, userEmail }: HomeClientCon
               <Link href="/confessions" className="block h-full">
                 <motion.div
                   whileHover={{ y: -6, scale: 1.015 }}
-                  className="group relative h-full bg-white/90 backdrop-blur-md border border-indigo-100 rounded-3xl p-5 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between overflow-hidden"
+                  className="group relative h-full bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border border-indigo-100 dark:border-slate-800 rounded-3xl p-5 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between overflow-hidden"
                 >
-                  <div className="absolute right-0 top-0 w-32 h-32 bg-indigo-50 rounded-full blur-2xl group-hover:bg-indigo-100 transition-all pointer-events-none" />
+                  <div className="absolute right-0 top-0 w-32 h-32 bg-indigo-50 dark:bg-indigo-950/20 rounded-full blur-2xl group-hover:bg-indigo-100 dark:group-hover:bg-indigo-900/30 transition-all pointer-events-none" />
 
                   <div>
-                    <div className="w-12 h-12 rounded-2xl bg-indigo-600 text-white flex items-center justify-center mb-4 shadow-md group-hover:scale-110 transition-transform">
+                    <div className="w-12 h-12 rounded-2xl bg-indigo-600 dark:bg-indigo-500 text-white flex items-center justify-center mb-4 shadow-md group-hover:scale-110 transition-transform">
                       <Heart size={24} />
                     </div>
-                    <span className="text-[10px] font-black uppercase tracking-wider text-indigo-700 bg-indigo-50 px-2.5 py-1 rounded-full border border-indigo-100">
+                    <span className="text-[10px] font-black uppercase tracking-wider text-indigo-700 dark:text-indigo-300 bg-indigo-50 dark:bg-indigo-950/60 px-2.5 py-1 rounded-full border border-indigo-100 dark:border-indigo-800/50">
                       Anonymous Feed
                     </span>
-                    <h3 className="text-lg font-black text-gray-900 mt-2 tracking-tight group-hover:text-indigo-700 transition-colors">
+                    <h3 className="text-lg font-black text-slate-900 dark:text-white mt-2 tracking-tight group-hover:text-indigo-700 dark:group-hover:text-indigo-300 transition-colors">
                       Confessions Wall
                     </h3>
-                    <p className="text-xs text-gray-500 mt-1 leading-relaxed">
+                    <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 leading-relaxed">
                       Share anonymous campus secrets, stories &amp; chat in safety.
                     </p>
                   </div>
 
-                  <div className="mt-5 pt-3 border-t border-gray-100 flex items-center justify-between text-xs font-black text-indigo-600">
+                  <div className="mt-5 pt-3 border-t border-gray-100 dark:border-slate-800 flex items-center justify-between text-xs font-black text-indigo-600 dark:text-indigo-400">
                     <span>Read Confessions</span>
                     <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
                   </div>
@@ -237,26 +237,26 @@ export default function HomeClientContent({ fullName, userEmail }: HomeClientCon
               <Link href="/loveguru" className="block h-full">
                 <motion.div
                   whileHover={{ y: -6, scale: 1.015 }}
-                  className="group relative h-full bg-white/90 backdrop-blur-md border border-pink-100 rounded-3xl p-5 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between overflow-hidden"
+                  className="group relative h-full bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border border-pink-100 dark:border-slate-800 rounded-3xl p-5 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between overflow-hidden"
                 >
-                  <div className="absolute right-0 top-0 w-32 h-32 bg-pink-50 rounded-full blur-2xl group-hover:bg-pink-100 transition-all pointer-events-none" />
+                  <div className="absolute right-0 top-0 w-32 h-32 bg-pink-50 dark:bg-pink-950/20 rounded-full blur-2xl group-hover:bg-pink-100 dark:group-hover:bg-pink-900/30 transition-all pointer-events-none" />
 
                   <div>
                     <div className="w-12 h-12 rounded-2xl bg-pink-500 text-white flex items-center justify-center mb-4 shadow-md group-hover:scale-110 transition-transform">
                       <Sparkles size={24} />
                     </div>
-                    <span className="text-[10px] font-black uppercase tracking-wider text-pink-700 bg-pink-50 px-2.5 py-1 rounded-full border border-pink-100">
+                    <span className="text-[10px] font-black uppercase tracking-wider text-pink-700 dark:text-pink-300 bg-pink-50 dark:bg-pink-950/60 px-2.5 py-1 rounded-full border border-pink-100 dark:border-pink-800/50">
                       AI &amp; Campus Guru
                     </span>
-                    <h3 className="text-lg font-black text-gray-900 mt-2 tracking-tight group-hover:text-pink-700 transition-colors">
+                    <h3 className="text-lg font-black text-slate-900 dark:text-white mt-2 tracking-tight group-hover:text-pink-700 dark:group-hover:text-pink-300 transition-colors">
                       Guru Ji
                     </h3>
-                    <p className="text-xs text-gray-500 mt-1 leading-relaxed">
+                    <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 leading-relaxed">
                       Get anonymous dating advice, crush matches &amp; relationship tips.
                     </p>
                   </div>
 
-                  <div className="mt-5 pt-3 border-t border-gray-100 flex items-center justify-between text-xs font-black text-pink-600">
+                  <div className="mt-5 pt-3 border-t border-gray-100 dark:border-slate-800 flex items-center justify-between text-xs font-black text-pink-600 dark:text-pink-400">
                     <span>Ask Guru Ji</span>
                     <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
                   </div>
@@ -274,28 +274,28 @@ export default function HomeClientContent({ fullName, userEmail }: HomeClientCon
           className="space-y-6"
         >
           {/* User Account Card */}
-          <div className="bg-white/90 backdrop-blur-md border border-gray-100 rounded-3xl p-5 shadow-sm space-y-4">
-            <div className="flex items-center justify-between border-b border-gray-100 pb-3">
-              <h3 className="font-black text-sm text-gray-900 flex items-center gap-1.5">
+          <div className="bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border border-gray-100 dark:border-slate-800 rounded-3xl p-5 shadow-sm space-y-4">
+            <div className="flex items-center justify-between border-b border-gray-100 dark:border-slate-800 pb-3">
+              <h3 className="font-black text-sm text-slate-900 dark:text-white flex items-center gap-1.5">
                 <Zap size={16} className="text-amber-500" /> Active Session
               </h3>
-              <span className="text-[10px] font-extrabold px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800">
+              <span className="text-[10px] font-extrabold px-2.5 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300">
                 Online
               </span>
             </div>
 
             <div className="space-y-2 text-xs">
-              <div className="flex justify-between py-1 border-b border-gray-50">
-                <span className="text-gray-400 font-medium">Student Email:</span>
-                <span className="font-extrabold text-gray-800 truncate max-w-[150px]">{userEmail}</span>
+              <div className="flex justify-between py-1 border-b border-gray-50 dark:border-slate-800/60">
+                <span className="text-slate-400 dark:text-slate-500 font-medium">Student Email:</span>
+                <span className="font-extrabold text-slate-800 dark:text-slate-200 truncate max-w-[150px]">{userEmail}</span>
               </div>
-              <div className="flex justify-between py-1 border-b border-gray-50">
-                <span className="text-gray-400 font-medium">Campus Reward Points:</span>
-                <span className="font-black text-purple-700">{points} Points</span>
+              <div className="flex justify-between py-1 border-b border-gray-50 dark:border-slate-800/60">
+                <span className="text-slate-400 dark:text-slate-500 font-medium">Campus Reward Points:</span>
+                <span className="font-black text-purple-700 dark:text-purple-300">{points} Points</span>
               </div>
               <div className="flex justify-between py-1">
-                <span className="text-gray-400 font-medium">Security &amp; AI Safety:</span>
-                <span className="font-extrabold text-emerald-600 flex items-center gap-1">
+                <span className="text-slate-400 dark:text-slate-500 font-medium">Security &amp; AI Safety:</span>
+                <span className="font-extrabold text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
                   <ShieldAlert size={12} /> Active Guard
                 </span>
               </div>

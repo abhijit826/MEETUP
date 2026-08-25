@@ -39,7 +39,7 @@ export default async function HomePage() {
   const userEmail = supabaseUser?.email || customUser?.email || "";
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-purple-50/40 via-white to-gray-50 flex flex-col pb-20 md:pb-8">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 flex flex-col pb-20 md:pb-8 transition-colors duration-200">
       {/* Top Desktop & Mobile Navigation Bar */}
       <Navbar userEmail={userEmail} userFullName={fullName} />
 
@@ -47,7 +47,7 @@ export default async function HomePage() {
         <HomeClientContent fullName={fullName} userEmail={userEmail} />
       </main>
 
-      <footer className="mt-auto border-t border-gray-100 bg-white py-6 text-center text-xs text-gray-400 font-medium">
+      <footer className="mt-auto border-t border-gray-100 dark:border-slate-800 bg-white dark:bg-slate-900 py-6 text-center text-xs text-gray-400 dark:text-slate-500 font-medium">
         MEETUP &copy; 2026
       </footer>
     </div>
