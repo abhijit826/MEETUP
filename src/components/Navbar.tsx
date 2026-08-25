@@ -15,6 +15,7 @@ import {
   Award,
   Menu,
   X,
+  User,
 } from "lucide-react";
 import NotificationDrawer from "@/components/notifications/NotificationDrawer";
 import { createClient } from "@/lib/supabase/client";
@@ -99,6 +100,7 @@ export default function Navbar({ userEmail, userFullName }: NavbarProps) {
     { label: "Meetups Hub", href: "/meetups", icon: Users },
     { label: "Confessions", href: "/confessions", icon: Heart },
     { label: "Guru Ji", href: "/loveguru", icon: Sparkles },
+    { label: "Profile", href: "/profile", icon: User },
   ];
 
   const handleSignOut = async () => {
@@ -193,20 +195,22 @@ export default function Navbar({ userEmail, userFullName }: NavbarProps) {
 
             {/* User Profile / Logout (Desktop) */}
             <div className="hidden lg:flex items-center gap-2 pl-2 border-l border-gray-200">
-              <motion.div
-                whileHover={{ scale: 1.08 }}
-                className="w-8 h-8 rounded-full bg-gradient-to-br from-purple-500 to-indigo-600 text-white font-bold text-xs flex items-center justify-center shadow-xs cursor-pointer"
-              >
-                {(sessionName || "S")[0].toUpperCase()}
-              </motion.div>
-              <div className="text-left">
-                <p className="text-xs font-extrabold text-gray-800 leading-tight max-w-[100px] truncate">
-                  {sessionName || "Student"}
-                </p>
-                <p className="text-[10px] text-emerald-600 font-bold flex items-center gap-1">
-                  <ShieldCheck size={10} /> Verified Student
-                </p>
-              </div>
+              <Link href="/profile" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
+                <motion.div
+                  whileHover={{ scale: 1.08 }}
+                  className="w-8 h-8 rounded-full bg-gradient-to-br from-purple-500 to-indigo-600 text-white font-bold text-xs flex items-center justify-center shadow-xs cursor-pointer"
+                >
+                  {(sessionName || "S")[0].toUpperCase()}
+                </motion.div>
+                <div className="text-left">
+                  <p className="text-xs font-extrabold text-gray-800 leading-tight max-w-[100px] truncate">
+                    {sessionName || "Student"}
+                  </p>
+                  <p className="text-[10px] text-emerald-600 font-bold flex items-center gap-1">
+                    <ShieldCheck size={10} /> Verified Student
+                  </p>
+                </div>
+              </Link>
 
               <motion.button
                 whileHover={{ scale: 1.1 }}
