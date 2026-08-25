@@ -4,7 +4,7 @@ import {
   getSharedMessagesForConv,
   startSharedConversation,
   sendSharedMessage,
-  revealSharedIdentity,
+  toggleSharedIdentity,
   toggleSharedBlockUser,
   getSharedConversationById,
   markSharedConversationAsRead,
@@ -119,12 +119,12 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: true, message, messages, conversations });
     }
 
-    // 3. Action: Reveal Identity
-    if (action === "reveal") {
-      if (!convId || !realName) {
-        return NextResponse.json({ error: "convId and realName required" }, { status: 400 });
+    // 3. Action: Reveal / Hide Identity Toggle
+    if (action === "reveal" || action === "toggleIdentity") {
+      if (!convId) {
+        return NextResponse.json({ error: "convId is required" }, { status: 400 });
       }
-      const conversations = await revealSharedIdentity(convId, realName);
+      const conversations = await toggleSharedIdentity(convId, realName);
       return NextResponse.json({ success: true, conversations });
     }
 

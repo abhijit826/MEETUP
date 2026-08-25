@@ -134,17 +134,31 @@ export async function sendSharedMessage(
   return newMsg;
 }
 
-export async function revealSharedIdentity(convId: string, realName: string): Promise<Conversation[]> {
+export async function toggleSharedIdentity(convId: string, realName?: string): Promise<Conversation[]> {
   const store = await getDiskMessagesData();
   store.conversations = store.conversations.map((c) => {
     if (c.id !== convId) return c;
-    return {
-      ...c,
-      participant2Name: realName,
-      participant2IsAnonymous: false,
-      participant2Avatar: realName.charAt(0).toUpperCase(),
-      isIdentityRevealed: true,
-    };
+    const isCurrentlyRevealed = c.isIdentityRevealed || !c.participant2IsAnonymous;
+    if (isCurrentlyRevealed) {
+      // Revert back to Anonymous
+      return {
+        ...c,
+        participant2IsAnonymous: true,
+        participant1IsAnonymous: true,
+        isIdentityRevealed: false,
+      };
+    } else {
+      // Reveal Identity
+      const name = realName || c.participant2Name || "Student";
+      return {
+        ...c,
+        participant2Name: name,
+        participant2IsAnonymous: false,
+        participant1IsAnonymous: false,
+        participant2Avatar: name.charAt(0).toUpperCase(),
+        isIdentityRevealed: true,
+      };
+    }
   });
   await saveDiskMessagesData(store);
   return store.conversations;

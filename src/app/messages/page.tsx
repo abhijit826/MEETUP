@@ -13,6 +13,7 @@ import {
   Flag,
   Ban,
   Eye,
+  EyeOff,
   CheckCircle2,
   Lock,
   MessageCircle,
@@ -225,14 +226,14 @@ function MessagesContent() {
     }
   };
 
-  const handleRevealIdentity = async () => {
+  const handleToggleIdentity = async () => {
     if (!activeConvId) return;
     try {
       const res = await fetch("/api/messages", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          action: "reveal",
+          action: "toggleIdentity",
           convId: activeConvId,
           realName: userFullName,
         }),
@@ -240,7 +241,13 @@ function MessagesContent() {
       const data = await res.json();
       if (data.success && data.conversations) {
         setConversations(data.conversations);
-        triggerToast("🔓 Identity revealed! The other user can now see your profile.");
+        const updated = (data.conversations as Conversation[]).find((c) => c.id === activeConvId);
+        const isAnonNow = updated ? updated.participant2IsAnonymous || !updated.isIdentityRevealed : false;
+        triggerToast(
+          isAnonNow
+            ? "🕵️ Switched back to Anonymous Mode!"
+            : "🔓 Identity revealed! The other user can now see your profile."
+        );
       }
     } catch {
       // ignore
@@ -477,16 +484,32 @@ function MessagesContent() {
                 </div>
 
                 <div className="flex items-center gap-1 relative">
-                  {activeConversation.participant2IsAnonymous && (
-                    <button
-                      onClick={handleRevealIdentity}
-                      className="py-1 px-2.5 rounded-full bg-indigo-50 text-[#4F46E5] hover:bg-[#4F46E5] hover:text-white transition-all text-[11px] font-bold flex items-center gap-1 border border-indigo-200"
-                      title="Reveal your identity voluntarily to this user"
-                    >
-                      <Eye size={12} />
-                      <span>Reveal Identity</span>
-                    </button>
-                  )}
+                  {(() => {
+                    const isRevealed = activeConversation.isIdentityRevealed || !activeConversation.participant2IsAnonymous;
+                    return (
+                      <button
+                        onClick={handleToggleIdentity}
+                        className={`py-1 px-2.5 rounded-full transition-all text-[11px] font-bold flex items-center gap-1 border ${
+                          isRevealed
+                            ? "bg-gray-100 text-gray-700 hover:bg-gray-200 border-gray-200"
+                            : "bg-indigo-50 text-[#4F46E5] hover:bg-[#4F46E5] hover:text-white border-indigo-200"
+                        }`}
+                        title={isRevealed ? "Hide identity and switch back to Anonymous mode" : "Reveal your identity voluntarily to this user"}
+                      >
+                        {isRevealed ? (
+                          <>
+                            <EyeOff size={12} />
+                            <span>Go Anonymous</span>
+                          </>
+                        ) : (
+                          <>
+                            <Eye size={12} />
+                            <span>Reveal Identity</span>
+                          </>
+                        )}
+                      </button>
+                    );
+                  })()}
 
                   <button
                     onClick={() => setShowOptionsMenu((v) => !v)}
@@ -497,6 +520,25 @@ function MessagesContent() {
 
                   {showOptionsMenu && (
                     <div className="absolute right-0 top-10 w-44 rounded-2xl bg-white border border-gray-100 shadow-xl p-1 z-30 animate-fade-in text-xs font-semibold text-gray-700">
+                      <button
+                        onClick={() => {
+                          setShowOptionsMenu(false);
+                          handleToggleIdentity();
+                        }}
+                        className="w-full px-3 py-2 text-left rounded-xl hover:bg-gray-50 flex items-center gap-2 text-gray-800"
+                      >
+                        {activeConversation.isIdentityRevealed || !activeConversation.participant2IsAnonymous ? (
+                          <>
+                            <EyeOff size={14} className="text-gray-500" />
+                            <span>Go Anonymous</span>
+                          </>
+                        ) : (
+                          <>
+                            <Eye size={14} className="text-indigo-600" />
+                            <span>Reveal Identity</span>
+                          </>
+                        )}
+                      </button>
                       <button
                         onClick={handleToggleBlock}
                         className="w-full px-3 py-2 text-left rounded-xl hover:bg-gray-50 flex items-center gap-2 text-gray-800"
