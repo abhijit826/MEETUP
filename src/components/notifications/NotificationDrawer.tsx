@@ -35,10 +35,9 @@ function SwipeItem({ children, onDismiss }: SwipeItemProps) {
   const currentOffsetRef = useRef(0);
   const isDraggingRef = useRef(false);
   const hasDraggedRef = useRef(false);
-  const DISMISS_THRESHOLD = 60; // 60px swipe triggers removal
+  const DISMISS_THRESHOLD = 40; // 40px swipe triggers removal easily
 
   const handleStart = (clientX: number) => {
-    if (isDraggingRef.current) return;
     startXRef.current = clientX;
     currentOffsetRef.current = 0;
     isDraggingRef.current = true;
@@ -63,26 +62,20 @@ function SwipeItem({ children, onDismiss }: SwipeItemProps) {
 
     const finalOffset = currentOffsetRef.current;
     if (Math.abs(finalOffset) >= DISMISS_THRESHOLD) {
-      // Animate card offscreen in direction of swipe
       const exitDirection = finalOffset > 0 ? 400 : -400;
       setOffsetX(exitDirection);
       setTimeout(() => {
         onDismiss();
-      }, 200);
+      }, 180);
     } else {
-      // Snap back to original position
       setOffsetX(0);
       currentOffsetRef.current = 0;
     }
   };
 
-  // Pointer event listeners (desktop & pointer devices)
   const onPointerDown = (e: React.PointerEvent) => {
     if (e.button !== 0 && e.pointerType === "mouse") return;
     handleStart(e.clientX);
-    if (e.pointerType === "mouse" && e.currentTarget) {
-      (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
-    }
   };
 
   const onPointerMove = (e: React.PointerEvent) => {
@@ -97,23 +90,6 @@ function SwipeItem({ children, onDismiss }: SwipeItemProps) {
     handleEnd();
   };
 
-  // Touch event listeners (mobile touch devices)
-  const onTouchStart = (e: React.TouchEvent) => {
-    if (e.touches.length === 1) {
-      handleStart(e.touches[0].clientX);
-    }
-  };
-
-  const onTouchMove = (e: React.TouchEvent) => {
-    if (e.touches.length === 1) {
-      handleMove(e.touches[0].clientX);
-    }
-  };
-
-  const onTouchEnd = () => {
-    handleEnd();
-  };
-
   const handleCaptureClick = (e: React.MouseEvent) => {
     if (hasDraggedRef.current) {
       e.stopPropagation();
@@ -121,15 +97,14 @@ function SwipeItem({ children, onDismiss }: SwipeItemProps) {
     }
   };
 
-  const isSwipingLeft = offsetX < -10;
-  const isSwipingRight = offsetX > 10;
+  const isSwipingLeft = offsetX < -8;
+  const isSwipingRight = offsetX > 8;
 
   return (
     <div className="relative overflow-hidden rounded-2xl select-none">
-      {/* Background Red Swipe Reveal Indicator */}
       <div
-        className={`absolute inset-0 bg-red-500/90 text-white flex items-center justify-between px-4 transition-opacity duration-150 rounded-2xl ${
-          Math.abs(offsetX) > 10 ? "opacity-100" : "opacity-0"
+        className={`absolute inset-0 bg-red-500 text-white flex items-center justify-between px-4 transition-opacity duration-150 rounded-2xl ${
+          Math.abs(offsetX) > 8 ? "opacity-100" : "opacity-0"
         }`}
       >
         <div className={`flex items-center gap-1.5 font-extrabold text-xs ${isSwipingRight ? "opacity-100" : "opacity-40"}`}>
@@ -140,12 +115,11 @@ function SwipeItem({ children, onDismiss }: SwipeItemProps) {
         </div>
       </div>
 
-      {/* Swipeable Card Content */}
       <div
         style={{
           transform: `translateX(${offsetX}px)`,
-          opacity: Math.max(0, 1 - Math.abs(offsetX) / 300),
-          transition: isDragging ? "none" : "transform 0.22s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.22s ease-out",
+          opacity: Math.max(0, 1 - Math.abs(offsetX) / 280),
+          transition: isDragging ? "none" : "transform 0.2s ease-out, opacity 0.2s ease-out",
           touchAction: "pan-y",
           cursor: isDragging ? "grabbing" : "grab",
           position: "relative",
@@ -155,9 +129,6 @@ function SwipeItem({ children, onDismiss }: SwipeItemProps) {
         onPointerMove={onPointerMove}
         onPointerUp={onPointerUp}
         onPointerCancel={onPointerCancel}
-        onTouchStart={onTouchStart}
-        onTouchMove={onTouchMove}
-        onTouchEnd={onTouchEnd}
         onClickCapture={handleCaptureClick}
       >
         {children}
@@ -172,7 +143,6 @@ export default function NotificationDrawer({ userEmail }: { userEmail?: string }
   const [notifications, setNotifications] = useState<SystemNotification[]>([]);
   const [unreadCount, setUnreadCount] = useState(0);
   const [selectedFilter, setSelectedFilter] = useState<NotificationType | "all">("all");
-  // Track IDs dismissed this session — prevents polls from resurrecting them
   const dismissedIds = useRef<Set<string>>(new Set());
 
   const fetchNotifications = useCallback(async () => {
@@ -200,15 +170,15 @@ export default function NotificationDrawer({ userEmail }: { userEmail?: string }
     return () => clearInterval(interval);
   }, [fetchNotifications]);
 
-  const handleMarkRead = (id: string) => {
-    // Optimistic UI updates
+  const handleMarkReadAndNavigate = (id: string, link: string) => {
     setNotifications((prev) =>
       prev.map((n) => (n.id === id ? { ...n, isRead: true } : n))
     );
     setUnreadCount((prev) => Math.max(0, prev - 1));
     setIsOpen(false);
-
-    // Call API in the background silently
+    if (link) {
+      router.push(link);
+    }
     fetch("/api/notifications", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -231,9 +201,7 @@ export default function NotificationDrawer({ userEmail }: { userEmail?: string }
   };
 
   const handleDismiss = async (id: string) => {
-    // Register in session-local dismissed set so polls never bring it back
     dismissedIds.current.add(id);
-    // Remove from UI immediately
     setNotifications((prev) => {
       const notif = prev.find((n) => n.id === id);
       if (notif && !notif.isRead) {
@@ -241,7 +209,6 @@ export default function NotificationDrawer({ userEmail }: { userEmail?: string }
       }
       return prev.filter((n) => n.id !== id);
     });
-    // Permanently delete from server so it never comes back even after re-login
     try {
       await fetch("/api/notifications", {
         method: "POST",
@@ -249,7 +216,7 @@ export default function NotificationDrawer({ userEmail }: { userEmail?: string }
         body: JSON.stringify({ action: "dismiss", id }),
       });
     } catch {
-      /* ignore – session guard already prevents re-appearance */
+      /* ignore */
     }
   };
 
@@ -275,7 +242,6 @@ export default function NotificationDrawer({ userEmail }: { userEmail?: string }
 
   return (
     <>
-      {/* Bell Icon Button */}
       <button
         onClick={() => setIsOpen(true)}
         className="relative p-2 rounded-full bg-purple-50 hover:bg-purple-100 text-purple-700 transition-all border border-purple-200/60 shadow-sm flex items-center justify-center"
@@ -289,7 +255,6 @@ export default function NotificationDrawer({ userEmail }: { userEmail?: string }
         )}
       </button>
 
-      {/* Notifications Drawer Modal */}
       {isOpen && (
         <div
           className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-start justify-center pt-12 px-4 animate-fade-in"
@@ -298,7 +263,6 @@ export default function NotificationDrawer({ userEmail }: { userEmail?: string }
           }}
         >
           <div className="w-full max-w-md bg-white rounded-3xl p-5 space-y-4 shadow-2xl max-h-[82vh] flex flex-col border border-purple-100">
-            {/* Drawer Header */}
             <div className="flex items-center justify-between border-b border-gray-100 pb-3">
               <div className="flex items-center gap-2">
                 <div className="w-8 h-8 rounded-full bg-purple-100 text-purple-700 flex items-center justify-center font-bold">
@@ -331,7 +295,6 @@ export default function NotificationDrawer({ userEmail }: { userEmail?: string }
               </div>
             </div>
 
-            {/* Filter Tabs */}
             <div className="flex items-center gap-1.5 overflow-x-auto pb-1 no-scrollbar shrink-0">
               {(["all", "radar", "message", "loveguru", "confession"] as const).map((f) => (
                 <button
@@ -352,7 +315,6 @@ export default function NotificationDrawer({ userEmail }: { userEmail?: string }
               ))}
             </div>
 
-            {/* Notification List */}
             <div className="flex-1 overflow-y-auto space-y-2 pr-0.5">
               {filteredNotifs.length === 0 ? (
                 <div className="py-12 text-center text-gray-400 space-y-1">
@@ -363,21 +325,18 @@ export default function NotificationDrawer({ userEmail }: { userEmail?: string }
               ) : (
                 filteredNotifs.map((n) => (
                   <SwipeItem key={n.id} onDismiss={() => handleDismiss(n.id)}>
-                    <Link
-                      href={n.link}
-                      onClick={() => handleMarkRead(n.id)}
-                      className={`p-3 rounded-2xl border transition-all cursor-pointer flex items-start gap-3 block w-full text-left outline-none ${
+                    <div
+                      onClick={() => handleMarkReadAndNavigate(n.id, n.link)}
+                      className={`p-3 rounded-2xl border transition-all cursor-pointer flex items-start gap-3 w-full text-left outline-none ${
                         n.isRead
-                          ? "bg-white border-gray-100 text-gray-500"
-                          : "bg-purple-50/70 border-purple-200/80 text-gray-900 shadow-sm"
+                          ? "bg-white border-gray-100 text-gray-500 hover:bg-gray-50/80"
+                          : "bg-purple-50/70 border-purple-200/80 text-gray-900 shadow-sm hover:bg-purple-100/60"
                       }`}
                     >
-                      {/* Left icon */}
                       <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${n.isRead ? "bg-gray-50 border border-gray-100" : "bg-white border border-gray-100"}`}>
                         {getIcon(n.type)}
                       </div>
 
-                      {/* Content */}
                       <div className="flex-1 space-y-0.5 min-w-0">
                         <div className="flex items-center justify-between gap-2">
                           <h4 className={`font-extrabold text-xs leading-tight truncate ${n.isRead ? "text-gray-600" : "text-gray-900"}`}>
@@ -394,13 +353,12 @@ export default function NotificationDrawer({ userEmail }: { userEmail?: string }
                           {formatNotifTime(n.createdAt)}
                         </span>
                       </div>
-                    </Link>
+                    </div>
                   </SwipeItem>
                 ))
               )}
             </div>
 
-            {/* Footer hint */}
             {filteredNotifs.length > 0 && (
               <p className="text-center text-[10px] text-gray-400 font-medium pt-1 border-t border-gray-50">
                 ← Swipe to remove · Tap to open →
