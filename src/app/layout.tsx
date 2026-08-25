@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Inter, Lora } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import AuthSync from "@/components/AuthSync";
+import { ThemeProvider } from "@/providers/ThemeProvider";
 import "./globals.css";
 
 const inter = Inter({
@@ -44,11 +45,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${inter.variable} ${lora.variable}`}>
-      <body className="antialiased">
-        <AuthSync />
-        {children}
-        <Analytics />
+    <html lang="en" className={`${inter.variable} ${lora.variable} suppressHydrationWarning`}>
+      <body className="antialiased bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 transition-colors duration-200">
+        <ThemeProvider>
+          <AuthSync />
+          {children}
+          <Analytics />
+        </ThemeProvider>
       </body>
     </html>
   );

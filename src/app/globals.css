@@ -66,9 +66,25 @@
   --shadow-glow-secondary: 0 0 32px rgba(79, 70, 229, 0.20);
 }
 
-/* Force light mode only */
+@custom-variant dark (&:where(.dark, .dark *));
+
+html.dark {
+  color-scheme: dark;
+  --color-bg:            #0B0F19;
+  --color-bg-muted:      #111827;
+  --color-card:          #1E293B;
+  --color-card-purple:   #1E1B4B;
+
+  --color-fg:            #F8FAFC;
+  --color-fg-muted:      #94A3B8;
+  --color-fg-subtle:     #64748B;
+
+  --color-border:        #334155;
+  --color-border-light:  #1E293B;
+}
+
 html {
-  color-scheme: light;
+  color-scheme: light dark;
 }
 
 *,
