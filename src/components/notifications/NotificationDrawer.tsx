@@ -34,18 +34,22 @@ function SwipeItem({ children, onDismiss }: SwipeItemProps) {
   const [dismissed, setDismissed] = useState(false);
   const startXRef = useRef(0);
   const itemRef = useRef<HTMLDivElement>(null);
+  const hasDraggedRef = useRef(false);
   const DISMISS_THRESHOLD = 100;
 
   const handlePointerDown = (e: React.PointerEvent) => {
     startXRef.current = e.clientX;
     setIsDragging(true);
+    hasDraggedRef.current = false;
     if (itemRef.current) itemRef.current.setPointerCapture(e.pointerId);
   };
 
   const handlePointerMove = (e: React.PointerEvent) => {
     if (!isDragging) return;
     const delta = e.clientX - startXRef.current;
-    // Only allow swiping left (negative) or right (positive) – both directions work
+    if (Math.abs(delta) > 5) {
+      hasDraggedRef.current = true;
+    }
     setOffsetX(delta);
   };
 
@@ -58,6 +62,13 @@ function SwipeItem({ children, onDismiss }: SwipeItemProps) {
     } else {
       // Snap back
       setOffsetX(0);
+    }
+  };
+
+  const handleCaptureClick = (e: React.MouseEvent) => {
+    if (hasDraggedRef.current) {
+      e.stopPropagation();
+      e.preventDefault();
     }
   };
 
@@ -81,6 +92,7 @@ function SwipeItem({ children, onDismiss }: SwipeItemProps) {
       onPointerMove={handlePointerMove}
       onPointerUp={handlePointerUp}
       onPointerCancel={handlePointerUp}
+      onClickCapture={handleCaptureClick}
     >
       {children}
     </div>

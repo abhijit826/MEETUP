@@ -128,6 +128,14 @@ function MessagesContent() {
     return () => clearInterval(interval);
   }, [initialConvId, fetchConversations]);
 
+  const currentQueryConvId = searchParams.get("convId");
+
+  useEffect(() => {
+    if (currentQueryConvId) {
+      setActiveConvId(currentQueryConvId);
+    }
+  }, [currentQueryConvId]);
+
   // Load and poll active conversation messages (every 2 seconds for instant chat)
   useEffect(() => {
     if (!activeConvId) return;
