@@ -93,6 +93,22 @@ function MessagesContent() {
     }
   }, [userEmail]);
 
+  const markAsRead = useCallback(async (convId: string) => {
+    try {
+      const res = await fetch("/api/messages", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "read", convId }),
+      });
+      const data = await res.json();
+      if (data.success && Array.isArray(data.conversations)) {
+        setConversations(data.conversations);
+      }
+    } catch {
+      // ignore
+    }
+  }, []);
+
   useEffect(() => {
     let email = "";
     if (typeof window !== "undefined") {
@@ -141,13 +157,15 @@ function MessagesContent() {
     if (!activeConvId) return;
 
     fetchActiveMessages(activeConvId);
+    markAsRead(activeConvId);
 
     const interval = setInterval(() => {
       fetchActiveMessages(activeConvId);
+      markAsRead(activeConvId);
     }, 2000);
 
     return () => clearInterval(interval);
-  }, [activeConvId, fetchActiveMessages]);
+  }, [activeConvId, fetchActiveMessages, markAsRead]);
 
   useEffect(() => {
     if (messages.length > 0) {

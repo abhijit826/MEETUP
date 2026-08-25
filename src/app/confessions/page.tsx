@@ -73,25 +73,28 @@ export default function ConfessionsPage() {
     }
   }, []);
 
+  const fetchUnreadDmCount = useCallback(async () => {
+    try {
+      const res = await fetch("/api/messages");
+      const d = await res.json();
+      if (d.success && Array.isArray(d.conversations)) {
+        const totalUnread = d.conversations.reduce(
+          (acc: number, c: { unreadCount?: number }) => acc + (c.unreadCount || 0),
+          0
+        );
+        setUnreadDmCount(totalUnread);
+      }
+    } catch {
+      // ignore
+    }
+  }, []);
+
   useEffect(() => {
     // 1. Initial Fetch
     fetchSharedConfessions();
+    fetchUnreadDmCount();
 
-    // 2. Unread DMs count
-    fetch("/api/messages")
-      .then((r) => r.json())
-      .then((d) => {
-        if (d.success && Array.isArray(d.conversations)) {
-          const totalUnread = d.conversations.reduce(
-            (acc: number, c: { unreadCount?: number }) => acc + (c.unreadCount || 0),
-            0
-          );
-          setUnreadDmCount(totalUnread);
-        }
-      })
-      .catch(() => {});
-
-    // 3. Extract user session info from cookies
+    // 2. Extract user session info from cookies
     if (typeof window !== "undefined") {
       const sessionStr = document.cookie
         .split("; ")
@@ -108,13 +111,14 @@ export default function ConfessionsPage() {
       }
     }
 
-    // 4. Set up cross-device real-time sync polling (every 3 seconds)
+    // 3. Set up cross-device real-time sync polling (every 3 seconds)
     const interval = setInterval(() => {
       fetchSharedConfessions();
+      fetchUnreadDmCount();
     }, 3000);
 
     return () => clearInterval(interval);
-  }, [fetchSharedConfessions]);
+  }, [fetchSharedConfessions, fetchUnreadDmCount]);
 
   const triggerToast = (msg: string) => {
     setToastMessage(msg);
@@ -123,7 +127,7 @@ export default function ConfessionsPage() {
 
   const handleManualRefresh = async () => {
     setIsRefreshing(true);
-    await fetchSharedConfessions();
+    await Promise.all([fetchSharedConfessions(), fetchUnreadDmCount()]);
     triggerToast("🔄 Feed synced in real-time!");
     setTimeout(() => setIsRefreshing(false), 500);
   };

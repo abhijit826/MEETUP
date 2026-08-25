@@ -167,3 +167,17 @@ export async function getSharedConversationById(convId: string): Promise<Convers
   const store = await getDiskMessagesData();
   return store.conversations.find((c) => c.id === convId) || null;
 }
+
+export async function markSharedConversationAsRead(convId: string): Promise<Conversation[]> {
+  const store = await getDiskMessagesData();
+  store.conversations = store.conversations.map((c) => {
+    if (c.id !== convId) return c;
+    return {
+      ...c,
+      unreadCount: 0,
+    };
+  });
+  await saveDiskMessagesData(store);
+  return store.conversations;
+}
+

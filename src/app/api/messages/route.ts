@@ -7,6 +7,7 @@ import {
   revealSharedIdentity,
   toggleSharedBlockUser,
   getSharedConversationById,
+  markSharedConversationAsRead,
 } from "@/lib/messagesStore";
 
 import { getSessionEmail } from "@/lib/security";
@@ -133,6 +134,15 @@ export async function POST(request: Request) {
         return NextResponse.json({ error: "convId required" }, { status: 400 });
       }
       const conversations = await toggleSharedBlockUser(convId);
+      return NextResponse.json({ success: true, conversations });
+    }
+
+    // 5. Action: Mark Conversation as Read
+    if (action === "read") {
+      if (!convId) {
+        return NextResponse.json({ error: "convId required" }, { status: 400 });
+      }
+      const conversations = await markSharedConversationAsRead(convId);
       return NextResponse.json({ success: true, conversations });
     }
 
