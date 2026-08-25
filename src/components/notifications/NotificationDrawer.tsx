@@ -31,38 +31,87 @@ interface SwipeItemProps {
 function SwipeItem({ children, onDismiss }: SwipeItemProps) {
   const [offsetX, setOffsetX] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
-  const [dismissed, setDismissed] = useState(false);
   const startXRef = useRef(0);
-  const itemRef = useRef<HTMLDivElement>(null);
+  const currentOffsetRef = useRef(0);
+  const isDraggingRef = useRef(false);
   const hasDraggedRef = useRef(false);
-  const DISMISS_THRESHOLD = 100;
+  const DISMISS_THRESHOLD = 60; // 60px swipe triggers removal
 
-  const handlePointerDown = (e: React.PointerEvent) => {
-    startXRef.current = e.clientX;
+  const handleStart = (clientX: number) => {
+    if (isDraggingRef.current) return;
+    startXRef.current = clientX;
+    currentOffsetRef.current = 0;
+    isDraggingRef.current = true;
     setIsDragging(true);
     hasDraggedRef.current = false;
-    if (itemRef.current) itemRef.current.setPointerCapture(e.pointerId);
   };
 
-  const handlePointerMove = (e: React.PointerEvent) => {
-    if (!isDragging) return;
-    const delta = e.clientX - startXRef.current;
+  const handleMove = (clientX: number) => {
+    if (!isDraggingRef.current) return;
+    const delta = clientX - startXRef.current;
+    currentOffsetRef.current = delta;
     if (Math.abs(delta) > 5) {
       hasDraggedRef.current = true;
     }
     setOffsetX(delta);
   };
 
-  const handlePointerUp = () => {
+  const handleEnd = () => {
+    if (!isDraggingRef.current) return;
+    isDraggingRef.current = false;
     setIsDragging(false);
-    if (Math.abs(offsetX) >= DISMISS_THRESHOLD) {
-      // Animate out then dismiss
-      setDismissed(true);
-      setTimeout(onDismiss, 300);
+
+    const finalOffset = currentOffsetRef.current;
+    if (Math.abs(finalOffset) >= DISMISS_THRESHOLD) {
+      // Animate card offscreen in direction of swipe
+      const exitDirection = finalOffset > 0 ? 400 : -400;
+      setOffsetX(exitDirection);
+      setTimeout(() => {
+        onDismiss();
+      }, 200);
     } else {
-      // Snap back
+      // Snap back to original position
       setOffsetX(0);
+      currentOffsetRef.current = 0;
     }
+  };
+
+  // Pointer event listeners (desktop & pointer devices)
+  const onPointerDown = (e: React.PointerEvent) => {
+    if (e.button !== 0 && e.pointerType === "mouse") return;
+    handleStart(e.clientX);
+    if (e.pointerType === "mouse" && e.currentTarget) {
+      (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
+    }
+  };
+
+  const onPointerMove = (e: React.PointerEvent) => {
+    handleMove(e.clientX);
+  };
+
+  const onPointerUp = () => {
+    handleEnd();
+  };
+
+  const onPointerCancel = () => {
+    handleEnd();
+  };
+
+  // Touch event listeners (mobile touch devices)
+  const onTouchStart = (e: React.TouchEvent) => {
+    if (e.touches.length === 1) {
+      handleStart(e.touches[0].clientX);
+    }
+  };
+
+  const onTouchMove = (e: React.TouchEvent) => {
+    if (e.touches.length === 1) {
+      handleMove(e.touches[0].clientX);
+    }
+  };
+
+  const onTouchEnd = () => {
+    handleEnd();
   };
 
   const handleCaptureClick = (e: React.MouseEvent) => {
@@ -72,29 +121,47 @@ function SwipeItem({ children, onDismiss }: SwipeItemProps) {
     }
   };
 
-  if (dismissed) return null;
+  const isSwipingLeft = offsetX < -10;
+  const isSwipingRight = offsetX > 10;
 
   return (
-    <div
-      ref={itemRef}
-      style={{
-        transform: dismissed
-          ? `translateX(${offsetX > 0 ? "100%" : "-100%"})`
-          : `translateX(${offsetX}px)`,
-        opacity: dismissed ? 0 : Math.max(0, 1 - Math.abs(offsetX) / 200),
-        transition: isDragging ? "none" : "transform 0.28s ease, opacity 0.28s ease",
-        touchAction: "pan-y",
-        userSelect: "none",
-        cursor: "grab",
-        position: "relative",
-      }}
-      onPointerDown={handlePointerDown}
-      onPointerMove={handlePointerMove}
-      onPointerUp={handlePointerUp}
-      onPointerCancel={handlePointerUp}
-      onClickCapture={handleCaptureClick}
-    >
-      {children}
+    <div className="relative overflow-hidden rounded-2xl select-none">
+      {/* Background Red Swipe Reveal Indicator */}
+      <div
+        className={`absolute inset-0 bg-red-500/90 text-white flex items-center justify-between px-4 transition-opacity duration-150 rounded-2xl ${
+          Math.abs(offsetX) > 10 ? "opacity-100" : "opacity-0"
+        }`}
+      >
+        <div className={`flex items-center gap-1.5 font-extrabold text-xs ${isSwipingRight ? "opacity-100" : "opacity-40"}`}>
+          <span>🗑 Remove</span>
+        </div>
+        <div className={`flex items-center gap-1.5 font-extrabold text-xs ${isSwipingLeft ? "opacity-100" : "opacity-40"}`}>
+          <span>Remove 🗑</span>
+        </div>
+      </div>
+
+      {/* Swipeable Card Content */}
+      <div
+        style={{
+          transform: `translateX(${offsetX}px)`,
+          opacity: Math.max(0, 1 - Math.abs(offsetX) / 300),
+          transition: isDragging ? "none" : "transform 0.22s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.22s ease-out",
+          touchAction: "pan-y",
+          cursor: isDragging ? "grabbing" : "grab",
+          position: "relative",
+          willChange: "transform, opacity",
+        }}
+        onPointerDown={onPointerDown}
+        onPointerMove={onPointerMove}
+        onPointerUp={onPointerUp}
+        onPointerCancel={onPointerCancel}
+        onTouchStart={onTouchStart}
+        onTouchMove={onTouchMove}
+        onTouchEnd={onTouchEnd}
+        onClickCapture={handleCaptureClick}
+      >
+        {children}
+      </div>
     </div>
   );
 }
