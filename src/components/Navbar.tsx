@@ -219,10 +219,10 @@ export default function Navbar({ userEmail, userFullName }: NavbarProps) {
                   {(sessionName || "S")[0].toUpperCase()}
                 </motion.div>
                 <div className="text-left">
-                  <p className="text-xs font-extrabold text-gray-800 dark:text-slate-200 leading-tight max-w-[100px] truncate">
+                  <p className="text-xs font-black text-slate-950 dark:text-white leading-tight max-w-[100px] truncate">
                     {sessionName || "Student"}
                   </p>
-                  <p className="text-[10px] text-emerald-600 dark:text-emerald-400 font-bold flex items-center gap-1">
+                  <p className="text-[10px] text-emerald-700 dark:text-emerald-400 font-extrabold flex items-center gap-1">
                     <ShieldCheck size={10} /> Verified Student
                   </p>
                 </div>

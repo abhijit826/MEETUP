@@ -198,21 +198,21 @@ export default function ProfilePage() {
 
               <div className="space-y-1 pb-1">
                 <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2">
-                  <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-slate-900 dark:text-white">
+                  <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-slate-950 dark:text-white opacity-100 drop-shadow-xs">
                     {displayName}
                   </h1>
-                  <span className="px-2.5 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 text-[11px] font-extrabold flex items-center gap-1 border border-emerald-200 dark:border-emerald-800/60">
+                  <span className="px-2.5 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-950/60 text-emerald-900 dark:text-emerald-300 text-[11px] font-black flex items-center gap-1 border border-emerald-300 dark:border-emerald-800/60 shadow-2xs">
                     <ShieldCheck size={12} /> Verified Student
                   </span>
                 </div>
 
-                <p className="text-xs sm:text-sm font-semibold text-slate-600 dark:text-slate-300 flex items-center justify-center sm:justify-start gap-1.5">
-                  <School size={14} className="text-slate-800 dark:text-slate-200 shrink-0" />
+                <p className="text-xs sm:text-sm font-bold text-slate-800 dark:text-slate-200 flex items-center justify-center sm:justify-start gap-1.5">
+                  <School size={14} className="text-slate-900 dark:text-slate-100 shrink-0" />
                   <span>{college}</span>
                 </p>
 
-                <p className="text-xs text-slate-500 dark:text-slate-400 font-medium flex items-center justify-center sm:justify-start gap-1">
-                  <Mail size={12} className="shrink-0 text-slate-400 dark:text-slate-500" />
+                <p className="text-xs text-slate-700 dark:text-slate-300 font-semibold flex items-center justify-center sm:justify-start gap-1">
+                  <Mail size={12} className="shrink-0 text-slate-600 dark:text-slate-400" />
                   <span>{sessionEmail || "student@meetup.edu"}</span>
                 </p>
               </div>
@@ -315,7 +315,7 @@ export default function ProfilePage() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {/* Full Name Input */}
                 <div className="space-y-1">
-                  <label className="text-xs font-extrabold text-slate-700 dark:text-slate-300 uppercase tracking-wider">
+                  <label className="text-xs font-extrabold text-slate-900 dark:text-slate-200 uppercase tracking-wider">
                     Full Name
                   </label>
                   <input
@@ -323,13 +323,13 @@ export default function ProfilePage() {
                     value={sessionName}
                     onChange={(e) => setSessionName(e.target.value)}
                     placeholder="Enter your full name"
-                    className="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-sm font-medium focus:ring-2 focus:ring-slate-800 dark:focus:ring-slate-400 focus:outline-none bg-slate-50/70 dark:bg-slate-800/70 text-slate-900 dark:text-white"
+                    className="w-full px-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 text-sm font-bold focus:ring-2 focus:ring-slate-900 dark:focus:ring-slate-400 focus:outline-none bg-white dark:bg-slate-800 text-slate-950 dark:text-white shadow-2xs"
                   />
                 </div>
 
                 {/* College Input */}
                 <div className="space-y-1">
-                  <label className="text-xs font-extrabold text-slate-700 dark:text-slate-300 uppercase tracking-wider">
+                  <label className="text-xs font-extrabold text-slate-900 dark:text-slate-200 uppercase tracking-wider">
                     College / Campus Name
                   </label>
                   <input
@@ -337,16 +337,16 @@ export default function ProfilePage() {
                     value={college}
                     onChange={(e) => setCollege(e.target.value)}
                     placeholder="e.g. Stanford University"
-                    className="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-sm font-medium focus:ring-2 focus:ring-slate-800 dark:focus:ring-slate-400 focus:outline-none bg-slate-50/70 dark:bg-slate-800/70 text-slate-900 dark:text-white"
+                    className="w-full px-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 text-sm font-bold focus:ring-2 focus:ring-slate-900 dark:focus:ring-slate-400 focus:outline-none bg-white dark:bg-slate-800 text-slate-950 dark:text-white shadow-2xs"
                   />
                 </div>
               </div>
 
               {/* Verified Email (Read-Only) */}
               <div className="space-y-1">
-                <label className="text-xs font-extrabold text-slate-700 dark:text-slate-300 uppercase tracking-wider flex items-center justify-between">
+                <label className="text-xs font-extrabold text-slate-900 dark:text-slate-200 uppercase tracking-wider flex items-center justify-between">
                   <span>Registered Student Email</span>
-                  <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-bold flex items-center gap-1">
+                  <span className="text-[10px] text-emerald-700 dark:text-emerald-400 font-extrabold flex items-center gap-1">
                     <Lock size={10} /> Verified Account
                   </span>
                 </label>
@@ -354,13 +354,13 @@ export default function ProfilePage() {
                   type="email"
                   value={sessionEmail}
                   disabled
-                  className="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-sm font-medium text-slate-500 dark:text-slate-400 bg-slate-100/90 dark:bg-slate-800/40 cursor-not-allowed"
+                  className="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-sm font-bold text-slate-800 dark:text-slate-300 bg-slate-100 dark:bg-slate-800/80 cursor-not-allowed"
                 />
               </div>
 
               {/* Bio TextArea */}
               <div className="space-y-1">
-                <label className="text-xs font-extrabold text-slate-700 dark:text-slate-300 uppercase tracking-wider">
+                <label className="text-xs font-extrabold text-slate-900 dark:text-slate-200 uppercase tracking-wider">
                   Campus Bio & Status Motto
                 </label>
                 <textarea
@@ -368,7 +368,7 @@ export default function ProfilePage() {
                   value={bio}
                   onChange={(e) => setBio(e.target.value)}
                   placeholder="Share a quick line about yourself..."
-                  className="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-sm font-medium focus:ring-2 focus:ring-slate-800 dark:focus:ring-slate-400 focus:outline-none bg-slate-50/70 dark:bg-slate-800/70 text-slate-900 dark:text-white resize-none"
+                  className="w-full px-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 text-sm font-bold focus:ring-2 focus:ring-slate-900 dark:focus:ring-slate-400 focus:outline-none bg-white dark:bg-slate-800 text-slate-950 dark:text-white resize-none shadow-2xs"
                 />
               </div>
 
