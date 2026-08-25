@@ -319,12 +319,12 @@ export default function ConfessionsPage() {
   });
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50/40 via-white to-purple-50/30 text-gray-900 flex flex-col pb-24">
+    <div className="min-h-screen bg-slate-100/70 dark:bg-slate-950 text-slate-900 dark:text-slate-100 flex flex-col pb-24 transition-colors duration-200">
       <Navbar userEmail={userEmail} userFullName={userFullName} />
 
       {/* Toast Alert */}
       {toastMessage && (
-        <div className="fixed top-20 left-1/2 -translate-x-1/2 z-50 px-5 py-3 rounded-2xl bg-gray-900 text-white text-xs font-bold shadow-2xl flex items-center gap-2 animate-fade-in">
+        <div className="fixed top-20 left-1/2 -translate-x-1/2 z-50 px-5 py-3 rounded-2xl bg-slate-900 dark:bg-slate-800 text-white text-xs font-bold shadow-2xl flex items-center gap-2 animate-fade-in border border-slate-700">
           <Check size={15} className="text-emerald-400 shrink-0" />
           <span>{toastMessage}</span>
         </div>
@@ -333,24 +333,24 @@ export default function ConfessionsPage() {
       {/* Main Responsive App Container */}
       <div className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col space-y-6">
         {/* Navigation & Controls Bar */}
-        <div className="bg-white/90 backdrop-blur-md border border-gray-100 rounded-3xl p-5 shadow-sm space-y-4">
+        <div className="bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border border-gray-100 dark:border-slate-800 rounded-3xl p-5 shadow-sm space-y-4 transition-colors">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <Link
                 href="/home"
-                className="w-9 h-9 rounded-2xl bg-indigo-50 hover:bg-indigo-100 flex items-center justify-center text-indigo-700 transition-all border border-indigo-100"
+                className="w-9 h-9 rounded-2xl bg-indigo-50 dark:bg-indigo-950/60 hover:bg-indigo-100 dark:hover:bg-indigo-900/60 flex items-center justify-center text-indigo-700 dark:text-indigo-300 transition-all border border-indigo-100 dark:border-indigo-800/50"
               >
                 <ArrowLeft size={18} />
               </Link>
               <div>
-                <h1 className="font-black text-xl text-gray-900 tracking-tight flex items-center gap-2">
+                <h1 className="font-black text-xl text-gray-900 dark:text-white tracking-tight flex items-center gap-2">
                   Campus Confessions
-                  <span className="text-xs py-0.5 px-2.5 rounded-full bg-emerald-100 text-emerald-800 font-extrabold flex items-center gap-1">
+                  <span className="text-xs py-0.5 px-2.5 rounded-full bg-emerald-100 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 font-extrabold flex items-center gap-1 border border-emerald-200 dark:border-emerald-800/60">
                     <ShieldCheck size={12} />
                     Live Synced
                   </span>
                 </h1>
-                <p className="text-xs text-gray-500 font-medium">
+                <p className="text-xs text-gray-500 dark:text-slate-400 font-medium">
                   Shared anonymous campus feed for all students (AI Moderated)
                 </p>
               </div>
@@ -359,7 +359,7 @@ export default function ConfessionsPage() {
             <div className="flex items-center gap-2">
               <button
                 onClick={handleManualRefresh}
-                className={`p-2.5 rounded-2xl bg-gray-50 hover:bg-gray-100 text-gray-700 transition-all border border-gray-200 ${
+                className={`p-2.5 rounded-2xl bg-gray-50 dark:bg-slate-800 hover:bg-gray-100 dark:hover:bg-slate-700 text-gray-700 dark:text-slate-200 transition-all border border-gray-200 dark:border-slate-700 ${
                   isRefreshing ? "animate-spin" : ""
                 }`}
                 title="Sync Feed"
@@ -369,7 +369,7 @@ export default function ConfessionsPage() {
 
               <Link
                 href="/messages"
-                className="relative py-2 px-3.5 rounded-2xl bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-bold text-xs transition-all flex items-center gap-2 border border-indigo-200"
+                className="relative py-2 px-3.5 rounded-2xl bg-indigo-50 dark:bg-indigo-950/60 hover:bg-indigo-100 dark:hover:bg-indigo-900/60 text-indigo-700 dark:text-indigo-300 font-bold text-xs transition-all flex items-center gap-2 border border-indigo-200 dark:border-indigo-800/60"
               >
                 <MessageSquare size={16} />
                 <span className="hidden sm:inline">Private Messages</span>
@@ -385,13 +385,13 @@ export default function ConfessionsPage() {
         {/* Search & New Post Button */}
         <div className="flex gap-2">
           <div className="relative flex-1">
-            <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" />
+            <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 dark:text-slate-500" />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search confessions, advice..."
-              className="w-full pl-10 pr-4 py-2.5 rounded-2xl bg-white border border-gray-200 text-xs text-gray-800 placeholder-gray-400 outline-none focus:border-[#4F46E5] focus:ring-2 focus:ring-[#4F46E5]/10 shadow-xs"
+              className="w-full pl-10 pr-4 py-2.5 rounded-2xl bg-white dark:bg-slate-800/80 border border-gray-200 dark:border-slate-700 text-xs text-gray-800 dark:text-white placeholder-gray-400 dark:placeholder-slate-500 outline-none focus:border-[#4F46E5] focus:ring-2 focus:ring-[#4F46E5]/10 shadow-xs"
             />
           </div>
 
@@ -414,8 +414,8 @@ export default function ConfessionsPage() {
               onClick={() => setSelectedCategory(cat.value)}
               className={`relative py-1.5 px-3.5 rounded-full text-xs font-bold border whitespace-nowrap transition-colors flex items-center gap-1.5 cursor-pointer ${
                 selectedCategory === cat.value
-                  ? "bg-[#111827] text-white border-[#111827] shadow-xs"
-                  : "bg-white text-gray-600 border-gray-200 hover:border-gray-300"
+                  ? "bg-[#111827] dark:bg-white text-white dark:text-slate-900 border-[#111827] dark:border-white shadow-xs"
+                  : "bg-white dark:bg-slate-800 text-gray-600 dark:text-slate-300 border-gray-200 dark:border-slate-700 hover:border-gray-300 dark:hover:border-slate-600"
               }`}
             >
               {cat.icon}
@@ -433,10 +433,10 @@ export default function ConfessionsPage() {
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"
         >
           {filteredConfessions.length === 0 ? (
-            <div className="py-16 text-center bg-white rounded-3xl border border-gray-100 shadow-sm px-4 col-span-full">
-              <Sparkles size={36} className="mx-auto text-gray-300 mb-2 animate-bounce" />
-              <h3 className="font-bold text-gray-800 text-sm">No confessions found</h3>
-              <p className="text-xs text-gray-400 mt-1 max-w-[220px] mx-auto">
+            <div className="py-16 text-center bg-white dark:bg-slate-900 rounded-3xl border border-gray-100 dark:border-slate-800 shadow-sm px-4 col-span-full">
+              <Sparkles size={36} className="mx-auto text-gray-300 dark:text-slate-600 mb-2 animate-bounce" />
+              <h3 className="font-bold text-gray-800 dark:text-slate-200 text-sm">No confessions found</h3>
+              <p className="text-xs text-gray-400 dark:text-slate-500 mt-1 max-w-[220px] mx-auto">
                 Be the first student to post a story or advice under this category!
               </p>
               <motion.button
@@ -461,7 +461,7 @@ export default function ConfessionsPage() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.3, delay: index * 0.05 }}
                   whileHover={{ y: -4 }}
-                  className="p-5 rounded-3xl bg-white border border-gray-100 shadow-sm flex flex-col gap-3.5 transition-shadow hover:shadow-md"
+                  className="p-5 rounded-3xl bg-white dark:bg-slate-900 border border-gray-100 dark:border-slate-800 shadow-sm flex flex-col gap-3.5 transition-shadow hover:shadow-md"
                 >
                   {/* Post Header */}
                   <div className="flex items-center justify-between">
@@ -478,14 +478,14 @@ export default function ConfessionsPage() {
 
                       <div>
                         <div className="flex items-center gap-1.5">
-                          <span className="font-bold text-xs text-gray-900">
+                          <span className="font-bold text-xs text-gray-900 dark:text-white">
                             {item.isAnonymous ? "Anonymous Student" : item.authorName}
                           </span>
-                          <span className="text-[10px] font-bold text-indigo-600 bg-indigo-50 px-1.5 py-0.5 rounded-md">
+                          <span className="text-[10px] font-bold text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-950/70 px-1.5 py-0.5 rounded-md">
                             {item.authorCollege || "Student ✓"}
                           </span>
                         </div>
-                        <span className="text-[10px] text-gray-400 font-medium">
+                        <span className="text-[10px] text-gray-400 dark:text-slate-400 font-medium">
                           {item.createdAt}
                         </span>
                       </div>
@@ -499,7 +499,7 @@ export default function ConfessionsPage() {
                       {isOwner && (
                         <button
                           onClick={() => handleDeletePost(item.id)}
-                          className="w-7 h-7 rounded-full flex items-center justify-center text-gray-400 hover:text-red-600 hover:bg-red-50 transition-all ml-1"
+                          className="w-7 h-7 rounded-full flex items-center justify-center text-gray-400 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/40 transition-all ml-1"
                           title="Delete Post"
                         >
                           <Trash2 size={14} />
@@ -509,13 +509,13 @@ export default function ConfessionsPage() {
                   </div>
 
                   {/* Confession Content */}
-                  <p className="text-xs font-normal text-gray-800 leading-relaxed whitespace-pre-line">
+                  <p className="text-xs font-normal text-gray-800 dark:text-slate-200 leading-relaxed whitespace-pre-line">
                     {item.content}
                   </p>
 
                   {/* Attached Image if present */}
                   {item.imageUrl && (
-                    <div className="rounded-2xl overflow-hidden border border-gray-100 max-h-64 mt-1">
+                    <div className="rounded-2xl overflow-hidden border border-gray-100 dark:border-slate-800 max-h-64 mt-1">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img
                         src={item.imageUrl}
@@ -526,14 +526,14 @@ export default function ConfessionsPage() {
                   )}
 
                   {/* Reaction Bar */}
-                  <div className="flex items-center justify-between pt-2 border-t border-gray-50 text-xs">
+                  <div className="flex items-center justify-between pt-2 border-t border-gray-50 dark:border-slate-800 text-xs">
                     <div className="flex items-center gap-1.5">
                       <button
                         onClick={() => handleReaction(item.id, "heart")}
                         className={`py-1 px-2 rounded-xl text-[11px] font-bold flex items-center gap-1 transition-all ${
                           item.userReactions.heart
-                            ? "bg-red-50 text-red-600 border border-red-200"
-                            : "bg-gray-50 text-gray-600 hover:bg-gray-100"
+                            ? "bg-red-50 dark:bg-red-950/60 text-red-600 dark:text-red-400 border border-red-200 dark:border-red-800/60"
+                            : "bg-gray-50 dark:bg-slate-800 text-gray-600 dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-700"
                         }`}
                       >
                         <Heart
@@ -547,8 +547,8 @@ export default function ConfessionsPage() {
                         onClick={() => handleReaction(item.id, "relatable")}
                         className={`py-1 px-2 rounded-xl text-[11px] font-bold flex items-center gap-1 transition-all ${
                           item.userReactions.relatable
-                            ? "bg-purple-50 text-purple-600 border border-purple-200"
-                            : "bg-gray-50 text-gray-600 hover:bg-gray-100"
+                            ? "bg-purple-50 dark:bg-purple-950/60 text-purple-600 dark:text-purple-300 border border-purple-200 dark:border-purple-800/60"
+                            : "bg-gray-50 dark:bg-slate-800 text-gray-600 dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-700"
                         }`}
                       >
                         <span>🤝</span>
@@ -559,8 +559,8 @@ export default function ConfessionsPage() {
                         onClick={() => handleReaction(item.id, "support")}
                         className={`py-1 px-2 rounded-xl text-[11px] font-bold flex items-center gap-1 transition-all ${
                           item.userReactions.support
-                            ? "bg-emerald-50 text-emerald-600 border border-emerald-200"
-                            : "bg-gray-50 text-gray-600 hover:bg-gray-100"
+                            ? "bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800/60"
+                            : "bg-gray-50 dark:bg-slate-800 text-gray-600 dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-700"
                         }`}
                       >
                         <span>💭</span>
@@ -572,7 +572,7 @@ export default function ConfessionsPage() {
                     <div className="flex items-center gap-1">
                       <button
                         onClick={() => setActiveCommentConfession(item)}
-                        className="py-1 px-2 rounded-xl text-[11px] font-bold text-gray-600 hover:bg-gray-100 flex items-center gap-1 transition-all"
+                        className="py-1 px-2 rounded-xl text-[11px] font-bold text-gray-600 dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-800 flex items-center gap-1 transition-all"
                       >
                         <MessageCircle size={13} />
                         <span>{item.commentsCount}</span>
@@ -580,7 +580,7 @@ export default function ConfessionsPage() {
 
                       <button
                         onClick={() => handleMessagePrivately(item)}
-                        className="py-1 px-2 rounded-xl text-[11px] font-bold text-[#4F46E5] bg-indigo-50 hover:bg-indigo-100 flex items-center gap-1 transition-all"
+                        className="py-1 px-2 rounded-xl text-[11px] font-bold text-[#4F46E5] dark:text-indigo-300 bg-indigo-50 dark:bg-indigo-950/60 hover:bg-indigo-100 dark:hover:bg-indigo-900/60 flex items-center gap-1 transition-all"
                         title="Private Chat"
                       >
                         <Send size={12} />
@@ -589,7 +589,7 @@ export default function ConfessionsPage() {
 
                       <button
                         onClick={() => handleShare(item)}
-                        className="p-1.5 rounded-xl text-gray-400 hover:text-gray-700 hover:bg-gray-100 transition-all"
+                        className="p-1.5 rounded-xl text-gray-400 hover:text-gray-700 dark:hover:text-slate-200 hover:bg-gray-100 dark:hover:bg-slate-800 transition-all"
                         title="Share"
                       >
                         <Share2 size={13} />

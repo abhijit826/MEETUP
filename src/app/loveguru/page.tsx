@@ -342,12 +342,12 @@ export default function LoveGuruPage() {
   // ============ RENDER ============
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-pink-50/40 via-white to-purple-50/40 text-gray-900 flex flex-col pb-24">
+    <div className="min-h-screen bg-slate-100/70 dark:bg-slate-950 text-slate-900 dark:text-slate-100 flex flex-col pb-24 transition-colors duration-200">
       <Navbar userEmail={userEmail} userFullName={userFullName} />
 
       {/* Toast */}
       {toast && (
-        <div className="fixed top-20 left-1/2 -translate-x-1/2 z-50 px-5 py-3 rounded-2xl bg-gray-900 text-white text-xs font-bold shadow-2xl flex items-center gap-2 animate-fade-in">
+        <div className="fixed top-20 left-1/2 -translate-x-1/2 z-50 px-5 py-3 rounded-2xl bg-slate-900 dark:bg-slate-800 text-white text-xs font-bold shadow-2xl flex items-center gap-2 animate-fade-in border border-slate-700">
           <CheckCircle2 size={15} className="text-emerald-400 shrink-0" />
           <span>{toast}</span>
         </div>
@@ -398,11 +398,11 @@ export default function LoveGuruPage() {
                 {activeTab === tab.id && (
                   <motion.div
                     layoutId="loveguru-active-tab"
-                    className="absolute inset-0 bg-white rounded-xl shadow-md z-0"
+                    className="absolute inset-0 bg-white dark:bg-slate-900 rounded-xl shadow-md z-0"
                     transition={{ type: "spring", stiffness: 400, damping: 30 }}
                   />
                 )}
-                <span className={`relative z-10 flex items-center gap-1 ${activeTab === tab.id ? "text-gray-900" : "text-white/80 hover:text-white"}`}>
+                <span className={`relative z-10 flex items-center gap-1 ${activeTab === tab.id ? "text-gray-900 dark:text-white" : "text-white/80 hover:text-white"}`}>
                   {tab.icon}
                   {tab.label}
                 </span>
@@ -420,22 +420,22 @@ export default function LoveGuruPage() {
 
               {/* Daily Challenge Card */}
               {dailyChallenge && (
-                <div className="p-4 rounded-2xl border-2 border-dashed border-purple-200 bg-gradient-to-br from-purple-50 to-pink-50">
+                <div className="p-4 rounded-2xl border-2 border-dashed border-purple-200 dark:border-purple-800/60 bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-950/40 dark:to-slate-900">
                   <div className="flex items-center gap-2 mb-2">
                     <div className="w-7 h-7 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center">
                       <Sparkles size={14} className="text-white" />
                     </div>
                     <div>
-                      <p className="text-[10px] font-bold text-purple-600 uppercase tracking-wider">Daily Challenge</p>
-                      <p className="text-xs font-extrabold text-gray-900">{dailyChallenge.title}</p>
+                      <p className="text-[10px] font-bold text-purple-600 dark:text-purple-400 uppercase tracking-wider">Daily Challenge</p>
+                      <p className="text-xs font-extrabold text-gray-900 dark:text-white">{dailyChallenge.title}</p>
                     </div>
                     {dailyChallenge.participantCount > 0 && (
-                      <span className="ml-auto text-[10px] font-bold text-purple-500 bg-purple-100 px-2 py-0.5 rounded-full">
+                      <span className="ml-auto text-[10px] font-bold text-purple-500 dark:text-purple-300 bg-purple-100 dark:bg-purple-950/70 px-2 py-0.5 rounded-full border border-purple-200 dark:border-purple-800/50">
                         {dailyChallenge.participantCount} voted
                       </span>
                     )}
                   </div>
-                  <p className="text-xs text-gray-600 mb-3 leading-relaxed">{dailyChallenge.description}</p>
+                  <p className="text-xs text-gray-600 dark:text-slate-300 mb-3 leading-relaxed">{dailyChallenge.description}</p>
                   <div className="flex flex-col gap-1.5">
                     {dailyChallenge.options?.map((opt, i) => {
                       const totalVotes = Object.values(dailyChallenge.votes || {}).reduce((a, b) => a + b, 0);
@@ -450,22 +450,22 @@ export default function LoveGuruPage() {
                           disabled={!!selectedChallengeOption}
                           className={`relative overflow-hidden text-left py-2.5 px-3 rounded-xl text-xs font-semibold border transition-all ${
                             isSelected
-                              ? "border-purple-400 bg-purple-100 text-purple-900"
+                              ? "border-purple-400 dark:border-purple-500 bg-purple-100 dark:bg-purple-950/80 text-purple-900 dark:text-purple-200"
                               : selectedChallengeOption
-                              ? "border-gray-200 bg-gray-50 text-gray-500"
-                              : "border-gray-200 bg-white text-gray-700 hover:border-purple-300 hover:bg-purple-50 active:scale-[0.98]"
+                              ? "border-gray-200 dark:border-slate-800 bg-gray-50 dark:bg-slate-800/50 text-gray-500 dark:text-slate-500"
+                              : "border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-700 dark:text-slate-200 hover:border-purple-300 dark:hover:border-purple-600 hover:bg-purple-50 dark:hover:bg-purple-950/40 active:scale-[0.98]"
                           }`}
                         >
                           {selectedChallengeOption && (
                             <div
-                              className="absolute inset-y-0 left-0 bg-purple-200/40 transition-all duration-700"
+                              className="absolute inset-y-0 left-0 bg-purple-200/40 dark:bg-purple-800/40 transition-all duration-700"
                               style={{ width: `${pct}%` }}
                             />
                           )}
                           <span className="relative z-10 flex items-center justify-between">
                             <span>{opt}</span>
                             {selectedChallengeOption && (
-                              <span className="text-[10px] font-bold text-purple-600">{pct}%</span>
+                              <span className="text-[10px] font-bold text-purple-600 dark:text-purple-300">{pct}%</span>
                             )}
                           </span>
                         </button>
@@ -484,7 +484,7 @@ export default function LoveGuruPage() {
                     className={`shrink-0 flex items-center gap-1 py-1.5 px-3 rounded-full text-[11px] font-bold border transition-all ${
                       selectedCategory === cat.value
                         ? "bg-gradient-to-r from-pink-500 to-purple-500 text-white border-transparent shadow-md"
-                        : "bg-white text-gray-600 border-gray-200 hover:border-pink-300"
+                        : "bg-white dark:bg-slate-800 text-gray-600 dark:text-slate-300 border-gray-200 dark:border-slate-700 hover:border-pink-300 dark:hover:border-pink-500"
                     }`}
                   >
                     <span>{cat.emoji}</span>
@@ -634,11 +634,11 @@ function DilemmaCard({
   const cat = categoryConfig[dilemma.category] || categoryConfig.General;
 
   return (
-    <article className="rounded-2xl bg-white border border-gray-100 shadow-sm overflow-hidden transition-all hover:shadow-md">
+    <article className="rounded-2xl bg-white dark:bg-slate-900 border border-gray-100 dark:border-slate-800 shadow-sm overflow-hidden transition-all hover:shadow-md">
       {/* Status Bar */}
       {dilemma.status !== "open" && (
         <div className={`px-4 py-1.5 text-[10px] font-bold flex items-center gap-1.5 ${
-          dilemma.status === "resolved" ? "bg-green-50 text-green-700" : "bg-blue-50 text-blue-700"
+          dilemma.status === "resolved" ? "bg-green-50 dark:bg-emerald-950/60 text-green-700 dark:text-emerald-300" : "bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300"
         }`}>
           {dilemma.status === "resolved" ? <CheckCircle2 size={11} /> : <RefreshCw size={11} />}
           {dilemma.status === "resolved" ? "Resolved" : "Updated"} • {dilemma.updateContent?.slice(0, 60)}
@@ -653,8 +653,8 @@ function DilemmaCard({
               {dilemma.isAnonymous ? <Shield size={14} /> : dilemma.authorName.charAt(0)}
             </div>
             <div>
-              <p className="text-xs font-bold text-gray-900">{dilemma.authorName}</p>
-              <p className="text-[10px] text-gray-400">{new Date(dilemma.createdAt).toLocaleDateString()}</p>
+              <p className="text-xs font-bold text-gray-900 dark:text-white">{dilemma.authorName}</p>
+              <p className="text-[10px] text-gray-400 dark:text-slate-400">{new Date(dilemma.createdAt).toLocaleDateString()}</p>
             </div>
           </div>
           <div className="flex items-center gap-1.5">
@@ -669,7 +669,7 @@ function DilemmaCard({
                     onDelete(dilemma.id);
                   }
                 }}
-                className="p-1.5 rounded-lg text-gray-400 hover:text-red-500 hover:bg-red-50 transition-all"
+                className="p-1.5 rounded-lg text-gray-400 dark:text-slate-400 hover:text-red-500 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/50 transition-all"
                 title="Delete Post"
               >
                 <Trash2 size={14} />
@@ -680,37 +680,37 @@ function DilemmaCard({
 
         {/* Title */}
         {dilemma.title && (
-          <h3 className="font-extrabold text-sm text-gray-900 mb-1.5 leading-snug">{dilemma.title}</h3>
+          <h3 className="font-extrabold text-sm text-gray-900 dark:text-white mb-1.5 leading-snug">{dilemma.title}</h3>
         )}
 
         {/* Content */}
-        <p className="text-xs text-gray-700 leading-relaxed whitespace-pre-line">
+        <p className="text-xs text-gray-700 dark:text-slate-200 leading-relaxed whitespace-pre-line">
           {isExpanded || dilemma.content.length <= 180
             ? dilemma.content
             : dilemma.content.slice(0, 180) + "..."}
           {dilemma.content.length > 180 && !isExpanded && (
-            <button onClick={onToggleExpand} className="text-purple-600 font-bold ml-1">Read more</button>
+            <button onClick={onToggleExpand} className="text-purple-600 dark:text-purple-400 font-bold ml-1">Read more</button>
           )}
         </p>
 
         {/* Prediction Section */}
         {dilemma.predictionQuestion && (
-          <div className="mt-3 p-3 rounded-xl bg-amber-50/80 border border-amber-200/50">
-            <p className="text-[10px] font-bold text-amber-700 flex items-center gap-1 mb-1.5">
+          <div className="mt-3 p-3 rounded-xl bg-amber-50/80 dark:bg-amber-950/40 border border-amber-200/50 dark:border-amber-800/40">
+            <p className="text-[10px] font-bold text-amber-700 dark:text-amber-400 flex items-center gap-1 mb-1.5">
               <BarChart3 size={11} /> Community Prediction
             </p>
-            <p className="text-xs font-semibold text-gray-800 mb-2">{dilemma.predictionQuestion}</p>
+            <p className="text-xs font-semibold text-gray-800 dark:text-slate-200 mb-2">{dilemma.predictionQuestion}</p>
             <div className="flex flex-col gap-1">
               {dilemma.predictionOptions?.map((opt, i) => {
                 const totalVotes = Object.values(dilemma.predictionVotes || {}).reduce((a, b) => a + b, 0);
                 const votes = dilemma.predictionVotes?.[opt] || 0;
                 const pct = totalVotes > 0 ? Math.round((votes / totalVotes) * 100) : 0;
                 return (
-                  <div key={i} className="relative overflow-hidden py-1.5 px-2.5 rounded-lg border border-amber-200 bg-white text-[11px] font-medium">
-                    <div className="absolute inset-y-0 left-0 bg-amber-100/60 transition-all" style={{ width: `${pct}%` }} />
+                  <div key={i} className="relative overflow-hidden py-1.5 px-2.5 rounded-lg border border-amber-200 dark:border-amber-800/50 bg-white dark:bg-slate-800 text-[11px] font-medium text-gray-800 dark:text-slate-200">
+                    <div className="absolute inset-y-0 left-0 bg-amber-100/60 dark:bg-amber-900/40 transition-all" style={{ width: `${pct}%` }} />
                     <span className="relative flex justify-between">
                       <span>{opt}</span>
-                      {totalVotes > 0 && <span className="text-amber-600 font-bold">{pct}%</span>}
+                      {totalVotes > 0 && <span className="text-amber-600 dark:text-amber-400 font-bold">{pct}%</span>}
                     </span>
                   </div>
                 );
@@ -721,14 +721,14 @@ function DilemmaCard({
 
         {/* AI Third Friend Viewpoint Card */}
         {aiSummary ? (
-          <div className="mt-3 p-3 rounded-xl bg-gradient-to-br from-indigo-50 to-purple-50 border border-purple-100/80 animate-fade-in">
-            <div className="flex items-center gap-1.5 mb-1 text-purple-700">
-              <Sparkles size={13} className="text-purple-600 animate-pulse" />
+          <div className="mt-3 p-3 rounded-xl bg-gradient-to-br from-indigo-50 to-purple-50 dark:from-indigo-950/40 dark:to-purple-950/40 border border-purple-100/80 dark:border-purple-800/60 animate-fade-in">
+            <div className="flex items-center gap-1.5 mb-1 text-purple-700 dark:text-purple-300">
+              <Sparkles size={13} className="text-purple-600 dark:text-purple-400 animate-pulse" />
               <span className="text-[10px] font-black uppercase tracking-wider">AI Third Friend Synthesis</span>
             </div>
-            <p className="text-[11px] text-gray-700 font-medium leading-relaxed">{aiSummary}</p>
+            <p className="text-[11px] text-gray-700 dark:text-slate-200 font-medium leading-relaxed">{aiSummary}</p>
             {aiDevilAdvocate && (
-              <p className="text-[11px] text-purple-900 font-semibold mt-1.5 pt-1.5 border-t border-purple-100 leading-relaxed">
+              <p className="text-[11px] text-purple-900 dark:text-purple-200 font-semibold mt-1.5 pt-1.5 border-t border-purple-100 dark:border-purple-800/60 leading-relaxed">
                 {aiDevilAdvocate}
               </p>
             )}
@@ -756,26 +756,26 @@ function DilemmaCard({
                   setLoadingAI(false);
                 }
               }}
-              className="text-[10px] font-bold text-purple-600 hover:text-purple-800 transition-all inline-flex items-center gap-1 bg-purple-50 px-2.5 py-1 rounded-full border border-purple-100 hover:bg-purple-100 disabled:opacity-50"
+              className="text-[10px] font-bold text-purple-600 dark:text-purple-400 hover:text-purple-800 dark:hover:text-purple-200 transition-all inline-flex items-center gap-1 bg-purple-50 dark:bg-purple-950/50 px-2.5 py-1 rounded-full border border-purple-100 dark:border-purple-800/60 hover:bg-purple-100 dark:hover:bg-purple-900/60 disabled:opacity-50"
             >
-              <Sparkles size={11} className={loadingAI ? "animate-spin text-purple-500" : "text-purple-600"} />
+              <Sparkles size={11} className={loadingAI ? "animate-spin text-purple-500" : "text-purple-600 dark:text-purple-400"} />
               {loadingAI ? "Consulting AI..." : "Ask AI Third Friend for Summary"}
             </button>
           </div>
         )}
 
         {/* Action bar */}
-        <div className="flex items-center justify-between mt-3 pt-2.5 border-t border-gray-50">
+        <div className="flex items-center justify-between mt-3 pt-2.5 border-t border-gray-50 dark:border-slate-800">
           <button
             onClick={onToggleExpand}
-            className="flex items-center gap-1 text-[11px] font-bold text-gray-500 hover:text-purple-600 transition-all"
+            className="flex items-center gap-1 text-[11px] font-bold text-gray-500 dark:text-slate-400 hover:text-purple-600 dark:hover:text-purple-400 transition-all"
           >
             <MessageCircle size={13} />
             <span>{dilemma.responseCount} advices</span>
           </button>
 
           <div className="flex items-center gap-1.5">
-            <span className="text-[10px] text-gray-400 flex items-center gap-0.5">
+            <span className="text-[10px] text-gray-400 dark:text-slate-400 flex items-center gap-0.5">
               <Eye size={10} /> {dilemma.viewCount}
             </span>
             <button
@@ -790,15 +790,15 @@ function DilemmaCard({
 
       {/* Response Input */}
       {isResponding && (
-        <div className="p-3 border-t border-gray-100 bg-gray-50/50">
+        <div className="p-3 border-t border-gray-100 dark:border-slate-800 bg-gray-50/50 dark:bg-slate-800/50">
           <textarea
             value={responseText}
             onChange={(e) => onResponseTextChange(e.target.value)}
             placeholder="Share your honest, supportive advice..."
-            className="w-full p-3 rounded-xl border border-gray-200 text-xs outline-none resize-none h-24 focus:border-purple-400 transition-all"
+            className="w-full p-3 rounded-xl border border-gray-200 dark:border-slate-700 text-xs bg-white dark:bg-slate-900 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-slate-500 outline-none resize-none h-24 focus:border-purple-400 transition-all"
           />
           <div className="flex items-center justify-between mt-2">
-            <button onClick={onCancelRespond} className="text-xs text-gray-400 font-semibold">Cancel</button>
+            <button onClick={onCancelRespond} className="text-xs text-gray-400 dark:text-slate-400 font-semibold">Cancel</button>
             <button
               onClick={onSubmitResponse}
               disabled={!responseText.trim()}
@@ -812,20 +812,20 @@ function DilemmaCard({
 
       {/* Responses List */}
       {isExpanded && dilemma.responses.length > 0 && (
-        <div className="border-t border-gray-50">
+        <div className="border-t border-gray-50 dark:border-slate-800">
           {dilemma.responses.map((resp) => (
-            <div key={resp.id} className="p-3.5 border-b border-gray-50 last:border-b-0">
+            <div key={resp.id} className="p-3.5 border-b border-gray-50 dark:border-slate-800 last:border-b-0">
               <div className="flex items-start gap-2.5">
                 <div className="w-7 h-7 rounded-full bg-gradient-to-br from-emerald-400 to-teal-500 flex items-center justify-center text-white text-[9px] font-black shrink-0 mt-0.5">
                   {resp.isAnonymous ? <Shield size={12} /> : resp.authorName.charAt(0)}
                 </div>
                 <div className="flex-1">
                   <div className="flex items-center gap-1.5 mb-1">
-                    <span className="text-xs font-bold text-gray-900">{resp.authorName}</span>
-                    <span className="text-[10px] text-gray-400">•</span>
-                    <span className="text-[10px] text-gray-400">{new Date(resp.createdAt).toLocaleDateString()}</span>
+                    <span className="text-xs font-bold text-gray-900 dark:text-white">{resp.authorName}</span>
+                    <span className="text-[10px] text-gray-400 dark:text-slate-400">•</span>
+                    <span className="text-[10px] text-gray-400 dark:text-slate-400">{new Date(resp.createdAt).toLocaleDateString()}</span>
                   </div>
-                  <p className="text-xs text-gray-700 leading-relaxed">{resp.content}</p>
+                  <p className="text-xs text-gray-700 dark:text-slate-200 leading-relaxed">{resp.content}</p>
 
                   {/* Reason Tags */}
                   {Object.entries(resp.reasonTags).length > 0 && (
@@ -836,7 +836,7 @@ function DilemmaCard({
                         .map(([tag, count]) => (
                           <span
                             key={tag}
-                            className={`text-[9px] font-bold px-2 py-0.5 rounded-full border ${TAG_COLORS[tag] || "bg-gray-50 text-gray-600 border-gray-200"}`}
+                            className={`text-[9px] font-bold px-2 py-0.5 rounded-full border ${TAG_COLORS[tag] || "bg-gray-50 dark:bg-slate-800 text-gray-600 dark:text-slate-300 border-gray-200 dark:border-slate-700"}`}
                           >
                             {tag} {count > 1 ? `×${count}` : ""}
                           </span>
@@ -848,19 +848,19 @@ function DilemmaCard({
                   <div className="flex items-center gap-2 mt-2">
                     <button
                       onClick={() => onVote(dilemma.id, resp.id, "up")}
-                      className="flex items-center gap-0.5 text-[10px] font-bold text-gray-400 hover:text-green-600 transition-all"
+                      className="flex items-center gap-0.5 text-[10px] font-bold text-gray-400 dark:text-slate-400 hover:text-green-600 dark:hover:text-green-400 transition-all"
                     >
                       <ChevronUp size={14} /> {resp.upvotes}
                     </button>
                     <button
                       onClick={() => onVote(dilemma.id, resp.id, "down")}
-                      className="flex items-center gap-0.5 text-[10px] font-bold text-gray-400 hover:text-red-500 transition-all"
+                      className="flex items-center gap-0.5 text-[10px] font-bold text-gray-400 dark:text-slate-400 hover:text-red-500 dark:hover:text-red-400 transition-all"
                     >
                       <ChevronDown size={14} /> {resp.downvotes}
                     </button>
                     <button
                       onClick={() => setShowTagPicker(showTagPicker === resp.id ? null : resp.id)}
-                      className="text-[10px] font-bold text-purple-500 hover:text-purple-700 transition-all ml-1"
+                      className="text-[10px] font-bold text-purple-500 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 transition-all ml-1"
                     >
                       + Tag Reason
                     </button>
@@ -868,7 +868,7 @@ function DilemmaCard({
 
                   {/* Tag Picker */}
                   {showTagPicker === resp.id && (
-                    <div className="mt-2 p-2 rounded-xl bg-gray-50 border border-gray-100 flex flex-wrap gap-1 animate-fade-in">
+                    <div className="mt-2 p-2 rounded-xl bg-gray-50 dark:bg-slate-800 border border-gray-100 dark:border-slate-700 flex flex-wrap gap-1 animate-fade-in">
                       {REASON_TAGS.map((tag) => (
                         <button
                           key={tag}
@@ -911,8 +911,8 @@ function SwipeGameTab({
   if (!scenario) {
     return (
       <div className="p-8 text-center flex flex-col items-center gap-3 pt-20">
-        <Zap size={36} className="text-gray-300" />
-        <p className="font-bold text-sm text-gray-700">Loading scenarios...</p>
+        <Zap size={36} className="text-gray-300 dark:text-slate-600" />
+        <p className="font-bold text-sm text-gray-700 dark:text-slate-300">Loading scenarios...</p>
       </div>
     );
   }
@@ -930,13 +930,13 @@ function SwipeGameTab({
             <Flame size={16} className="text-white" />
           </div>
           <div>
-            <p className="text-[10px] font-bold text-gray-400 uppercase">Your Score</p>
-            <p className="text-lg font-black text-gray-900">{score}</p>
+            <p className="text-[10px] font-bold text-gray-400 dark:text-slate-400 uppercase">Your Score</p>
+            <p className="text-lg font-black text-gray-900 dark:text-white">{score}</p>
           </div>
         </div>
         <div className="text-right">
-          <p className="text-[10px] text-gray-400 font-bold">{currentIndex + 1} / {scenarios.length}</p>
-          <div className="w-24 h-1.5 rounded-full bg-gray-200 mt-0.5 overflow-hidden">
+          <p className="text-[10px] text-gray-400 dark:text-slate-400 font-bold">{currentIndex + 1} / {scenarios.length}</p>
+          <div className="w-24 h-1.5 rounded-full bg-gray-200 dark:bg-slate-800 mt-0.5 overflow-hidden">
             <div
               className="h-full rounded-full bg-gradient-to-r from-pink-500 to-purple-500 transition-all"
               style={{ width: `${((currentIndex + 1) / scenarios.length) * 100}%` }}
@@ -949,9 +949,9 @@ function SwipeGameTab({
       <div className={`relative p-6 rounded-3xl border-2 transition-all duration-500 ${
         result
           ? result.correct
-            ? "border-green-400 bg-green-50"
-            : "border-red-400 bg-red-50"
-          : "border-gray-200 bg-white"
+            ? "border-green-400 dark:border-green-500 bg-green-50 dark:bg-emerald-950/40"
+            : "border-red-400 dark:border-red-500 bg-red-50 dark:bg-red-950/40"
+          : "border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900"
       }`}
       style={{ minHeight: "280px" }}
       >
@@ -961,29 +961,29 @@ function SwipeGameTab({
           </div>
         </div>
 
-        <p className="text-center text-sm font-semibold text-gray-800 leading-relaxed px-2">
+        <p className="text-center text-sm font-semibold text-gray-800 dark:text-slate-100 leading-relaxed px-2">
           &ldquo;{scenario.scenario}&rdquo;
         </p>
 
-        <p className="text-center text-[10px] text-gray-400 mt-2 font-bold uppercase tracking-wider">
+        <p className="text-center text-[10px] text-gray-400 dark:text-slate-400 mt-2 font-bold uppercase tracking-wider">
           Is this a red flag or green flag?
         </p>
 
         {/* Result overlay */}
         {result && (
-          <div className="mt-4 p-3 rounded-xl bg-white/80 border border-gray-100 animate-fade-in">
-            <p className={`text-xs font-extrabold mb-1 ${result.correct ? "text-green-600" : "text-red-600"}`}>
+          <div className="mt-4 p-3 rounded-xl bg-white/80 dark:bg-slate-800/80 border border-gray-100 dark:border-slate-700 animate-fade-in">
+            <p className={`text-xs font-extrabold mb-1 ${result.correct ? "text-green-600 dark:text-green-400" : "text-red-600 dark:text-red-400"}`}>
               {result.correct ? "✅ Correct!" : "❌ Not quite!"}
             </p>
-            <p className="text-[11px] text-gray-600 leading-relaxed">{scenario.explanation}</p>
+            <p className="text-[11px] text-gray-600 dark:text-slate-300 leading-relaxed">{scenario.explanation}</p>
             <div className="flex items-center gap-3 mt-2">
-              <div className="flex items-center gap-1 text-[10px] font-bold text-red-500">
+              <div className="flex items-center gap-1 text-[10px] font-bold text-red-500 dark:text-red-400">
                 🚩 {redPct}%
               </div>
-              <div className="flex-1 h-2 rounded-full bg-gray-200 overflow-hidden">
+              <div className="flex-1 h-2 rounded-full bg-gray-200 dark:bg-slate-700 overflow-hidden">
                 <div className="h-full bg-gradient-to-r from-red-400 to-red-500" style={{ width: `${redPct}%` }} />
               </div>
-              <div className="flex items-center gap-1 text-[10px] font-bold text-green-500">
+              <div className="flex items-center gap-1 text-[10px] font-bold text-green-500 dark:text-green-400">
                 🟢 {greenPct}%
               </div>
             </div>
@@ -1030,19 +1030,19 @@ function LeaderboardTab({
   return (
     <div className="p-4 flex flex-col gap-4">
       <div className="flex items-center justify-between">
-        <h3 className="font-black text-base text-gray-900 flex items-center gap-1.5">
+        <h3 className="font-black text-base text-gray-900 dark:text-white flex items-center gap-1.5">
           <Trophy size={18} className="text-amber-500" /> Guru Leaderboard
         </h3>
-        <button onClick={onRefresh} className="text-[10px] font-bold text-purple-600 flex items-center gap-1 hover:underline">
+        <button onClick={onRefresh} className="text-[10px] font-bold text-purple-600 dark:text-purple-400 flex items-center gap-1 hover:underline">
           <RefreshCw size={10} /> Refresh
         </button>
       </div>
 
       {leaderboard.length === 0 ? (
         <div className="py-16 text-center">
-          <Trophy size={36} className="mx-auto text-gray-200 mb-2" />
-          <p className="text-sm font-bold text-gray-700">No gurus yet</p>
-          <p className="text-xs text-gray-400 mt-1">Post dilemmas and give advice to earn Guru Points!</p>
+          <Trophy size={36} className="mx-auto text-gray-200 dark:text-slate-700 mb-2" />
+          <p className="text-sm font-bold text-gray-700 dark:text-slate-300">No gurus yet</p>
+          <p className="text-xs text-gray-400 dark:text-slate-500 mt-1">Post dilemmas and give advice to earn Guru Points!</p>
         </div>
       ) : (
         <>
@@ -1059,10 +1059,10 @@ function LeaderboardTab({
                     >
                       {podiumIcons[rIdx]}
                     </div>
-                    <p className="text-[11px] font-black text-gray-900 truncate max-w-[70px] text-center">{guru.name}</p>
-                    <p className="text-[10px] font-bold text-purple-600">{guru.guruPoints} pts</p>
+                    <p className="text-[11px] font-black text-gray-900 dark:text-white truncate max-w-[70px] text-center">{guru.name}</p>
+                    <p className="text-[10px] font-bold text-purple-600 dark:text-purple-400">{guru.guruPoints} pts</p>
                     {guru.badges.length > 0 && (
-                      <p className="text-[9px] text-amber-500">{guru.badges[guru.badges.length - 1]}</p>
+                      <p className="text-[9px] text-amber-500 dark:text-amber-400">{guru.badges[guru.badges.length - 1]}</p>
                     )}
                   </div>
                 );
@@ -1076,28 +1076,28 @@ function LeaderboardTab({
               <div
                 key={guru.id}
                 className={`flex items-center gap-3 p-3 rounded-xl border transition-all ${
-                  i < 3 ? "bg-gradient-to-r from-amber-50 to-orange-50 border-amber-200" : "bg-white border-gray-100"
+                  i < 3 ? "bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-950/30 dark:to-orange-950/30 border-amber-200 dark:border-amber-800/40" : "bg-white dark:bg-slate-900 border-gray-100 dark:border-slate-800"
                 }`}
               >
                 <span className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-black ${
-                  i === 0 ? "bg-yellow-400 text-white" : i === 1 ? "bg-gray-300 text-white" : i === 2 ? "bg-amber-600 text-white" : "bg-gray-100 text-gray-600"
+                  i === 0 ? "bg-yellow-400 text-white" : i === 1 ? "bg-gray-300 dark:bg-slate-700 text-white" : i === 2 ? "bg-amber-600 text-white" : "bg-gray-100 dark:bg-slate-800 text-gray-600 dark:text-slate-300"
                 }`}>
                   {i + 1}
                 </span>
                 <div className="flex-1 min-w-0">
-                  <p className="text-xs font-bold text-gray-900 truncate">{guru.name}</p>
-                  <div className="flex items-center gap-1.5 text-[10px] text-gray-400">
+                  <p className="text-xs font-bold text-gray-900 dark:text-white truncate">{guru.name}</p>
+                  <div className="flex items-center gap-1.5 text-[10px] text-gray-400 dark:text-slate-400">
                     <span>{guru.responsesGiven} advices</span>
                     <span>•</span>
                     <span>🔥 {guru.streak} streak</span>
                   </div>
                 </div>
                 <div className="text-right">
-                  <p className="text-xs font-black text-purple-600">{guru.guruPoints}</p>
-                  <p className="text-[9px] text-gray-400">pts</p>
+                  <p className="text-xs font-black text-purple-600 dark:text-purple-400">{guru.guruPoints}</p>
+                  <p className="text-[9px] text-gray-400 dark:text-slate-400">pts</p>
                 </div>
                 {guru.badges.length > 0 && (
-                  <span className="text-[9px] font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-700 shrink-0">
+                  <span className="text-[9px] font-bold px-2 py-0.5 rounded-full bg-amber-100 dark:bg-amber-950/60 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-800/40 shrink-0">
                     {guru.badges[guru.badges.length - 1]}
                   </span>
                 )}
@@ -1148,30 +1148,30 @@ function PostDilemmaModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/40 backdrop-blur-sm animate-fade-in"
+    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/50 backdrop-blur-sm animate-fade-in"
       onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
     >
-      <div className="w-full max-w-[440px] max-h-[85vh] bg-white rounded-t-3xl sm:rounded-3xl overflow-y-auto animate-fade-in-up shadow-2xl">
+      <div className="w-full max-w-[440px] max-h-[85vh] bg-white dark:bg-slate-900 border border-gray-100 dark:border-slate-800 rounded-t-3xl sm:rounded-3xl overflow-y-auto animate-fade-in-up shadow-2xl">
         {/* Header */}
-        <div className="sticky top-0 bg-white border-b border-gray-100 p-4 flex items-center justify-between z-10">
-          <h2 className="font-black text-base text-gray-900 flex items-center gap-1.5">
+        <div className="sticky top-0 bg-white dark:bg-slate-900 border-b border-gray-100 dark:border-slate-800 p-4 flex items-center justify-between z-10">
+          <h2 className="font-black text-base text-gray-900 dark:text-white flex items-center gap-1.5">
             <Heart size={16} className="text-pink-500" /> Share Your Dilemma
           </h2>
-          <button onClick={onClose} className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center hover:bg-gray-200 transition-all">
-            <X size={16} className="text-gray-500" />
+          <button onClick={onClose} className="w-8 h-8 rounded-full bg-gray-100 dark:bg-slate-800 flex items-center justify-center hover:bg-gray-200 dark:hover:bg-slate-700 transition-all">
+            <X size={16} className="text-gray-500 dark:text-slate-400" />
           </button>
         </div>
 
         <div className="p-4 flex flex-col gap-4">
           {/* Anonymous Toggle */}
-          <div className="flex items-center justify-between p-3 rounded-xl bg-purple-50 border border-purple-100">
+          <div className="flex items-center justify-between p-3 rounded-xl bg-purple-50 dark:bg-purple-950/40 border border-purple-100 dark:border-purple-800/40">
             <div className="flex items-center gap-2">
-              <Shield size={16} className="text-purple-600" />
-              <span className="text-xs font-bold text-purple-800">Post Anonymously</span>
+              <Shield size={16} className="text-purple-600 dark:text-purple-400" />
+              <span className="text-xs font-bold text-purple-800 dark:text-purple-200">Post Anonymously</span>
             </div>
             <button
               onClick={() => setIsAnonymous(!isAnonymous)}
-              className={`relative w-11 h-6 rounded-full transition-all ${isAnonymous ? "bg-purple-500" : "bg-gray-300"}`}
+              className={`relative w-11 h-6 rounded-full transition-all ${isAnonymous ? "bg-purple-500" : "bg-gray-300 dark:bg-slate-700"}`}
             >
               <span className={`absolute top-0.5 w-5 h-5 rounded-full bg-white shadow-md transition-all ${isAnonymous ? "left-5.5" : "left-0.5"}`}
                 style={{ left: isAnonymous ? "22px" : "2px" }}
@@ -1181,7 +1181,7 @@ function PostDilemmaModal({
 
           {/* Category */}
           <div>
-            <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1.5 block">Category</label>
+            <label className="text-[10px] font-bold text-gray-500 dark:text-slate-400 uppercase tracking-wider mb-1.5 block">Category</label>
             <div className="flex flex-wrap gap-1.5">
               {CATEGORIES.filter((c) => c.value !== "All").map((cat) => (
                 <button
@@ -1190,7 +1190,7 @@ function PostDilemmaModal({
                   className={`text-[10px] font-bold px-2.5 py-1.5 rounded-full border transition-all ${
                     category === cat.value
                       ? "bg-gradient-to-r from-pink-500 to-purple-500 text-white border-transparent"
-                      : "bg-white text-gray-600 border-gray-200 hover:border-pink-300"
+                      : "bg-white dark:bg-slate-800 text-gray-600 dark:text-slate-300 border-gray-200 dark:border-slate-700 hover:border-pink-300"
                   }`}
                 >
                   {cat.emoji} {cat.label}
@@ -1205,7 +1205,7 @@ function PostDilemmaModal({
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             placeholder="Quick headline (optional)"
-            className="w-full py-2.5 px-3.5 rounded-xl border border-gray-200 text-xs outline-none focus:border-purple-400 transition-all"
+            className="w-full py-2.5 px-3.5 rounded-xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-slate-500 text-xs outline-none focus:border-purple-400 transition-all"
           />
 
           {/* Content */}
@@ -1214,7 +1214,7 @@ function PostDilemmaModal({
               value={content}
               onChange={(e) => setContent(e.target.value)}
               placeholder="Tell us what's happening. Be as detailed as you want — your identity is safe..."
-              className="w-full p-3.5 rounded-xl border border-gray-200 text-xs outline-none resize-none h-32 focus:border-purple-400 transition-all leading-relaxed"
+              className="w-full p-3.5 rounded-xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-slate-500 text-xs outline-none resize-none h-32 focus:border-purple-400 transition-all leading-relaxed"
             />
             {content.trim() && (
               <div className="mt-1 flex justify-end">
@@ -1233,9 +1233,9 @@ function PostDilemmaModal({
                       }
                     } catch { /* ignore */ }
                   }}
-                  className="text-[10px] font-bold text-purple-600 hover:text-purple-800 flex items-center gap-1 bg-purple-50 px-2.5 py-1 rounded-full border border-purple-100 transition-all hover:bg-purple-100"
+                  className="text-[10px] font-bold text-purple-600 dark:text-purple-400 hover:text-purple-800 dark:hover:text-purple-200 flex items-center gap-1 bg-purple-50 dark:bg-purple-950/50 px-2.5 py-1 rounded-full border border-purple-100 dark:border-purple-800/60 transition-all hover:bg-purple-100 dark:hover:bg-purple-900/60"
                 >
-                  <Sparkles size={11} className="text-purple-500" /> Refine with AI Assistant
+                  <Sparkles size={11} className="text-purple-500 dark:text-purple-400" /> Refine with AI Assistant
                 </button>
               </div>
             )}
@@ -1245,17 +1245,17 @@ function PostDilemmaModal({
           <div>
             <button
               onClick={() => setAddPrediction(!addPrediction)}
-              className="text-xs font-bold text-purple-600 flex items-center gap-1 hover:underline"
+              className="text-xs font-bold text-purple-600 dark:text-purple-400 flex items-center gap-1 hover:underline"
             >
               <BarChart3 size={13} /> {addPrediction ? "Remove" : "Add"} Community Prediction
             </button>
             {addPrediction && (
-              <div className="mt-2 p-3 rounded-xl bg-amber-50 border border-amber-200 flex flex-col gap-2 animate-fade-in">
+              <div className="mt-2 p-3 rounded-xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800/40 flex flex-col gap-2 animate-fade-in">
                 <input
                   value={predictionQ}
                   onChange={(e) => setPredictionQ(e.target.value)}
                   placeholder="What will happen? (e.g. 'Will they get back together?')"
-                  className="w-full py-2 px-3 rounded-lg border border-amber-200 text-xs outline-none focus:border-amber-400 bg-white"
+                  className="w-full py-2 px-3 rounded-lg border border-amber-200 dark:border-amber-800/50 text-xs outline-none focus:border-amber-400 bg-white dark:bg-slate-800 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-slate-500"
                 />
                 {predictionOpts.map((opt, i) => (
                   <input
@@ -1267,13 +1267,13 @@ function PostDilemmaModal({
                       setPredictionOpts(nOpts);
                     }}
                     placeholder={`Option ${i + 1}`}
-                    className="w-full py-2 px-3 rounded-lg border border-amber-200 text-xs outline-none focus:border-amber-400 bg-white"
+                    className="w-full py-2 px-3 rounded-lg border border-amber-200 dark:border-amber-800/50 text-xs outline-none focus:border-amber-400 bg-white dark:bg-slate-800 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-slate-500"
                   />
                 ))}
                 {predictionOpts.length < 4 && (
                   <button
                     onClick={() => setPredictionOpts([...predictionOpts, ""])}
-                    className="text-[10px] font-bold text-amber-600 hover:text-amber-800"
+                    className="text-[10px] font-bold text-amber-600 dark:text-amber-400 hover:text-amber-800 dark:hover:text-amber-300"
                   >
                     + Add Option
                   </button>
@@ -1316,8 +1316,8 @@ function BattlesTab({
     return (
       <div className="p-8 text-center flex flex-col items-center justify-center min-h-[300px]">
         <Swords size={36} className="text-purple-400 mb-2 animate-bounce" />
-        <h3 className="font-extrabold text-sm text-gray-900">No Active Advice Battles</h3>
-        <p className="text-xs text-gray-500 max-w-[240px] mt-1">
+        <h3 className="font-extrabold text-sm text-gray-900 dark:text-white">No Active Advice Battles</h3>
+        <p className="text-xs text-gray-500 dark:text-slate-400 max-w-[240px] mt-1">
           Check back soon! Daily advice battles rotate every 24 hours.
         </p>
       </div>
@@ -1349,20 +1349,20 @@ function BattlesTab({
         return (
           <div
             key={battle.id}
-            className="rounded-2xl bg-white border border-gray-100 p-4 shadow-sm space-y-3"
+            className="rounded-2xl bg-white dark:bg-slate-900 border border-gray-100 dark:border-slate-800 p-4 shadow-sm space-y-3"
           >
             {/* Battle Tag & Snippet */}
             <div className="flex items-center justify-between">
-              <span className="text-[10px] font-black px-2.5 py-0.5 rounded-full bg-orange-100 text-orange-700 uppercase tracking-wider flex items-center gap-1">
+              <span className="text-[10px] font-black px-2.5 py-0.5 rounded-full bg-orange-100 dark:bg-orange-950/60 text-orange-700 dark:text-orange-300 border border-orange-200 dark:border-orange-800/40 uppercase tracking-wider flex items-center gap-1">
                 <Flame size={10} /> Battle #{idx + 1}
               </span>
-              <span className="text-[10px] text-gray-400 font-medium">
+              <span className="text-[10px] text-gray-400 dark:text-slate-400 font-medium">
                 {total} community votes
               </span>
             </div>
 
-            <div className="p-3 rounded-xl bg-gray-50 border border-gray-100">
-              <p className="text-xs font-bold text-gray-800 italic">
+            <div className="p-3 rounded-xl bg-gray-50 dark:bg-slate-800/60 border border-gray-100 dark:border-slate-700">
+              <p className="text-xs font-bold text-gray-800 dark:text-slate-200 italic">
                 "{battle.dilemmaSnippet}"
               </p>
             </div>
@@ -1379,33 +1379,33 @@ function BattlesTab({
                 }}
                 className={`relative overflow-hidden p-3.5 rounded-xl border-2 transition-all cursor-pointer ${
                   userVote === 1
-                    ? "border-pink-500 bg-pink-50/50 shadow-sm"
+                    ? "border-pink-500 bg-pink-50/50 dark:bg-pink-950/40 shadow-sm"
                     : userVote === 2
-                    ? "border-gray-100 bg-gray-50/50 opacity-70"
-                    : "border-pink-100 bg-gradient-to-br from-pink-50/40 to-white hover:border-pink-400 hover:shadow-md active:scale-[0.98]"
+                    ? "border-gray-100 dark:border-slate-800 bg-gray-50/50 dark:bg-slate-800/50 opacity-70"
+                    : "border-pink-100 dark:border-pink-900/40 bg-gradient-to-br from-pink-50/40 to-white dark:from-pink-950/20 dark:to-slate-900 hover:border-pink-400 hover:shadow-md active:scale-[0.98]"
                 }`}
               >
                 <div className="flex items-center justify-between mb-1.5">
-                  <span className="text-[10px] font-black uppercase text-pink-600 tracking-wider">
+                  <span className="text-[10px] font-black uppercase text-pink-600 dark:text-pink-400 tracking-wider">
                     ⚡ {battle.response1.authorName}
                   </span>
                   {userVote === 1 && (
-                    <span className="text-[10px] font-extrabold text-pink-600 bg-pink-100 px-2 py-0.5 rounded-full flex items-center gap-1">
+                    <span className="text-[10px] font-extrabold text-pink-600 dark:text-pink-300 bg-pink-100 dark:bg-pink-950/70 px-2 py-0.5 rounded-full flex items-center gap-1">
                       <CheckCircle2 size={10} /> Voted
                     </span>
                   )}
                 </div>
-                <p className="text-xs text-gray-700 font-medium leading-relaxed mb-3">
+                <p className="text-xs text-gray-700 dark:text-slate-200 font-medium leading-relaxed mb-3">
                   "{battle.response1.content}"
                 </p>
 
                 {userVote ? (
                   <div className="space-y-1">
-                    <div className="flex justify-between text-[10px] font-bold text-pink-700">
+                    <div className="flex justify-between text-[10px] font-bold text-pink-700 dark:text-pink-300">
                       <span>{pct1}% Agree</span>
                       <span>{v1} votes</span>
                     </div>
-                    <div className="w-full h-1.5 rounded-full bg-pink-100 overflow-hidden">
+                    <div className="w-full h-1.5 rounded-full bg-pink-100 dark:bg-pink-950 overflow-hidden">
                       <div
                         className="h-full bg-gradient-to-r from-pink-500 to-rose-500 transition-all duration-700"
                         style={{ width: `${pct1}%` }}
@@ -1429,33 +1429,33 @@ function BattlesTab({
                 }}
                 className={`relative overflow-hidden p-3.5 rounded-xl border-2 transition-all cursor-pointer ${
                   userVote === 2
-                    ? "border-purple-500 bg-purple-50/50 shadow-sm"
+                    ? "border-purple-500 bg-purple-50/50 dark:bg-purple-950/40 shadow-sm"
                     : userVote === 1
-                    ? "border-gray-100 bg-gray-50/50 opacity-70"
-                    : "border-purple-100 bg-gradient-to-br from-purple-50/40 to-white hover:border-purple-400 hover:shadow-md active:scale-[0.98]"
+                    ? "border-gray-100 dark:border-slate-800 bg-gray-50/50 dark:bg-slate-800/50 opacity-70"
+                    : "border-purple-100 dark:border-purple-900/40 bg-gradient-to-br from-purple-50/40 to-white dark:from-purple-950/20 dark:to-slate-900 hover:border-purple-400 hover:shadow-md active:scale-[0.98]"
                 }`}
               >
                 <div className="flex items-center justify-between mb-1.5">
-                  <span className="text-[10px] font-black uppercase text-purple-600 tracking-wider">
+                  <span className="text-[10px] font-black uppercase text-purple-600 dark:text-purple-400 tracking-wider">
                     🔥 {battle.response2.authorName}
                   </span>
                   {userVote === 2 && (
-                    <span className="text-[10px] font-extrabold text-purple-600 bg-purple-100 px-2 py-0.5 rounded-full flex items-center gap-1">
+                    <span className="text-[10px] font-extrabold text-purple-600 dark:text-purple-300 bg-purple-100 dark:bg-purple-950/70 px-2 py-0.5 rounded-full flex items-center gap-1">
                       <CheckCircle2 size={10} /> Voted
                     </span>
                   )}
                 </div>
-                <p className="text-xs text-gray-700 font-medium leading-relaxed mb-3">
+                <p className="text-xs text-gray-700 dark:text-slate-200 font-medium leading-relaxed mb-3">
                   "{battle.response2.content}"
                 </p>
 
                 {userVote ? (
                   <div className="space-y-1">
-                    <div className="flex justify-between text-[10px] font-bold text-purple-700">
+                    <div className="flex justify-between text-[10px] font-bold text-purple-700 dark:text-purple-300">
                       <span>{pct2}% Agree</span>
                       <span>{v2} votes</span>
                     </div>
-                    <div className="w-full h-1.5 rounded-full bg-purple-100 overflow-hidden">
+                    <div className="w-full h-1.5 rounded-full bg-purple-100 dark:bg-purple-950 overflow-hidden">
                       <div
                         className="h-full bg-gradient-to-r from-purple-500 to-indigo-500 transition-all duration-700"
                         style={{ width: `${pct2}%` }}

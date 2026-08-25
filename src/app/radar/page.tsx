@@ -240,12 +240,12 @@ export default function RadarPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-purple-50/30 to-pink-50/20 text-gray-900 flex flex-col pb-20">
+    <div className="min-h-screen bg-slate-100/70 dark:bg-slate-950 text-slate-900 dark:text-slate-100 flex flex-col pb-20 transition-colors duration-200">
       <Navbar userEmail={userEmail} userFullName={userFullName} />
 
       {/* Toast Notification */}
       {toast && (
-        <div className="fixed top-20 left-1/2 -translate-x-1/2 z-50 px-4 py-2.5 rounded-2xl bg-gray-900/90 backdrop-blur-md text-white text-xs font-bold shadow-xl animate-fade-in flex items-center gap-2">
+        <div className="fixed top-20 left-1/2 -translate-x-1/2 z-50 px-4 py-2.5 rounded-2xl bg-slate-900/90 dark:bg-slate-800/90 backdrop-blur-md text-white text-xs font-bold shadow-xl animate-fade-in flex items-center gap-2 border border-slate-700">
           <span>{toast}</span>
         </div>
       )}
@@ -253,35 +253,35 @@ export default function RadarPage() {
       {/* Main Responsive Container */}
       <div className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col space-y-4">
         {/* Top Controls Header Bar */}
-        <div className="bg-white/90 backdrop-blur-md border border-gray-100 rounded-3xl p-4 shadow-sm space-y-3">
+        <div className="bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border border-gray-100 dark:border-slate-800 rounded-3xl p-4 shadow-sm space-y-3 transition-colors">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <Link
                 href="/home"
-                className="w-9 h-9 rounded-2xl bg-purple-50 hover:bg-purple-100 flex items-center justify-center text-purple-700 transition-all border border-purple-100"
+                className="w-9 h-9 rounded-2xl bg-purple-50 dark:bg-purple-950/60 hover:bg-purple-100 dark:hover:bg-purple-900/60 flex items-center justify-center text-purple-700 dark:text-purple-300 transition-all border border-purple-100 dark:border-purple-800/50"
               >
                 <ArrowLeft size={18} />
               </Link>
               <div>
                 <div className="flex items-center gap-2">
-                  <h1 className="font-black text-lg tracking-tight text-gray-900">Campus Radar Map</h1>
+                  <h1 className="font-black text-lg tracking-tight text-gray-900 dark:text-white">Campus Radar Map</h1>
                   <span className="flex h-2.5 w-2.5 relative">
                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
                     <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-500"></span>
                   </span>
                 </div>
-                <p className="text-xs font-semibold text-gray-500">
+                <p className="text-xs font-semibold text-gray-500 dark:text-slate-400">
                   Real-time GPS activity pinpoints near your location
                 </p>
               </div>
             </div>
 
             {/* View Mode Switches (Mobile / Desktop) */}
-            <div className="flex items-center bg-gray-100 p-1 rounded-2xl gap-1">
+            <div className="flex items-center bg-gray-100 dark:bg-slate-800 p-1 rounded-2xl gap-1">
               <button
                 onClick={() => setViewMode("split")}
                 className={`px-3 py-1.5 rounded-xl text-xs transition-all flex items-center gap-1 ${
-                  viewMode === "split" ? "bg-white text-purple-700 shadow-xs font-bold" : "text-gray-500 hover:text-gray-800"
+                  viewMode === "split" ? "bg-white dark:bg-slate-700 text-purple-700 dark:text-purple-300 shadow-xs font-bold" : "text-gray-500 dark:text-slate-400 hover:text-gray-800 dark:hover:text-slate-200"
                 }`}
                 title="Split View"
               >
@@ -291,7 +291,7 @@ export default function RadarPage() {
               <button
                 onClick={() => setViewMode("map")}
                 className={`px-3 py-1.5 rounded-xl text-xs transition-all flex items-center gap-1 ${
-                  viewMode === "map" ? "bg-white text-purple-700 shadow-xs font-bold" : "text-gray-500 hover:text-gray-800"
+                  viewMode === "map" ? "bg-white dark:bg-slate-700 text-purple-700 dark:text-purple-300 shadow-xs font-bold" : "text-gray-500 dark:text-slate-400 hover:text-gray-800 dark:hover:text-slate-200"
                 }`}
                 title="Map View"
               >
@@ -301,7 +301,7 @@ export default function RadarPage() {
               <button
                 onClick={() => setViewMode("list")}
                 className={`px-3 py-1.5 rounded-xl text-xs transition-all flex items-center gap-1 ${
-                  viewMode === "list" ? "bg-white text-purple-700 shadow-xs font-bold" : "text-gray-500 hover:text-gray-800"
+                  viewMode === "list" ? "bg-white dark:bg-slate-700 text-purple-700 dark:text-purple-300 shadow-xs font-bold" : "text-gray-500 dark:text-slate-400 hover:text-gray-800 dark:hover:text-slate-200"
                 }`}
                 title="List View"
               >
@@ -314,18 +314,18 @@ export default function RadarPage() {
           {/* Search & Category Filter Bar */}
           <div className="flex flex-col md:flex-row items-center gap-3 pt-1">
             <div className="relative w-full md:w-80">
-              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" size={15} />
+              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 dark:text-slate-500" size={15} />
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search activities, landmarks, topics..."
-                className="w-full py-2 pl-10 pr-3 text-xs bg-gray-50 rounded-2xl border border-gray-200 focus:border-purple-500 focus:bg-white outline-none transition-all"
+                className="w-full py-2 pl-10 pr-3 text-xs bg-gray-50 dark:bg-slate-800/80 rounded-2xl border border-gray-200 dark:border-slate-700 text-slate-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-slate-500 focus:border-purple-500 focus:bg-white dark:focus:bg-slate-800 outline-none transition-all"
               />
               {searchQuery && (
                 <button
                   onClick={() => setSearchQuery("")}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-slate-200"
                 >
                   <X size={14} />
                 </button>
@@ -340,7 +340,7 @@ export default function RadarPage() {
                   className={`shrink-0 flex items-center gap-1.5 py-1.5 px-3.5 rounded-full text-xs font-bold border transition-all ${
                     selectedCategory === cat.value
                       ? "bg-gradient-to-r from-purple-600 to-indigo-600 text-white border-transparent shadow-xs"
-                      : "bg-white text-gray-600 border-gray-200 hover:border-purple-300"
+                      : "bg-white dark:bg-slate-800 text-gray-600 dark:text-slate-300 border-gray-200 dark:border-slate-700 hover:border-purple-300 dark:hover:border-purple-700"
                   }`}
                 >
                   <span>{cat.emoji}</span>
@@ -355,7 +355,7 @@ export default function RadarPage() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 flex-1">
           {/* Left Column: Interactive Radar Map (Takes 7 cols on Desktop) */}
           {(viewMode === "split" || viewMode === "map") && (
-            <div className={`lg:col-span-7 rounded-3xl overflow-hidden shadow-lg border border-purple-100 ${
+            <div className={`lg:col-span-7 rounded-3xl overflow-hidden shadow-lg border border-purple-100 dark:border-slate-800 ${
               viewMode === "map" ? "h-[calc(100vh-230px)]" : "h-80 lg:h-[calc(100vh-230px)] min-h-[400px]"
             }`}>
               <RadarMap
@@ -374,20 +374,20 @@ export default function RadarPage() {
               viewMode === "list" ? "lg:col-span-12" : "lg:col-span-5"
             } space-y-3.5 overflow-y-auto max-h-[calc(100vh-230px)] pr-1`}>
               <div className="flex items-center justify-between px-1">
-                <span className="text-xs font-extrabold uppercase tracking-wider text-gray-400">
+                <span className="text-xs font-extrabold uppercase tracking-wider text-gray-400 dark:text-slate-500">
                   {activities.length} Live Campus Activities
                 </span>
-                <span className="text-[11px] text-green-700 font-bold bg-green-50 px-2.5 py-0.5 rounded-full flex items-center gap-1 border border-green-200">
+                <span className="text-[11px] text-green-700 dark:text-green-400 font-bold bg-green-50 dark:bg-green-950/60 px-2.5 py-0.5 rounded-full flex items-center gap-1 border border-green-200 dark:border-green-800/60">
                   <span className="w-2 h-2 rounded-full bg-green-500 animate-ping"></span>
                   Real-time GPS Pinpoint
                 </span>
               </div>
 
               {activities.length === 0 ? (
-                <div className="py-12 text-center bg-white rounded-2xl border border-dashed border-gray-200 p-6 space-y-2">
-                  <Compass size={32} className="mx-auto text-purple-300 animate-spin" />
-                  <h3 className="font-extrabold text-sm text-gray-800">No activities found</h3>
-                  <p className="text-xs text-gray-400">
+                <div className="py-12 text-center bg-white dark:bg-slate-900 rounded-2xl border border-dashed border-gray-200 dark:border-slate-800 p-6 space-y-2">
+                  <Compass size={32} className="mx-auto text-purple-300 dark:text-purple-500 animate-spin" />
+                  <h3 className="font-extrabold text-sm text-gray-800 dark:text-slate-200">No activities found</h3>
+                  <p className="text-xs text-gray-400 dark:text-slate-500">
                     Be the first to host a meetup, study group, or game session near campus!
                   </p>
                   <button
@@ -408,19 +408,19 @@ export default function RadarPage() {
                     <article
                       key={act.id}
                       onClick={() => setSelectedActivityId(act.id)}
-                      className={`rounded-2xl bg-white border p-4 shadow-sm space-y-3 transition-all cursor-pointer ${
+                      className={`rounded-2xl bg-white dark:bg-slate-900 border p-4 shadow-sm space-y-3 transition-all cursor-pointer ${
                         isSelected
-                          ? "border-purple-500 ring-2 ring-purple-200 shadow-md"
-                          : "border-gray-100 hover:border-purple-200"
+                          ? "border-purple-500 ring-2 ring-purple-200 dark:ring-purple-900 shadow-md"
+                          : "border-gray-100 dark:border-slate-800 hover:border-purple-200 dark:hover:border-purple-800"
                       }`}
                     >
                       {/* Top Header */}
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-1.5">
-                          <span className="text-xs font-extrabold px-2.5 py-0.5 rounded-full bg-purple-100 text-purple-700">
+                          <span className="text-xs font-extrabold px-2.5 py-0.5 rounded-full bg-purple-100 dark:bg-purple-950/70 text-purple-700 dark:text-purple-300">
                             {act.category}
                           </span>
-                          <span className="text-[10px] font-bold text-gray-400 bg-gray-50 px-2 py-0.5 rounded-full">
+                          <span className="text-[10px] font-bold text-gray-400 dark:text-slate-400 bg-gray-50 dark:bg-slate-800 px-2 py-0.5 rounded-full">
                             📍 {act.approxDistance}
                           </span>
                         </div>
@@ -431,7 +431,7 @@ export default function RadarPage() {
                               e.stopPropagation();
                               handleDelete(act.id);
                             }}
-                            className="p-1 text-gray-400 hover:text-red-500 rounded-md transition-all"
+                            className="p-1 text-gray-400 hover:text-red-500 dark:hover:text-red-400 rounded-md transition-all"
                             title="Delete Activity"
                           >
                             <Trash2 size={14} />
@@ -441,12 +441,12 @@ export default function RadarPage() {
 
                       {/* Title & Description */}
                       <div>
-                        <h3 className="font-extrabold text-sm text-gray-900 leading-snug">{act.title}</h3>
-                        <p className="text-xs text-gray-600 mt-1 leading-relaxed">{act.description}</p>
+                        <h3 className="font-extrabold text-sm text-gray-900 dark:text-white leading-snug">{act.title}</h3>
+                        <p className="text-xs text-gray-600 dark:text-slate-300 mt-1 leading-relaxed">{act.description}</p>
                       </div>
 
                       {/* Location & Time Info */}
-                      <div className="grid grid-cols-2 gap-2 text-[11px] font-medium text-gray-600 bg-gray-50/80 p-2.5 rounded-xl border border-gray-100">
+                      <div className="grid grid-cols-2 gap-2 text-[11px] font-medium text-gray-600 dark:text-slate-300 bg-gray-50/80 dark:bg-slate-800/60 p-2.5 rounded-xl border border-gray-100 dark:border-slate-800">
                         <div className="flex items-center gap-1.5 truncate">
                           <MapPin size={13} className="text-purple-500 shrink-0" />
                           <span className="truncate">{act.locationName}</span>
@@ -463,12 +463,12 @@ export default function RadarPage() {
                           <div className="w-6 h-6 rounded-full bg-gradient-to-br from-purple-400 to-indigo-500 flex items-center justify-center text-white text-[9px] font-black">
                             {act.isAnonymousHost ? <Shield size={10} /> : act.hostName.charAt(0)}
                           </div>
-                          <span className="text-[11px] font-semibold text-gray-700">
+                          <span className="text-[11px] font-semibold text-gray-700 dark:text-slate-300">
                             Host: {act.hostName}
                           </span>
                         </div>
 
-                        <div className="flex items-center gap-1 text-[11px] font-bold text-purple-700">
+                        <div className="flex items-center gap-1 text-[11px] font-bold text-purple-700 dark:text-purple-300">
                           <Users size={13} />
                           <span>
                             {act.participantCount} {act.maxParticipants ? `/ ${act.maxParticipants}` : ""} Interested
@@ -485,7 +485,7 @@ export default function RadarPage() {
                           }}
                           className={`flex-1 py-2 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 ${
                             isJoined
-                              ? "bg-green-100 text-green-700 border border-green-200 hover:bg-green-200"
+                              ? "bg-green-100 dark:bg-green-950/60 text-green-700 dark:text-green-300 border border-green-200 dark:border-green-800/60 hover:bg-green-200"
                               : "bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-md hover:shadow-lg"
                           }`}
                         >
@@ -507,7 +507,7 @@ export default function RadarPage() {
                                 e.stopPropagation();
                                 handleChatHost(act);
                               }}
-                              className="py-2 px-3 rounded-xl bg-purple-50 hover:bg-purple-100 text-purple-700 text-xs font-bold transition-all flex items-center gap-1 border border-purple-200 shadow-sm"
+                              className="py-2 px-3 rounded-xl bg-purple-50 dark:bg-purple-950/50 hover:bg-purple-100 dark:hover:bg-purple-900/60 text-purple-700 dark:text-purple-300 text-xs font-bold transition-all flex items-center gap-1 border border-purple-200 dark:border-purple-800 shadow-sm"
                               title="Direct Message Host"
                             >
                               <MessageSquare size={13} /> DM Host
@@ -522,7 +522,7 @@ export default function RadarPage() {
                                   targetId: act.id,
                                 });
                               }}
-                              className="py-2 px-2.5 rounded-xl bg-red-50 hover:bg-red-100 text-red-600 text-xs font-bold transition-all flex items-center gap-1 border border-red-200 shadow-xs shrink-0"
+                              className="py-2 px-2.5 rounded-xl bg-red-50 dark:bg-red-950/40 hover:bg-red-100 dark:hover:bg-red-900/50 text-red-600 dark:text-red-400 text-xs font-bold transition-all flex items-center gap-1 border border-red-200 dark:border-red-900/50 shadow-xs shrink-0"
                               title="Report or Block Host"
                             >
                               <Shield size={13} />
@@ -533,7 +533,7 @@ export default function RadarPage() {
                         <Link
                           href={`/meetups?openId=${act.id}`}
                           onClick={(e) => e.stopPropagation()}
-                          className="py-2 px-2.5 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-800 text-xs font-extrabold transition-all flex items-center gap-1 border border-amber-200 shadow-xs shrink-0"
+                          className="py-2 px-2.5 rounded-xl bg-amber-50 dark:bg-amber-950/40 hover:bg-amber-100 dark:hover:bg-amber-900/50 text-amber-800 dark:text-amber-300 text-xs font-extrabold transition-all flex items-center gap-1 border border-amber-200 dark:border-amber-800/60 shadow-xs shrink-0"
                           title="Open Squad Hub (Chat, Split Bill, Polls)"
                         >
                           ☕ Meetup Hub
@@ -544,7 +544,7 @@ export default function RadarPage() {
                           target="_blank"
                           rel="noopener noreferrer"
                           onClick={(e) => e.stopPropagation()}
-                          className="py-2 px-2.5 rounded-xl bg-gray-100 hover:bg-purple-50 text-gray-700 hover:text-purple-700 text-xs font-bold transition-all flex items-center gap-1 border border-gray-200 shrink-0"
+                          className="py-2 px-2.5 rounded-xl bg-gray-100 dark:bg-slate-800 hover:bg-purple-50 dark:hover:bg-slate-700 text-gray-700 dark:text-slate-300 hover:text-purple-700 dark:hover:text-purple-300 text-xs font-bold transition-all flex items-center gap-1 border border-gray-200 dark:border-slate-700 shrink-0"
                         >
                           <Navigation size={13} /> Nav
                         </a>
@@ -672,18 +672,18 @@ function CreateActivityModal({
 
   return (
     <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4 animate-fade-in">
-      <div className="w-full max-w-md bg-white rounded-t-3xl sm:rounded-3xl p-5 space-y-4 max-h-[90vh] overflow-y-auto shadow-2xl">
-        <div className="flex items-center justify-between border-b border-gray-100 pb-3">
+      <div className="w-full max-w-md bg-white dark:bg-slate-900 border border-transparent dark:border-slate-800 rounded-t-3xl sm:rounded-3xl p-5 space-y-4 max-h-[90vh] overflow-y-auto shadow-2xl">
+        <div className="flex items-center justify-between border-b border-gray-100 dark:border-slate-800 pb-3">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center">
+            <div className="w-8 h-8 rounded-full bg-purple-100 dark:bg-purple-950/70 text-purple-600 dark:text-purple-400 flex items-center justify-center">
               <Sparkles size={16} />
             </div>
             <div>
-              <h3 className="font-black text-sm text-gray-900">Host Campus Activity</h3>
-              <p className="text-[10px] text-purple-600 font-bold">Pinpoint exact event location on live map</p>
+              <h3 className="font-black text-sm text-gray-900 dark:text-white">Host Campus Activity</h3>
+              <p className="text-[10px] text-purple-600 dark:text-purple-400 font-bold">Pinpoint exact event location on live map</p>
             </div>
           </div>
-          <button onClick={onClose} className="p-1 rounded-full text-gray-400 hover:text-gray-600">
+          <button onClick={onClose} className="p-1 rounded-full text-gray-400 hover:text-gray-600 dark:hover:text-slate-200">
             <X size={18} />
           </button>
         </div>
@@ -691,11 +691,11 @@ function CreateActivityModal({
         <form onSubmit={handleSubmit} className="space-y-3.5">
           {/* Category */}
           <div>
-            <label className="block text-[11px] font-bold text-gray-700 mb-1">Category</label>
+            <label className="block text-[11px] font-bold text-gray-700 dark:text-slate-300 mb-1">Category</label>
             <select
               value={category}
               onChange={(e) => setCategory(e.target.value as RadarCategory)}
-              className="w-full py-2 px-3 rounded-xl border border-gray-200 text-xs bg-white font-medium outline-none focus:border-purple-500"
+              className="w-full py-2 px-3 rounded-xl border border-gray-200 dark:border-slate-700 text-xs bg-white dark:bg-slate-800 text-gray-900 dark:text-white font-medium outline-none focus:border-purple-500"
             >
               <option value="Sports">⚽ Sports & Fitness</option>
               <option value="Study">📚 Study & Exams</option>
@@ -711,22 +711,22 @@ function CreateActivityModal({
 
           {/* Title */}
           <div>
-            <label className="block text-[11px] font-bold text-gray-700 mb-1">Activity Title</label>
+            <label className="block text-[11px] font-bold text-gray-700 dark:text-slate-300 mb-1">Activity Title</label>
             <input
               type="text"
               required
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="e.g. 5v5 Turf Football Match ⚽"
-              className="w-full py-2 px-3 rounded-xl border border-gray-200 text-xs font-medium outline-none focus:border-purple-500"
+              className="w-full py-2 px-3 rounded-xl border border-gray-200 dark:border-slate-700 text-xs bg-white dark:bg-slate-800 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-slate-500 font-medium outline-none focus:border-purple-500"
             />
           </div>
 
           {/* Interactive Map Location Picker */}
           <div>
-            <label className="block text-[11px] font-bold text-gray-700 mb-1 flex items-center justify-between">
+            <label className="block text-[11px] font-bold text-gray-700 dark:text-slate-300 mb-1 flex items-center justify-between">
               <span>Pin Exact Location on Map</span>
-              <span className="text-[10px] text-purple-600 font-semibold">
+              <span className="text-[10px] text-purple-600 dark:text-purple-400 font-semibold">
                 ({latitude.toFixed(4)}, {longitude.toFixed(4)})
               </span>
             </label>
@@ -745,7 +745,7 @@ function CreateActivityModal({
 
           {/* Location Landmark */}
           <div>
-            <label className="block text-[11px] font-bold text-gray-700 mb-1">
+            <label className="block text-[11px] font-bold text-gray-700 dark:text-slate-300 mb-1">
               Landmark / Building Name
             </label>
             <input
@@ -754,25 +754,25 @@ function CreateActivityModal({
               value={locationName}
               onChange={(e) => setLocationName(e.target.value)}
               placeholder="e.g. Central Library 2nd Floor Study Pods"
-              className="w-full py-2 px-3 rounded-xl border border-gray-200 text-xs font-medium outline-none focus:border-purple-500"
+              className="w-full py-2 px-3 rounded-xl border border-gray-200 dark:border-slate-700 text-xs bg-white dark:bg-slate-800 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-slate-500 font-medium outline-none focus:border-purple-500"
             />
           </div>
 
           {/* Time & Max Participants */}
           <div className="grid grid-cols-2 gap-2">
             <div>
-              <label className="block text-[11px] font-bold text-gray-700 mb-1">Time</label>
+              <label className="block text-[11px] font-bold text-gray-700 dark:text-slate-300 mb-1">Time</label>
               <input
                 type="text"
                 required
                 value={time}
                 onChange={(e) => setTime(e.target.value)}
                 placeholder="e.g. Today @ 5:30 PM"
-                className="w-full py-2 px-3 rounded-xl border border-gray-200 text-xs font-medium outline-none focus:border-purple-500"
+                className="w-full py-2 px-3 rounded-xl border border-gray-200 dark:border-slate-700 text-xs bg-white dark:bg-slate-800 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-slate-500 font-medium outline-none focus:border-purple-500"
               />
             </div>
             <div>
-              <label className="block text-[11px] font-bold text-gray-700 mb-1">Max Capacity (Optional)</label>
+              <label className="block text-[11px] font-bold text-gray-700 dark:text-slate-300 mb-1">Max Capacity (Optional)</label>
               <input
                 type="number"
                 min="2"
@@ -780,28 +780,28 @@ function CreateActivityModal({
                 value={maxParticipants}
                 onChange={(e) => setMaxParticipants(e.target.value)}
                 placeholder="e.g. 10"
-                className="w-full py-2 px-3 rounded-xl border border-gray-200 text-xs font-medium outline-none focus:border-purple-500"
+                className="w-full py-2 px-3 rounded-xl border border-gray-200 dark:border-slate-700 text-xs bg-white dark:bg-slate-800 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-slate-500 font-medium outline-none focus:border-purple-500"
               />
             </div>
           </div>
 
           {/* Description */}
           <div>
-            <label className="block text-[11px] font-bold text-gray-700 mb-1">Description</label>
+            <label className="block text-[11px] font-bold text-gray-700 dark:text-slate-300 mb-1">Description</label>
             <textarea
               rows={3}
               required
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="What are the plans? Who can join? Any gear or prep needed?"
-              className="w-full py-2 px-3 rounded-xl border border-gray-200 text-xs font-medium outline-none focus:border-purple-500 resize-none"
+              className="w-full py-2 px-3 rounded-xl border border-gray-200 dark:border-slate-700 text-xs bg-white dark:bg-slate-800 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-slate-500 font-medium outline-none focus:border-purple-500 resize-none"
             />
           </div>
 
           {/* Host Anonymously Toggle */}
-          <label className="flex items-center justify-between p-2.5 rounded-xl bg-purple-50/70 border border-purple-100 cursor-pointer">
-            <span className="text-xs font-bold text-purple-900 flex items-center gap-1.5">
-              <Shield size={14} className="text-purple-600" /> Host Anonymously
+          <label className="flex items-center justify-between p-2.5 rounded-xl bg-purple-50/70 dark:bg-purple-950/40 border border-purple-100 dark:border-purple-800/50 cursor-pointer">
+            <span className="text-xs font-bold text-purple-900 dark:text-purple-300 flex items-center gap-1.5">
+              <Shield size={14} className="text-purple-600 dark:text-purple-400" /> Host Anonymously
             </span>
             <input
               type="checkbox"
