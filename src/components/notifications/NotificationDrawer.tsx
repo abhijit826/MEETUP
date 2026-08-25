@@ -133,22 +133,20 @@ export default function NotificationDrawer({ userEmail }: { userEmail?: string }
     return () => clearInterval(interval);
   }, [fetchNotifications]);
 
-  const handleMarkRead = async (id: string, link: string) => {
-    try {
-      await fetch("/api/notifications", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ action: "markRead", id }),
-      });
-      setNotifications((prev) =>
-        prev.map((n) => (n.id === id ? { ...n, isRead: true } : n))
-      );
-      setUnreadCount((prev) => Math.max(0, prev - 1));
-      setIsOpen(false);
-      router.push(link);
-    } catch {
-      router.push(link);
-    }
+  const handleMarkRead = (id: string) => {
+    // Optimistic UI updates
+    setNotifications((prev) =>
+      prev.map((n) => (n.id === id ? { ...n, isRead: true } : n))
+    );
+    setUnreadCount((prev) => Math.max(0, prev - 1));
+    setIsOpen(false);
+
+    // Call API in the background silently
+    fetch("/api/notifications", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ action: "markRead", id }),
+    }).catch(() => {});
   };
 
   const handleMarkAllRead = async () => {
@@ -298,9 +296,10 @@ export default function NotificationDrawer({ userEmail }: { userEmail?: string }
               ) : (
                 filteredNotifs.map((n) => (
                   <SwipeItem key={n.id} onDismiss={() => handleDismiss(n.id)}>
-                    <div
-                      onClick={() => handleMarkRead(n.id, n.link)}
-                      className={`p-3 rounded-2xl border transition-all cursor-pointer flex items-start gap-3 ${
+                    <Link
+                      href={n.link}
+                      onClick={() => handleMarkRead(n.id)}
+                      className={`p-3 rounded-2xl border transition-all cursor-pointer flex items-start gap-3 block w-full text-left outline-none ${
                         n.isRead
                           ? "bg-white border-gray-100 text-gray-500"
                           : "bg-purple-50/70 border-purple-200/80 text-gray-900 shadow-sm"
@@ -328,7 +327,7 @@ export default function NotificationDrawer({ userEmail }: { userEmail?: string }
                           {formatNotifTime(n.createdAt)}
                         </span>
                       </div>
-                    </div>
+                    </Link>
                   </SwipeItem>
                 ))
               )}
