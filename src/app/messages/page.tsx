@@ -242,11 +242,12 @@ function MessagesContent() {
       if (data.success && data.conversations) {
         setConversations(data.conversations);
         const updated = (data.conversations as Conversation[]).find((c) => c.id === activeConvId);
-        const isAnonNow = updated ? updated.participant2IsAnonymous || !updated.isIdentityRevealed : false;
+        const isMeP1 = userEmail && updated ? updated.participant1Id.toLowerCase().includes(userEmail.toLowerCase()) : true;
+        const myIsAnonNow = isMeP1 ? updated?.participant1IsAnonymous : updated?.participant2IsAnonymous;
         triggerToast(
-          isAnonNow
-            ? "🕵️ Switched back to Anonymous Mode!"
-            : "🔓 Identity revealed! The other user can now see your profile."
+          myIsAnonNow
+            ? "🕵️ Switched back to Anonymous Mode! Your identity is hidden."
+            : "🔓 Identity revealed! The other user can now see your real name."
         );
       }
     } catch {
@@ -482,18 +483,21 @@ function MessagesContent() {
 
                 <div className="flex items-center gap-1 relative">
                   {(() => {
-                    const isRevealed = activeConversation.isIdentityRevealed || !activeConversation.participant2IsAnonymous;
+                    const isMeP1 = userEmail && activeConversation.participant1Id.toLowerCase().includes(userEmail.toLowerCase());
+                    const myIsAnon = isMeP1 ? activeConversation.participant1IsAnonymous : activeConversation.participant2IsAnonymous;
+                    const myIsRevealed = !myIsAnon;
+
                     return (
                       <button
                         onClick={handleToggleIdentity}
                         className={`py-1 px-2.5 rounded-full transition-all text-[11px] font-bold flex items-center gap-1 border ${
-                          isRevealed
+                          myIsRevealed
                             ? "bg-gray-100 dark:bg-slate-800 text-gray-700 dark:text-slate-300 hover:bg-gray-200 dark:hover:bg-slate-700 border-gray-200 dark:border-slate-700"
                             : "bg-indigo-50 dark:bg-indigo-950/60 text-[#4F46E5] dark:text-indigo-300 hover:bg-[#4F46E5] hover:text-white border-indigo-200 dark:border-indigo-800/50"
                         }`}
-                        title={isRevealed ? "Hide identity and switch back to Anonymous mode" : "Reveal your identity voluntarily to this user"}
+                        title={myIsRevealed ? "Hide your identity and switch back to Anonymous mode" : "Reveal your identity voluntarily to this user"}
                       >
-                        {isRevealed ? (
+                        {myIsRevealed ? (
                           <>
                             <EyeOff size={12} />
                             <span>Go Anonymous</span>
@@ -501,7 +505,7 @@ function MessagesContent() {
                         ) : (
                           <>
                             <Eye size={12} />
-                            <span>Reveal Identity</span>
+                            <span>Reveal My Identity</span>
                           </>
                         )}
                       </button>
@@ -524,17 +528,22 @@ function MessagesContent() {
                         }}
                         className="w-full px-3 py-2 text-left rounded-xl hover:bg-gray-50 dark:hover:bg-slate-700 flex items-center gap-2 text-gray-800 dark:text-slate-200"
                       >
-                        {activeConversation.isIdentityRevealed || !activeConversation.participant2IsAnonymous ? (
-                          <>
-                            <EyeOff size={14} className="text-gray-500 dark:text-slate-400" />
-                            <span>Go Anonymous</span>
-                          </>
-                        ) : (
-                          <>
-                            <Eye size={14} className="text-indigo-600 dark:text-indigo-400" />
-                            <span>Reveal Identity</span>
-                          </>
-                        )}
+                        {(() => {
+                          const isMeP1 = userEmail && activeConversation.participant1Id.toLowerCase().includes(userEmail.toLowerCase());
+                          const myIsAnon = isMeP1 ? activeConversation.participant1IsAnonymous : activeConversation.participant2IsAnonymous;
+                          const myIsRevealed = !myIsAnon;
+                          return myIsRevealed ? (
+                            <>
+                              <EyeOff size={14} className="text-gray-500 dark:text-slate-400" />
+                              <span>Go Anonymous</span>
+                            </>
+                          ) : (
+                            <>
+                              <Eye size={14} className="text-indigo-600 dark:text-indigo-400" />
+                              <span>Reveal My Identity</span>
+                            </>
+                          );
+                        })()}
                       </button>
                       <button
                         onClick={handleToggleBlock}
@@ -561,6 +570,46 @@ function MessagesContent() {
                 </div>
               </header>
             )}
+
+            {/* Identity Status Context Banners */}
+            {activeConversation && (() => {
+              const isMeP1 = userEmail && activeConversation.participant1Id.toLowerCase().includes(userEmail.toLowerCase());
+              const myIsAnon = isMeP1 ? activeConversation.participant1IsAnonymous : activeConversation.participant2IsAnonymous;
+              const otherIsAnon = isMeP1 ? activeConversation.participant2IsAnonymous : activeConversation.participant1IsAnonymous;
+              const otherName = isMeP1 ? activeConversation.participant2Name : activeConversation.participant1Name;
+
+              if (!myIsAnon && !otherIsAnon) {
+                return (
+                  <div className="px-3.5 py-2 bg-emerald-50/80 dark:bg-emerald-950/40 border-b border-emerald-100 dark:border-emerald-800/40 text-[11px] text-emerald-800 dark:text-emerald-300 flex items-center justify-between shrink-0 font-bold">
+                    <span className="flex items-center gap-1.5">
+                      <CheckCircle2 size={13} className="text-emerald-500 shrink-0" />
+                      Both identities revealed! You and {otherName} can see each other&apos;s real profiles.
+                    </span>
+                  </div>
+                );
+              }
+              if (!myIsAnon && otherIsAnon) {
+                return (
+                  <div className="px-3.5 py-2 bg-indigo-50/80 dark:bg-indigo-950/40 border-b border-indigo-100 dark:border-indigo-800/40 text-[11px] text-indigo-900 dark:text-indigo-300 flex items-center justify-between shrink-0 font-medium">
+                    <span className="flex items-center gap-1.5">
+                      <Eye size={13} className="text-[#4F46E5] dark:text-indigo-400 shrink-0" />
+                      Your identity is revealed to them. (Their identity remains hidden until they reveal it).
+                    </span>
+                  </div>
+                );
+              }
+              if (myIsAnon && !otherIsAnon) {
+                return (
+                  <div className="px-3.5 py-2 bg-purple-50/80 dark:bg-purple-950/40 border-b border-purple-100 dark:border-purple-800/40 text-[11px] text-purple-900 dark:text-purple-300 flex items-center justify-between shrink-0 font-medium">
+                    <span className="flex items-center gap-1.5">
+                      <CheckCircle2 size={13} className="text-purple-500 shrink-0" />
+                      {otherName} has revealed their identity to you! (Your identity is still hidden).
+                    </span>
+                  </div>
+                );
+              }
+              return null;
+            })()}
 
             {/* Confession Excerpt Context Banner */}
             {activeConversation?.confessionSnippet && (

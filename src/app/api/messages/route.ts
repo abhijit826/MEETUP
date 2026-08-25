@@ -124,7 +124,8 @@ export async function POST(request: Request) {
       if (!convId) {
         return NextResponse.json({ error: "convId is required" }, { status: 400 });
       }
-      const conversations = await toggleSharedIdentity(convId, realName);
+      const sessionEmail = await getSessionEmail();
+      const conversations = await toggleSharedIdentity(convId, sessionEmail || body.userId, realName);
       return NextResponse.json({ success: true, conversations });
     }
 

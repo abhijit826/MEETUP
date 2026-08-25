@@ -74,9 +74,9 @@ export async function startSharedConversation(
     participant1Id: p1Id,
     participant1Name: currentUserName || "Student",
     participant1College: "SRM ✓",
-    participant1IsAnonymous: false,
+    participant1IsAnonymous: true, // Sender starts anonymous in private confession DM
     participant2Id: p2Id,
-    participant2Name: authorIsAnonymous ? "Anonymous" : authorName || "Student",
+    participant2Name: authorName || "Student",
     participant2College: "SRM ✓",
     participant2IsAnonymous: authorIsAnonymous,
     participant2Avatar: authorIsAnonymous ? undefined : (authorName || "S").charAt(0).toUpperCase(),
@@ -104,13 +104,29 @@ export async function sendSharedMessage(
   isAnonymousSender: boolean
 ): Promise<DirectMessage> {
   const store = await getDiskMessagesData();
+  const conv = store.conversations.find((c) => c.id === convId);
+
+  let isAnon = isAnonymousSender;
+  let resolvedName = senderName;
+
+  if (conv) {
+    const cleanSender = (senderId || "").replace("user-", "").trim().toLowerCase();
+    const p1Clean = conv.participant1Id.replace("user-", "").trim().toLowerCase();
+    if (cleanSender && (cleanSender.includes(p1Clean) || p1Clean.includes(cleanSender))) {
+      isAnon = conv.participant1IsAnonymous ?? true;
+      resolvedName = conv.participant1IsAnonymous ? "Anonymous" : (conv.participant1Name || senderName);
+    } else {
+      isAnon = conv.participant2IsAnonymous ?? true;
+      resolvedName = conv.participant2IsAnonymous ? "Anonymous" : (conv.participant2Name || senderName);
+    }
+  }
 
   const newMsg: DirectMessage = {
     id: `msg-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
     conversationId: convId,
     senderId,
-    senderName: isAnonymousSender ? "Anonymous" : senderName,
-    isAnonymousSender,
+    senderName: isAnon ? "Anonymous" : resolvedName,
+    isAnonymousSender: isAnon,
     content: content.trim(),
     timestamp: new Date().toISOString(),
     isRead: true,
@@ -134,29 +150,48 @@ export async function sendSharedMessage(
   return newMsg;
 }
 
-export async function toggleSharedIdentity(convId: string, realName?: string): Promise<Conversation[]> {
+export async function toggleSharedIdentity(
+  convId: string,
+  userEmail?: string,
+  realName?: string
+): Promise<Conversation[]> {
   const store = await getDiskMessagesData();
+  const normalizedEmail = (userEmail || "").trim().toLowerCase();
+
   store.conversations = store.conversations.map((c) => {
     if (c.id !== convId) return c;
-    const isCurrentlyRevealed = c.isIdentityRevealed || !c.participant2IsAnonymous;
-    if (isCurrentlyRevealed) {
-      // Revert back to Anonymous
+
+    const p1Clean = c.participant1Id.replace("user-", "").trim().toLowerCase();
+    const p2Clean = c.participant2Id.replace("user-", "").trim().toLowerCase();
+
+    // Check if the toggling user is Participant 1 or Participant 2
+    const isP1 = normalizedEmail
+      ? p1Clean.includes(normalizedEmail) || normalizedEmail.includes(p1Clean)
+      : true;
+
+    if (isP1) {
+      // Toggle Participant 1's identity status ONLY
+      const currentlyAnon = c.participant1IsAnonymous ?? true;
+      const nextAnon = !currentlyAnon;
+      const updatedName = realName || c.participant1Name || "Student";
       return {
         ...c,
-        participant2IsAnonymous: true,
-        participant1IsAnonymous: true,
-        isIdentityRevealed: false,
+        participant1Name: updatedName,
+        participant1IsAnonymous: nextAnon,
+        participant1Avatar: nextAnon ? undefined : updatedName.charAt(0).toUpperCase(),
+        isIdentityRevealed: !nextAnon || !c.participant2IsAnonymous,
       };
     } else {
-      // Reveal Identity
-      const name = realName || c.participant2Name || "Student";
+      // Toggle Participant 2's identity status ONLY
+      const currentlyAnon = c.participant2IsAnonymous ?? true;
+      const nextAnon = !currentlyAnon;
+      const updatedName = realName || c.participant2Name || "Student";
       return {
         ...c,
-        participant2Name: name,
-        participant2IsAnonymous: false,
-        participant1IsAnonymous: false,
-        participant2Avatar: name.charAt(0).toUpperCase(),
-        isIdentityRevealed: true,
+        participant2Name: updatedName,
+        participant2IsAnonymous: nextAnon,
+        participant2Avatar: nextAnon ? undefined : updatedName.charAt(0).toUpperCase(),
+        isIdentityRevealed: !c.participant1IsAnonymous || !nextAnon,
       };
     }
   });
